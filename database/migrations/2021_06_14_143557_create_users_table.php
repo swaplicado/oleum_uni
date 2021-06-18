@@ -23,14 +23,19 @@ class CreateUsersTable extends Migration
             $table->string('last_name', 100);
             $table->string('names', 100);
             $table->string('full_name', 150);
+            $table->boolean('is_active');
             $table->boolean('is_deleted');
+            $table->integer('external_id')->unsigned();
             $table->integer('job_id')->unsigned();
+            $table->integer('branch_id')->unsigned();
             $table->integer('user_type_id')->unsigned();
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();
             $table->rememberToken();
             $table->timestamps();
-
+            
+            $table->foreign('job_id')->references('id_job')->on('adm_jobs')->onDelete('cascade');
+            //	$table->foreign('branch_id')->references('id_branch')->on('adm_branches')->onDelete('cascade');
             $table->foreign('user_type_id')->references('id_user_type')->on('adm_user_types')->onDelete('cascade');
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');

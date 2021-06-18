@@ -18,6 +18,7 @@ class CreateAdmCompanies extends Migration
             $table->string('company', 100);
             $table->string('acronym', 100);
             $table->boolean('is_deleted');
+            $table->integer('external_id')->unsigned();
             $table->integer('head_user_id')->unsigned();
             $table->timestamps();
 

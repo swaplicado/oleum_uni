@@ -13,17 +13,22 @@ class CreateQuestions extends Migration
      */
     public function up()
     {
-        Schema::create('questions', function (blueprint $table) {	
+        Schema::create('uni_questions', function (Blueprint $table) {	
             $table->bigIncrements('id_question');
             $table->longText('question');
             $table->integer('number_answers')->unsigned();
+            $table->string('answers', 250);
             $table->boolean('is_deleted');
-            $table->bigInteger('answer_id')->unsigned();
+            $table->integer('answer_id');
             $table->integer('subtopic')->unsigned();
+            $table->integer('created_by_id')->unsigned();
+            $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
             
-        //	$table->foreign('answer_id')->references('id_answer')->on('answers')->onDelete('cascade');
-            $table->foreign('subtopic')->references('id_subtopic')->on('subtopics')->onDelete('cascade');
+        //	$table->foreign('answer_id')->references('id_answer')->on('uni_answers')->onDelete('cascade');
+            $table->foreign('subtopic')->references('id_subtopic')->on('uni_subtopics')->onDelete('cascade');
+            $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
         });	
     }
 
@@ -34,6 +39,6 @@ class CreateQuestions extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('uni_questions');
     }
 }

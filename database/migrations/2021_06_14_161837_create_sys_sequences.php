@@ -19,10 +19,10 @@ class CreateSysSequences extends Migration
             $table->string('code', 5)->unique();
         });
 
-        DB::table('sys_sequences')->insert([	
-            ['id_sequence' => '1','sequence' => 'Aleatoria','code' => 'ALE'],
-            ['id_sequence' => '2','sequence' => 'Secuencial','code' => 'SEC'],
-        ]);	
+        DB::table('sys_sequences')->insert([
+            ['id_sequence' => '1','sequence' => 'Secuencial','code' => 'SEC'],
+            ['id_sequence' => '2','sequence' => 'Aleatoria','code' => 'ALE'],
+        ]);
     }
 
     /**

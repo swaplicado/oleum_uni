@@ -13,15 +13,22 @@ class CreateTopics extends Migration
      */
     public function up()
     {
-        Schema::create('topics', function (Blueprint $table) {
+        Schema::create('uni_topics', function (Blueprint $table) {
             $table->increments('id_topic');
             $table->string('topic', 100);
+            $table->string('course_key', 100);
             $table->string('hash_id', 100);
             $table->boolean('is_deleted');
             $table->integer('course_id')->unsigned();
+            $table->integer('sequence_id')->unsigned();
+            $table->integer('created_by_id')->unsigned();
+            $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
             
-            $table->foreign('course_id')->references('id_course')->on('courses')->onDelete('cascade');
+            $table->foreign('course_id')->references('id_course')->on('uni_courses')->onDelete('cascade');
+            $table->foreign('sequence_id')->references('id_sequence')->on('sys_sequences')->onDelete('cascade');
+            $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -32,6 +39,6 @@ class CreateTopics extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('topics');
+        Schema::dropIfExists('uni_topics');
     }
 }

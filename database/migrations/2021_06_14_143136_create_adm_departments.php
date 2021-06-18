@@ -18,13 +18,14 @@ class CreateAdmDepartments extends Migration
             $table->string('department', 100);
             $table->string('acronym', 100);
             $table->boolean('is_deleted');
+            $table->integer('external_id')->unsigned();
             $table->integer('head_user_n_id')->unsigned()->nullable();
             $table->integer('department_n_id')->unsigned()->nullable();
             $table->timestamps();
-
-            //$table->foreign('head_user_n_id')->references('id')->on('users')->onDelete('cascade');
+            
+        //	$table->foreign('head_user_n_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('department_n_id')->references('id_department')->on('adm_departments')->onDelete('cascade');
-        });
+        });	
     }
 
     /**

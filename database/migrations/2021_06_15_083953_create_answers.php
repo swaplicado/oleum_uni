@@ -13,15 +13,15 @@ class CreateAnswers extends Migration
      */
     public function up()
     {
-        Schema::create('answers', function (Blueprint $table) {
-            $table->bigIncrements('id_answer');
-            $table->string('answer', 200);
-            $table->boolean('is_deleted');
-            $table->bigInteger('question_id')->unsigned();
-            $table->timestamps();
-
-            $table->foreign('question_id')->references('id_question')->on('questions')->onDelete('cascade');
-        });
+        //	Schema::create('uni_answers', function (Blueprint $table) {	
+        //		$table->bigIncrements('id_answer');
+        //		$table->string('answer', 200);
+        //		$table->boolean('is_deleted');
+        //		$table->bigInteger('question_id')->unsigned();
+        //		$table->timestamps();
+        //		
+        //		$table->foreign('question_id')->references('id_question')->on('uni_questions')->onDelete('cascade');
+        //	});	
     }
 
     /**
@@ -31,6 +31,6 @@ class CreateAnswers extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('answers');
+        //	Schema::dropIfExists('uni_answers');
     }
 }

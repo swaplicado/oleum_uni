@@ -13,16 +13,20 @@ class CreateSubtopics extends Migration
      */
     public function up()
     {
-        Schema::create('subtopics', function (Blueprint $table) {
+        Schema::create('uni_subtopics', function (Blueprint $table) {	
             $table->increments('id_subtopic');
             $table->string('subtopic', 100);
             $table->string('hash_id', 100);
-            $table->integer('number_questions')->unsigned();
+            $table->integer('number_questions');
             $table->boolean('is_deleted');
             $table->integer('topic_id')->unsigned();
+            $table->integer('created_by_id')->unsigned();
+            $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
-
-            $table->foreign('topic_id')->references('id_topic')->on('topics')->onDelete('cascade');
+            
+            $table->foreign('topic_id')->references('id_topic')->on('uni_topics')->onDelete('cascade');
+            $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -33,6 +37,6 @@ class CreateSubtopics extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subtopics');
+        Schema::dropIfExists('uni_subtopics');
     }
 }

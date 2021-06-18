@@ -18,6 +18,7 @@ class CreateAdmOrganizations extends Migration
             $table->string('organization', 100);
             $table->string('acronym', 100);
             $table->boolean('is_deleted');
+            $table->integer('external_id')->unsigned();
             $table->integer('head_user_id')->unsigned();
             $table->timestamps();
 

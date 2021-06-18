@@ -17,7 +17,10 @@ class CreateAdmJobs extends Migration
             $table->increments('id_job');
             $table->string('job', 100);
             $table->string('acronym', 100);
+            $table->integer('num_positions');
+            $table->integer('hierarchical_level');
             $table->boolean('is_deleted');
+            $table->integer('external_id')->unsigned();
             $table->integer('department_id')->unsigned();
             $table->timestamps();
 
