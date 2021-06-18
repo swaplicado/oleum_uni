@@ -18,7 +18,7 @@ class CreateCourses extends Migration
             $table->string('course', 100);
             $table->string('hash_id', 100);
             $table->longText('description');
-            $table->longText('objetives');
+            $table->longText('objectives');
             $table->integer('completion_days');
             $table->integer('university_points');
             $table->boolean('is_deleted');

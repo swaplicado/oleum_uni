@@ -18,7 +18,7 @@ class CreateModules extends Migration
             $table->string('module', 100);
             $table->string('hash_id', 100);
             $table->longText('description');
-            $table->longText('objetives');
+            $table->longText('objectives');
             $table->boolean('is_deleted');
             $table->integer('knowledge_area_id')->unsigned();
             $table->integer('elem_status_id')->unsigned();

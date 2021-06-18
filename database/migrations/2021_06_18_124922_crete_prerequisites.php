@@ -17,11 +17,11 @@ class CretePrerequisites extends Migration
             $table->bigIncrements('id_prerequisite');
             $table->boolean('is_deleted');
             $table->integer('element_type_id')->unsigned();
-            $table->integer('knowledge_area_id')->unsigned();
-            $table->integer('module_id')->unsigned();
-            $table->integer('course_id')->unsigned();
-            $table->integer('topic_id')->unsigned();
-            $table->integer('subtopic_id')->unsigned();
+            $table->integer('knowledge_n_area_id')->unsigned()->nullable();
+            $table->integer('module_n_id')->unsigned()->nullable();
+            $table->integer('course_n_id')->unsigned()->nullable();
+            $table->integer('topic_n_id')->unsigned()->nullable();
+            $table->integer('subtopic_n_id')->unsigned()->nullable();
             $table->timestamps();
             
             $table->foreign('element_type_id')->references('id_element_type')->on('sys_element_types')->onDelete('cascade');
@@ -37,11 +37,11 @@ class CretePrerequisites extends Migration
             $table->boolean('is_deleted');
             $table->bigInteger('prerequisite_id')->unsigned();
             $table->integer('element_type_id')->unsigned();
-            $table->integer('knowledge_area_id')->unsigned();
-            $table->integer('module_id')->unsigned();
-            $table->integer('course_id')->unsigned();
-            $table->integer('topic_id')->unsigned();
-            $table->integer('subtopic_id')->unsigned();
+            $table->integer('knowledge_n_area_id')->unsigned()->nullable();
+            $table->integer('module_n_id')->unsigned()->nullable();
+            $table->integer('course_n_id')->unsigned()->nullable();
+            $table->integer('topic_n_id')->unsigned()->nullable();
+            $table->integer('subtopic_n_id')->unsigned()->nullable();
             $table->timestamps();
             
             $table->foreign('prerequisite_id')->references('id_prerequisite')->on('uni_prerequisites')->onDelete('cascade');

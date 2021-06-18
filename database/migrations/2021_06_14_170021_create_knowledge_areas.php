@@ -18,7 +18,7 @@ class CreateKnowledgeAreas extends Migration
             $table->string('knowledge_area', 100);
             $table->string('hash_id', 100);
             $table->longText('description');
-            $table->longText('objetives');
+            $table->longText('objectives');
             $table->boolean('is_deleted');
             $table->integer('elem_status_id')->unsigned();
             $table->integer('sequence_id')->unsigned();
