@@ -27,7 +27,6 @@ class Topic extends Model
      */
     protected $fillable = [
         'topic',
-        'course_key',
         'hash_id',
         'is_deleted',
         'course_id',

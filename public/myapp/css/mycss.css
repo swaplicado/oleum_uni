@@ -1,0 +1,11 @@
+#fixedbutton {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+}
+
+#rightnew {
+    position: relative;
+    /* bottom: 0px; */
+    left: 90%;
+}

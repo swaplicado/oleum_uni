@@ -27,6 +27,7 @@ class Course extends Model
      */
     protected $fillable = [
         'course',
+        'course_key',
         'hash_id',
         'description',
         'objectives',

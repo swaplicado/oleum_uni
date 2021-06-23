@@ -16,7 +16,6 @@ class CreateTopics extends Migration
         Schema::create('uni_topics', function (Blueprint $table) {
             $table->increments('id_topic');
             $table->string('topic', 100);
-            $table->string('course_key', 100);
             $table->string('hash_id', 100);
             $table->boolean('is_deleted');
             $table->integer('course_id')->unsigned();

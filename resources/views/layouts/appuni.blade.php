@@ -4,9 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Uni GH</title>
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('myapp/css/mycss.css') }}" rel="stylesheet">
+    <link href="{{ asset('swal2/css/sweetalert2.css') }}" rel="stylesheet">
+    <link href="{{ asset('select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('datatables/datatables.min.css') }}" rel="stylesheet">
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('datatables/DataTables-1.10.25/css/dataTables.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/AutoFill-2.3.7/css/autoFill.bootstrap5.css') }}"/> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Buttons-1.7.1/css/buttons.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/ColReorder-1.5.4/css/colReorder.bootstrap5.min.css') }}"/>
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('datatables/DateTime-1.1.0/css/dataTables.dateTime.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/FixedColumns-3.3.3/css/fixedColumns.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/FixedHeader-3.1.9/css/fixedHeader.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/KeyTable-2.6.2/css/keyTable.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Responsive-2.2.9/css/responsive.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/RowGroup-1.1.3/css/rowGroup.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/RowReorder-1.2.8/css/rowReorder.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Scroller-2.0.4/css/scroller.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/SearchBuilder-1.1.0/css/searchBuilder.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/SearchPanes-1.3.0/css/searchPanes.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Select-1.3.3/css/select.bootstrap5.min.css') }}"/> --}}
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
@@ -137,7 +157,7 @@
             font-size: 1.25rem
         }
 
-        .show {
+        .showm {
             left: 0
         }
 
@@ -187,7 +207,7 @@
                 padding: 1rem 1rem 0 0
             }
 
-            .show {
+            .showm {
                 width: calc(var(--nav-width) + 156px)
             }
 
@@ -197,8 +217,24 @@
         }
     </style>
     @yield('css_section')
+    <script type="text/javascript" src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('swal2/js/sweetalert2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('myapp/js/myjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('select2/js/select2.full.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/JSZip-2.5.0/jszip.min.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('datatables/pdfmake-0.1.36/pdfmake.min.js') }}"></script> --}}
+    <script type="text/javascript" src="{{ asset('datatables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/DataTables-1.10.25/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/AutoFill-2.3.7/js/dataTables.autoFill.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.colVis.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/ColReorder-1.5.4/js/dataTables.colReorder.min.js') }}"></script>
     @yield('scripts_section')
+    @yield('scripts_section_complement')
 </head>
 
 <body class="snippet-body" id="body-pd">
@@ -231,7 +267,14 @@
                     </div>
     
                     <div class="card-body">
-                        @yield('content')
+                        @if (session('error'))
+                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
+                        <div class="row">
+                            <div class="col-md-12">
+                                @yield('content')
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -251,7 +294,7 @@
     if(toggle && nav && bodypd && headerpd){
     toggle.addEventListener('click', ()=>{
     // show navbar
-    nav.classList.toggle('show')
+    nav.classList.toggle('showm')
     // change icon
     toggle.classList.toggle('bx-x')
     // add padding to body
