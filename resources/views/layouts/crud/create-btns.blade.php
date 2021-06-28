@@ -2,9 +2,14 @@
     @section('scripts_section_complement')
         <script>
             function onSave() {
+                let isValid = document.querySelector('#createForm').reportValidity();
+
+                if (! isValid) {
+                    return;
+                }
+
                 document.getElementById("saveButton").disabled = true;
-                let oGui = new SGui();
-                oGui.showWaiting(3000);
+                SGui.showWaiting(3000);
                 document.getElementById("createForm").submit();
             }
         </script>

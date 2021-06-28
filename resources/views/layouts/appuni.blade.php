@@ -219,6 +219,8 @@
     @yield('css_section')
     <script type="text/javascript" src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vue/vue.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('axios/axios.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('swal2/js/sweetalert2.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myapp/js/myjs.js') }}"></script>
     <script type="text/javascript" src="{{ asset('select2/js/select2.full.min.js') }}"></script>
@@ -321,6 +323,7 @@
     // Your code to run since DOM is loaded and ready
     });
     </script>
+    @yield('bottom_scripts')
 </body>
 
 </html>

@@ -10,11 +10,13 @@ use App\Uni\KnowledgeArea;
 use App\Uni\Module;
 use App\Uni\Course;
 use App\Uni\Topic;
+use App\Uni\SubTopic;
 
 class TopicsController extends Controller
 {
     protected $newRoute;
     protected $storeRoute;
+    protected $storeSubRoute;
 
     /**
      * Create a new controller instance.
@@ -26,6 +28,7 @@ class TopicsController extends Controller
     {
         $this->newRoute = "topics.create";
         $this->storeRoute = "topics.store";
+        $this->storeSubRoute = "subtopics.store";
     }
 
     /**
@@ -54,9 +57,37 @@ class TopicsController extends Controller
 
         $lTopics = $lTopics->get();
 
+        foreach ($lTopics as $topic) {
+            $topic->lSubtopics = SubTopic::where('topic_id', $topic->id_topic)->get();
+        }
+
+        $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
+                        ->get();
+
         return view('mgr.topics.index')->with('title', $title)
-                                        ->with('newRoute', $this->newRoute)
+                                        ->with('storeRoute', $this->storeRoute)
+                                        ->with('storeSubRoute', $this->storeSubRoute)
                                         ->with('courseId', $courseId)
+                                        ->with('sequences', $seq)
                                         ->with('lTopics', $lTopics);
+    }
+
+    public function store(Request $request)
+    {
+        $topic = json_decode($request->topic);
+
+        $oTopic = new Topic();
+        
+        $oTopic->topic = $topic->topic;
+        $oTopic->hash_id = hash('ripemd160', $oTopic->topic);
+        $oTopic->is_deleted = false;
+        $oTopic->course_id = $topic->course_id;
+        $oTopic->sequence_id = $topic->secuence_id;
+        $oTopic->created_by_id = \Auth::id();
+        $oTopic->updated_by_id = \Auth::id();
+
+        $oTopic->save();
+
+        return json_encode($oTopic);
     }
 }

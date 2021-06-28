@@ -4,21 +4,21 @@ namespace App\Uni;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EduContent extends Model
+class ElementContent extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'uni_edu_contents';
+    protected $table = 'uni_contents_vs_elements';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_content';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -26,13 +26,10 @@ class EduContent extends Model
      * @var array
      */
     protected $fillable = [
-        'file_name',
-        'file_extension',
-        'file_sys_name',
-        'file_path',
-        'file_type',
-        'file_size',
-        'is_deleted',
+        'order',
+        'content_id',
+        'element_type_id',
+        'element_id',
         'created_by_id',
         'updated_by_id'
     ];

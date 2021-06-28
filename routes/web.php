@@ -44,5 +44,23 @@ Route::prefix('mgr')->namespace('Mgr')->group( function () {
      * Rutas de CRUD de Temas (Topics)
      */
     Route::get('/topics/{course?}', 'TopicsController@index')->name('topics.index');
-    Route::get('/topics/{course}/create', 'TopicsController@create')->name('topics.create');
+    Route::get('/topics/create', 'TopicsController@create')->name('topics.create');
+    Route::post('/topics', 'TopicsController@store')->name('topics.store');
+
+    /**
+     * Rutas de CRUD de Subtemas (SubTopics)
+     */
+    Route::post('/subtopics', 'SubTopicsController@store')->name('subtopics.store');
+    // Contenidos vs subtemas
+    Route::get('/topics/{course?}/subtopics/{id?}/contents', 'ElementsContentsController@subtopics')->name('subtopics.contents.index');
+    Route::post('/topics/{course?}/subtopics/contents', 'ElementsContentsController@store')->name('subtopics.contents.store');
+
+    /**
+     * Rutas de Gestión de contenidos
+     */
+    Route::get('/contents', 'ContentsController@index')->name('contents.index');
+    Route::get('/contents/create', 'ContentsController@create')->name('contents.create');
+    Route::post('/contents', 'ContentsController@store')->name('contents.store');
+    Route::get('/contents/preview', 'ContentsController@getPreview')->name('contents.preview');
+
 });
