@@ -4,21 +4,21 @@ namespace App\Uni;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Answer extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'uni_questions';
+    protected $table = 'uni_answers';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_question';
+    protected $primaryKey = 'id_answer';
 
     /**
      * The attributes that are mass assignable.
@@ -26,18 +26,14 @@ class Question extends Model
      * @var array
      */
     protected $fillable = [
-        'question',
-        'number_answers',
-        'answers',
+        'answer',
         'is_deleted',
-        'answer_id',
-        'subtopic_id',
-        'created_by_id',
-        'updated_by_id'
+        'content_n_id',
+        'question_id'
     ];
 
-    public function answers()
+    public function question()
     {
-        return $this->hasMany('App\Uni\Answer', 'question_id', 'id_question');
+        return $this->belongsTo('App\Uni\Question', 'id_question', 'question_id');
     }
 }

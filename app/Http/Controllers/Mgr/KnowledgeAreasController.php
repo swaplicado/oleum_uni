@@ -16,8 +16,7 @@ class KnowledgeAreasController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @param  UserRepository  $users
+     *     
      * @return void
      */
     public function __construct()

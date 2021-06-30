@@ -54,6 +54,11 @@ Route::prefix('mgr')->namespace('Mgr')->group( function () {
     // Contenidos vs subtemas
     Route::get('/topics/{course?}/subtopics/{id?}/contents', 'ElementsContentsController@subtopics')->name('subtopics.contents.index');
     Route::post('/topics/{course?}/subtopics/contents', 'ElementsContentsController@store')->name('subtopics.contents.store');
+    // Preguntas de subtemas
+    Route::get('/topics/{course?}/subtopics/{id?}/questions', 'QuestionsController@index')->name('subtopics.questions.index');
+    Route::post('/question', 'QuestionsController@store')->name('questions.store');
+    Route::get('/question', 'QuestionsController@getQuestion')->name('questions.getquestion');
+    Route::put('/question', 'QuestionsController@update')->name('questions.update');
 
     /**
      * Rutas de Gestión de contenidos
@@ -63,4 +68,12 @@ Route::prefix('mgr')->namespace('Mgr')->group( function () {
     Route::post('/contents', 'ContentsController@store')->name('contents.store');
     Route::get('/contents/preview', 'ContentsController@getPreview')->name('contents.preview');
 
+    /**
+     * Rutas de asignaciones de áreas de competencia
+     */
+    Route::get('/assignments', 'AssignmentsController@index')->name('assignments.index');
+    Route::get('/getstudents', 'AssignmentsController@getStudents')->name('assignments.getstudents');
+    Route::get('/assignments/create', 'AssignmentsController@create')->name('assignments.create');
+    Route::post('/assignments', 'AssignmentsController@store')->name('assignments.store');
+    Route::put('/assignments/updateassignment', 'AssignmentsController@updateAssignment')->name('assignments.updateassignment');
 });

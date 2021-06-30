@@ -19,11 +19,13 @@ class CreateAdmCompanies extends Migration
             $table->string('acronym', 100);
             $table->boolean('is_deleted');
             $table->integer('external_id')->unsigned();
+            $table->integer('organization_id')->unsigned();
             $table->integer('head_user_id')->unsigned();
             $table->timestamps();
-
+            
+            $table->foreign('organization_id')->references('id_organization')->on('adm_organizations')->onDelete('cascade');
             $table->foreign('head_user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+        });	
     }
 
     /**

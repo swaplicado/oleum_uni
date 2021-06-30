@@ -20,7 +20,7 @@ class CreateQuestions extends Migration
             $table->string('answers', 250);
             $table->boolean('is_deleted');
             $table->integer('answer_id');
-            $table->integer('subtopic')->unsigned();
+            $table->integer('subtopic_id')->unsigned();
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();
             $table->timestamps();

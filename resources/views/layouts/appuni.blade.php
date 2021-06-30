@@ -219,6 +219,7 @@
     @yield('css_section')
     <script type="text/javascript" src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('moment/moment.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vue/vue.js') }}"></script>
     <script type="text/javascript" src="{{ asset('axios/axios.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('swal2/js/sweetalert2.js') }}"></script>

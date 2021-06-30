@@ -19,9 +19,11 @@ class CreateAdmBranches extends Migration
             $table->string('acronym', 100);
             $table->boolean('is_deleted');
             $table->integer('external_id')->unsigned();
+            $table->integer('company_id')->unsigned();
             $table->integer('head_user_id')->unsigned();
             $table->timestamps();
-
+            
+            $table->foreign('company_id')->references('id_company')->on('adm_companies')->onDelete('cascade');
             $table->foreign('head_user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
