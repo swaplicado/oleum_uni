@@ -136,7 +136,12 @@ var app = new Vue({
 
             return true;
         },
+        discardAssignment(assignment) {
+            this.lAssignments.splice(this.lAssignments.indexOf(assignment), 2);
+            SGui.showOk();
+        },
         assignArea() {
+            SGui.showWaiting(4000);
             /**
              * Petición al Controlador
              */

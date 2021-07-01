@@ -21,7 +21,7 @@
                                 <input v-model="oElem.dt_end" type="date" class="form-control">
                             </div>
                             <div class="col-1">
-                                <button class="btn btn-danger"><i class='bx bx-x'></i></button>
+                                <button v-on:click="discardAssignment(oElem)" class="btn btn-danger"><i class='bx bx-x'></i></button>
                             </div>
                         </div>
                     </div>

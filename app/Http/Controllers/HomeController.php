@@ -23,6 +23,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $title = "¡Bienvenido ".(\Auth::user()->names)."!";
+
+        return view('home')->with('title', $title);
     }
 }
