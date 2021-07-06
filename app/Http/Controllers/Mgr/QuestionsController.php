@@ -55,7 +55,7 @@ class QuestionsController extends Controller
 
         $oQuestion->question = $question->question;
         $oQuestion->number_answers = $question->number_answers;
-        $oQuestion->answers = "";
+        $oQuestion->answer_feedback = $question->answer_feedback;
         $oQuestion->is_deleted = false;
         $oQuestion->answer_id = 0;
         $oQuestion->subtopic_id = $question->subtopic_id;

@@ -77,3 +77,22 @@ Route::prefix('mgr')->namespace('Mgr')->group( function () {
     Route::post('/assignments', 'AssignmentsController@store')->name('assignments.store');
     Route::put('/assignments/updateassignment', 'AssignmentsController@updateAssignment')->name('assignments.updateassignment');
 });
+
+// Controllers Within The "App\Http\Controllers\Uni" Namespace
+Route::prefix('uni')->namespace('Uni')->group( function () {
+    /**
+     * Universidad Alumno
+     */
+    Route::get('/areas', 'UniversityController@indexAreas')->name('areas.index');
+    Route::get('/modules/{area?}', 'UniversityController@indexModules')->name('uni.modules.index');
+    Route::get('/courses/{module?}', 'UniversityController@indexCourses')->name('uni.courses.index');
+    Route::get('/course/{course?}', 'UniversityController@viewCourse')->name('uni.courses.course');
+    Route::get('/course/play/{subtopic}', 'UniversityController@playSubtopic')->name('uni.courses.course.play');
+
+
+    /**
+     * Exámenes
+     */
+    Route::get('/exam/{subtopic}', 'ExamsController@exam')->name('exam.evaluate');
+    Route::post('/exam/recordanswer', 'ExamsController@recordAnswer')->name('exam.recordanswer');
+});

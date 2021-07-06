@@ -17,9 +17,9 @@ class CreateQuestions extends Migration
             $table->bigIncrements('id_question');
             $table->longText('question');
             $table->integer('number_answers')->unsigned();
-            $table->string('answers', 250);
+            $table->longText('answer_feedback');
             $table->boolean('is_deleted');
-            $table->integer('answer_id');
+            $table->bigInteger('answer_id')->unsigned();
             $table->integer('subtopic_id')->unsigned();
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();

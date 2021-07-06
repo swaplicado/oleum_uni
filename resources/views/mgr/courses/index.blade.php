@@ -84,8 +84,10 @@
                             <td>{{ $course->seq_code }}</td>
                             <td>{{ $course->status_code }}</td>
                             <td>{{ $course->module }}</td>
-                            <td>
-                                
+                            <td style="text-align: center">
+                                <a href="{{ route('topics.index', ['course' => $course->id_course]) }}">
+                                    <i class='bx bxs-category'></i>
+                                </a>
                             </td>
                         </tr>
                     @endforeach

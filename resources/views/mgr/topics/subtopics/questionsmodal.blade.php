@@ -21,6 +21,13 @@
             <div>
               <div class="row">
                 <div class="col-12">
+                  <label for="answer_id" class="form-label">Retroalimentación de respuesta*</label>
+                  <textarea v-model="oQuestion.answer_feedback" class="form-control" id="answer_feedback" name="answer_feedback" rows="2"></textarea>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-12">
                   <label for="answer_id" class="form-label">Respuesta correcta*</label>
                   <select v-model="idPicked" style="width: 100%" class="form-control" id="answer_id" name="answer_id" placeholder="Respuesta...">
                     <option v-for="oAnswer in oQuestion.lAnswers" :value="oAnswer.id_aux">@{{ oAnswer.answer }}</option>

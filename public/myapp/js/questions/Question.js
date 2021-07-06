@@ -7,7 +7,7 @@ class Question {
         this.id_question = 0;
         this.question = "";
         this.number_answers = 2;
-        this.answers = "";
+        this.answer_feedback = "";
         this.is_deleted = false;
         this.answer_id = 0;
         this.subtopic_id = 0;

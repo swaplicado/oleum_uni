@@ -28,7 +28,7 @@ class Question extends Model
     protected $fillable = [
         'question',
         'number_answers',
-        'answers',
+        'answer_feedback',
         'is_deleted',
         'answer_id',
         'subtopic_id',

@@ -20,7 +20,7 @@
             ?>
                 {!! $menu !!}
             @auth
-                <a href="{{ route('logout') }}" class="nav_link" onclick="event.preventDefault();
+                <a class="nav_link" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
                     <i class="bx bx-log-out nav_icon"></i>
                     <span class="nav_name">Salir</span>

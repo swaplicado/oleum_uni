@@ -81,6 +81,7 @@ var appTopics = new Vue({
                     this.addSubTopic(subtopic);
                     $('#subTopicsModal').modal('hide');
                     SGui.showOk();
+                    location.reload();
                 })
                 .catch(function(error) {
                     console.log(error);
@@ -100,12 +101,15 @@ var appTopics = new Vue({
          * @param {SubTopic} subtopic 
          */
         addSubTopic(subtopic) {
-            for (const top of this.oData.lTopics) {
-                if (top.id_topic == subtopic.topic_id) {
-                    top.lSubtopics.push(subtopic);
-                    break;
-                }
-            }
+            // for (const top of this.oData.lTopics) {
+            //     if (top.id_topic == subtopic.topic_id) {
+            //         if (top.lSubtopics == undefined || top.lSubtopics.length == 0) {
+            //             top.lSubtopics = [];
+            //         }
+            //         top.lSubtopics.push(subtopic);
+            //         break;
+            //     }
+            // }
         },
         /**
          * Validación de Tema

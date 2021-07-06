@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,20 +14,33 @@
     <link href="{{ asset('select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('datatables/datatables.min.css') }}" rel="stylesheet">
     {{-- <link rel="stylesheet" type="text/css" href="{{ asset('datatables/DataTables-1.10.25/css/dataTables.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/AutoFill-2.3.7/css/autoFill.bootstrap5.css') }}"/> --}}
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Buttons-1.7.1/css/buttons.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/ColReorder-1.5.4/css/colReorder.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/AutoFill-2.3.7/css/autoFill.bootstrap5.css') }}" /> --}}
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/Buttons-1.7.1/css/buttons.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/ColReorder-1.5.4/css/colReorder.bootstrap5.min.css') }}" />
     {{-- <link rel="stylesheet" type="text/css" href="{{ asset('datatables/DateTime-1.1.0/css/dataTables.dateTime.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/FixedColumns-3.3.3/css/fixedColumns.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/FixedHeader-3.1.9/css/fixedHeader.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/KeyTable-2.6.2/css/keyTable.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Responsive-2.2.9/css/responsive.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/RowGroup-1.1.3/css/rowGroup.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/RowReorder-1.2.8/css/rowReorder.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Scroller-2.0.4/css/scroller.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/SearchBuilder-1.1.0/css/searchBuilder.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/SearchPanes-1.3.0/css/searchPanes.bootstrap5.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/Select-1.3.3/css/select.bootstrap5.min.css') }}"/> --}}
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/FixedColumns-3.3.3/css/fixedColumns.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/FixedHeader-3.1.9/css/fixedHeader.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/KeyTable-2.6.2/css/keyTable.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/Responsive-2.2.9/css/responsive.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/RowGroup-1.1.3/css/rowGroup.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/RowReorder-1.2.8/css/rowReorder.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/Scroller-2.0.4/css/scroller.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/SearchBuilder-1.1.0/css/searchBuilder.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/SearchPanes-1.3.0/css/searchPanes.bootstrap5.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/Select-1.3.3/css/select.bootstrap5.min.css') }}" /> --}}
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
@@ -47,8 +61,7 @@
             box-sizing: border-box
         }
 
-        body {
-            position: relative;
+        body {            
             margin: var(--header-height) 0 0 0;
             padding: 0 1rem;
             font-family: var(--body-font);
@@ -214,6 +227,105 @@
             .body-pd {
                 padding-left: calc(var(--nav-width) + 188px)
             }
+
+            /* ==========================
+
+    Contact
+
+=============================*/
+            .contact-us {
+                position: relative;
+                z-index: 2;
+                margin-top: 65px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -moz-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -moz-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+            }
+
+            .contact-icon {
+                position: absolute;
+            }
+
+            .contact-icon i {
+                font-size: 36px;
+                top: -5px;
+                position: relative;
+                color: #007bff;
+            }
+
+            .contact-info {
+                margin-left: 75px;
+                color: #fff;
+            }
+
+            .contact-info h3 {
+                font-size: 20px;
+                color: #fff;
+                margin-bottom: 0;
+            }
+
+            .copyright {
+                padding: 28px 0;
+                margin-top: 55px;
+                background-color: #202020;
+            }
+
+            .copyright span,
+            .copyright a {
+                color: #878787;
+                -webkit-transition: all 0.3s linear;
+                -o-transition: all 0.3s linear;
+                transition: all 0.3s linear;
+            }
+
+            .copyright a:hover {
+                color: #007bff;
+            }
+
+            .copyright-menu ul {
+                text-align: right;
+                margin: 0;
+            }
+
+            .copyright-menu li {
+                display: inline-block;
+                padding-left: 20px;
+            }
+
+            .back-to-top {
+                position: relative;
+                z-index: 2;
+            }
+
+            .back-to-top .btn-dark {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                padding: 0;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #2e2e2e;
+                border-color: #2e2e2e;
+                display: none;
+                z-index: 999;
+                -webkit-transition: all 0.3s linear;
+                -o-transition: all 0.3s linear;
+                transition: all 0.3s linear;
+            }
+
+            .back-to-top .btn-dark:hover {
+                cursor: pointer;
+                background: #FA6742;
+                border-color: #FA6742;
+            }
         }
     </style>
     @yield('css_section')
@@ -229,13 +341,19 @@
     <script type="text/javascript" src="{{ asset('datatables/JSZip-2.5.0/jszip.min.js') }}"></script>
     {{-- <script type="text/javascript" src="{{ asset('datatables/pdfmake-0.1.36/pdfmake.min.js') }}"></script> --}}
     <script type="text/javascript" src="{{ asset('datatables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('datatables/DataTables-1.10.25/js/jquery.dataTables.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('datatables/AutoFill-2.3.7/js/dataTables.autoFill.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/DataTables-1.10.25/js/jquery.dataTables.min.js') }}">
+    </script>
+    <script type="text/javascript" src="{{ asset('datatables/AutoFill-2.3.7/js/dataTables.autoFill.min.js') }}">
+    </script>
     <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/dataTables.buttons.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.colVis.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.print.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('datatables/ColReorder-1.5.4/js/dataTables.colReorder.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/ColReorder-1.5.4/js/dataTables.colReorder.min.js') }}">
+    </script>
+    <script type="text/javascript">
+        moment.locale('es-mx');
+    </script>
     @yield('scripts_section')
     @yield('scripts_section_complement')
 </head>
@@ -249,9 +367,9 @@
             </div>
             <div class="col">
                 @guest
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                 @else
-                    <button class="btn btn-light ms-3">{{ Auth::user()->username }}</button>
+                <button class="btn btn-light ms-3">{{ Auth::user()->username }}</button>
                 @endguest
             </div>
         </div>
@@ -266,12 +384,21 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        @yield('content_title', 'Unknow')
+                        <div class="row">
+                            <div class="col-9">
+                                <h2><b style="color: green">@yield('content_title', 'Unknow')</b></h2>
+                            </div>
+                            <div class="col-3">
+                                <div style="float: right;">
+                                    @yield('right_header')
+                                </div>
+                            </div>
+                        </div>
                     </div>
-    
+
                     <div class="card-body">
                         @if (session('error'))
-                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        <div class="alert alert-danger">{{ session('error') }}</div>
                         @endif
                         <div class="row">
                             <div class="col-md-12">
@@ -283,6 +410,7 @@
             </div>
         </div>
     </div>
+    <br>
     <!--Container Main end-->
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -326,5 +454,45 @@
     </script>
     @yield('bottom_scripts')
 </body>
+{{-- <footer style="position: absolute; bottom: 0; width: 93%; height: 60px;">
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <span>Copyright © 2021, All Right Reserved Software Aplicado</span>
+                </div>
+                <!-- End Col -->
+                <div class="col-md-6">
+                    <div class="copyright-menu">
+                        <ul>
+                            <li>
+                                <a href="#">Home</a>
+                            </li>
+                            <li>
+                                <a href="#">Terms</a>
+                            </li>
+                            <li>
+                                <a href="#">Privacy Policy</a>
+                            </li>
+                            <li>
+                                <a href="#">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- End col -->
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Copyright Container -->
+    </div>
+    <!-- End Copyright -->
+    <!-- Back to top -->
+    <div id="back-to-top" class="back-to-top">
+        <button class="btn btn-dark" title="Back to Top" style="display: block;">
+            <i class='bx bxs-chevron-up-circle'></i>
+        </button>
+    </div>
+</footer> --}}
 
 </html>
