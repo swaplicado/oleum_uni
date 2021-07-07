@@ -86,6 +86,7 @@ var app = new Vue({
                     this.oData.lElementContents.push(element);
                     $('#elemContentModalId').modal('hide');
                     SGui.showOk();
+                    location.reload();
                 })
                 .catch(function(error) {
                     console.log(error);

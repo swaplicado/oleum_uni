@@ -71,8 +71,8 @@
                     <table id="assignments_table" class="display stripe hover row-border order-column" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Área de competencia</th>
                                 <th>Estudiante</th>
+                                <th>Área de competencia</th>
                                 <th>Fecha de asignación</th>
                                 <th>Fecha límite</th>
                                 <th>Terminada</th>
@@ -82,8 +82,8 @@
                         <tbody>
                             @foreach ($lAssignments as $oAssign)
                                 <tr>
-                                    <td>{{ $oAssign->ka }}</td>
                                     <td>{{ $oAssign->student }}</td>
+                                    <td>{{ $oAssign->ka }}</td>
                                     <td>{{ $oAssign->dt_assignment }}</td>
                                     <td>{{ $oAssign->dt_end }}</td>
                                     <td>{{ $oAssign->is_over ? 'SÍ' : 'NO' }}</td>
@@ -100,8 +100,8 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Área de competencia</th>
                                 <th>Estudiante</th>
+                                <th>Área de competencia</th>
                                 <th>Fecha de asignación</th>
                                 <th>Fecha límite</th>
                                 <th>Terminada</th>

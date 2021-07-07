@@ -8,5 +8,9 @@
         "main": "",
         "secondary": "",
         "third": ""
+    },
+    "grades": {
+        "scale": 100,
+        "approved": 80
     }
 }

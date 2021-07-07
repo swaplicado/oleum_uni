@@ -27,4 +27,12 @@ class SGui {
             text: sError,
         });
     }
+
+    static showMessage(sTitle, sMessage, sIcon = 0) {
+        Swal.fire({
+            icon: sIcon == 0 ? 'info' : sIcon,
+            title: sTitle,
+            text: sMessage
+        })
+    }
 }

@@ -17,7 +17,7 @@
 @section('content')
     @section('content_title', $title)
 <div class="div" id="topicsApp">
-    <button id="rightnew" v-on:click="createTopic()" class="btn btn-success">Nuevo tema<i class='bx bx-plus'></i></button>
+    <button id="rightnew" v-on:click="createTopic()" class="btn btn-success">Tema<i class='bx bx-plus'></i></button>
     <br>
     <br>
     <div class="row">
@@ -31,9 +31,9 @@
               <div :id="'collapse' + topic.id_topic" class="accordion-collapse collapse show" :aria-labelledby="'heading' + topic.id_topic" data-bs-parent="#accordionTopics">
                 <div class="accordion-body">
                     <div class="row">
-                        <div class="col-11"></div>
-                        <div class="col-1">
-                            <button v-on:click="createSubtopic(topic.id_topic)" class="btn btn-success btn-sm" ><i class='bx bx-list-plus'></i></button>
+                        <div class="col-10"></div>
+                        <div class="col-2">
+                            <button v-on:click="createSubtopic(topic.id_topic)" class="btn btn-success btn-sm" >Subtema <i class='bx bx-list-plus'></i></button>
                         </div>
                     </div>
                     <br>

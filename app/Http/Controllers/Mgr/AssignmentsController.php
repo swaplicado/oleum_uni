@@ -50,6 +50,7 @@ class AssignmentsController extends Controller
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('users AS u', 'a.student_id', '=', 'u.id')
                         ->select('a.*', 'ka.knowledge_area AS ka', 'u.full_name AS student')
+                        ->whereRaw('NOW() between a.dt_assignment AND a.dt_end')
                         ->get();
 
         return view("mgr.assignments.index")->with('title', "Todas las asignaciones")

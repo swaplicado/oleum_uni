@@ -16,6 +16,8 @@ class ExamsController extends Controller
         $oSubtopic = SubTopic::find($subtopic);
         $oTopic = Topic::find($oSubtopic->topic_id);
 
+        session()->forget('questions');
+
         if (session()->has('questions')) {
             $questions = session('questions');
             $ids = collect($questions)->pluck('id_question');
@@ -28,10 +30,15 @@ class ExamsController extends Controller
         
         $lQuestions = \DB::table('uni_questions AS q')
                             ->where('subtopic_id', $subtopic)
-                            ->where('is_deleted', false)
-                            ->whereNotIn('id_question', $ids)
-                            ->take($limit)
-                            ->get();
+                            ->where('is_deleted', false);
+
+        if (count($ids) > 0) {
+            $lQuestions = $lQuestions->whereNotIn('id_question', $ids);
+        }
+                            
+        $lQuestions = $lQuestions->inRandomOrder()
+                                    ->take($limit)
+                                    ->get();
 
         foreach ($lQuestions as $question) {
             $correct = \DB::table('uni_answers AS a')
@@ -43,42 +50,62 @@ class ExamsController extends Controller
                                         ->where('question_id', $question->id_question)
                                         ->where('id_answer', '<>', $question->answer_id)
                                         ->where('is_deleted', false)
+                                        ->inRandomOrder()
                                         ->take($question->number_answers - 1)
                                         ->union($correct)
                                         ->inRandomOrder()
                                         ->get();
 
-            $question->feedback = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident laudantium amet est beatae temporibus? 
-                                    Nobis obcaecati ipsam consectetur at veritatis possimus ea saepe, autem cumque iste eos odit, accusamus adipisci!";
+            if ($question->answer_feedback == "") {
+                $question->answer_feedback = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident laudantium amet est beatae temporibus? 
+                                        Nobis obcaecati ipsam consectetur at veritatis possimus ea saepe, autem cumque iste eos odit, accusamus adipisci!";
+            }
+        }
+
+        if (count($lQuestions) == 0) {
+            return redirect()->back();
         }
 
         return view('uni.exams.exam')->with('lQuestions', $lQuestions)
                                     ->with('oTopic', $oTopic)
                                     ->with('oSubtopic', $oSubtopic)
+                                    ->with('idCourse', $oTopic->course_id)
+                                    ->with('sSuccessRoute', 'uni.courses.course') // course parameter
+                                    ->with('sFailRoute', 'uni.courses.course.play') // subtopic parameter
                                     ->with('sRecordRoute', 'exam.recordanswer');
     }
 
     public function recordAnswer(Request $request)
     {
-        $questionId = $request->id_question;
-        $answerId = $request->id_answer;
+        $questions = json_decode($request->questions);
 
-        $question = (object) [
-                                'id_question' => $questionId,
-                                'id_answer' => $answerId,
+        if ($questions != null && count($questions) > 0) {
+            session(['questions' => $questions]);
+        }
+
+        $config = \App\Utils\Configuration::getConfigurations();
+
+        $scale = $config->grades->scale;
+        $approved_grade = $config->grades->approved;
+
+        $nQuestions = count($questions);
+        $correctAnswers = 0;
+        foreach ($questions as $question) {
+            if ($question->is_correct) {
+                $correctAnswers++;
+            }
+        }
+
+        // nQuestions => scale
+        // correctAnswers => ?
+
+        $grade = ($correctAnswers * $scale / $nQuestions);
+
+        $response = (object) [
+                                'isApproved' => ($grade >= $approved_grade),
+                                'grade' => $grade
                             ];
 
-        if (session()->has('questions')) {
-            $questions = session('questions');
-        }
-        else {
-            $questions = [];
-        }
-
-        $questions[] = $question;
-
-        session(['questions' => $questions]);
-
-        return json_encode($questions);
+        return json_encode($response);
     }
 }

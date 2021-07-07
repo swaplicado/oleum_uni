@@ -1,5 +1,9 @@
 @extends('layouts.appuni')
 
+@section('css_section')
+    <link href="{{ asset('steps/bootstrap-steps.css') }}" rel="stylesheet">
+@endsection
+
 @include('uni.exams.sectionjs')
 
 @section('content')
@@ -19,7 +23,7 @@
             <div v-if="bFeedback" class="row">
                 <div class="col-1"></div>
                 <div class="col-10">
-                    <p><b>@{{ oQuestion.feedback }}</b></p>
+                    <p><b>@{{ oQuestion.answer_feedback }}</b></p>
                 </div>
             </div>
             <br v-if="bFeedback">
@@ -38,10 +42,31 @@
                     <button v-on:click="next()" class="btn btn-success">Siguiente</button>
                 </div>
             </div>
+            <div v-if="indexQuestion == (nQuestions - 1)" class="row">
+                <div class="col-10"></div>
+                <div class="col-2">
+                    <button v-on:click="recordExam()" class="btn btn-success">Terminar</button>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <hr>
+            <div class="row">
+                <ul class="steps">
+                    <li :class="step.class" v-for="step in lSteps">
+                      <div class="step-content">
+                        <span class="step-circle">@{{ step.circle }}</span>
+                        <span class="step-text">@{{ step.text }}</span>
+                      </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 @endsection
 
 @section('bottom_scripts')
-    <script type="text/javascript" src="{{ asset('myapp/js/uni/VueExam.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('myapp/js/uni/exam/Step.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('myapp/js/uni/exam/VueExam.js') }}"></script>
 @endsection
