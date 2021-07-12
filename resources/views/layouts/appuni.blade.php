@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Uni GH</title>
+    <title>Univ AETH</title>
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('boxicons/css/boxicons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('myapp/css/mycss.css') }}" rel="stylesheet">
@@ -363,13 +363,13 @@
         <div class="header_toggle"> <i class="bx bx-menu" id="header-toggle"></i> </div>
         <div class="row">
             <div class="header_img col">
-                <img src="https://i.imgur.com/hczKIze.jpg" alt="">
+                <a href="{{ route('profile') }}"><img src="{{ asset(\Auth::user()->profile_picture) }}" alt=""></a>
             </div>
             <div class="col">
                 @guest
                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                 @else
-                <button class="btn btn-light ms-3">{{ Auth::user()->username }}</button>
+                <a href="{{ route('profile') }}" class="btn btn-light ms-3">{{ Auth::user()->username }}</a>
                 @endguest
             </div>
         </div>
@@ -398,7 +398,16 @@
 
                     <div class="card-body">
                         @if (session('error'))
-                        <div class="alert alert-danger">{{ session('error') }}</div>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                         @endif
                         <div class="row">
                             <div class="col-md-12">

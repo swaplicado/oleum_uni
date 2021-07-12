@@ -28,6 +28,18 @@ Route::get('/401', function () {
 
 Route::middleware(['auth', 'menu'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/profile', 'ProfilesController@myProfile')->name('profile');
+    /**
+     * password
+     */
+    Route::get('/changepass', 'ProfilesController@changePassword')->name('change.pass');
+    Route::post('/changepass', 'ProfilesController@updatePassword')->name('update.pass');
+
+    /**
+     * Avatar
+     */
+    Route::get('/changeavatar', 'ProfilesController@changeAvatar')->name('change.avatar');
+    Route::post('/changeavatar', 'ProfilesController@updateAvatar')->name('update.avatar');
     
     // Controllers Within The "App\Http\Controllers\Adm" Namespace
     Route::prefix('mgr')->namespace('Mgr')->middleware('manager')->group( function () {

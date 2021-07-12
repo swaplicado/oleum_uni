@@ -14,7 +14,7 @@ class Menu {
             //Estándar
             case '1':
                 $lMenus = [
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
+                    (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
                     (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
                     (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia'],
                     (object) ['route' => route('home'), 'icon' => 'bx bxs-school', 'name' => 'Cursos'],
@@ -25,7 +25,7 @@ class Menu {
             //Administrador
             case '2':
                 $lMenus = [
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
+                    (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
                     (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
                     (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
                     (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión de áreas'],
