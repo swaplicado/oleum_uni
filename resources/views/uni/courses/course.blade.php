@@ -61,8 +61,11 @@
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                                         <div>
                                                             {{ $subtopic->subtopic }}
+                                                            {!! $subtopic->ended != null ? '<span style="color: green" class="success"><i class="bx bx-check"></i></span>' : '' !!}
                                                         </div>
-                                                        <a href="{{ route('uni.courses.course.play', $subtopic->id_subtopic) }}" class="btn btn-dark">Comenzar</a>
+                                                        @if ($subtopic->ended == null)
+                                                            <a href="{{ route('uni.courses.course.play', [$subtopic->id_subtopic, $takeGrouper]) }}" class="btn btn-dark">Comenzar</a>
+                                                        @endif
                                                     </li>
                                                 @endforeach
                                             </ul>

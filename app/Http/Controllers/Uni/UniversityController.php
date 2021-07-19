@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Uni;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 use App\Uni\KnowledgeArea;
 use App\Uni\Module;
 use App\Uni\Assignment;
 use App\Uni\Topic;
 use App\Uni\SubTopic;
+use App\Uni\TakingControl;
 
 class UniversityController extends Controller
 {
@@ -91,21 +93,45 @@ class UniversityController extends Controller
                 $topic->lSubtopics = SubTopic::where('topic_id', $topic->id_topic)
                                             ->where('is_deleted', false)
                                             ->get();
+
+                foreach ($topic->lSubtopics as $subTopic) {
+                    $controls = TakingControl::where('status_id', '=', config('csys.take_status.COM'))
+                                                ->where('element_type_id', config('csys.elem_type.SUBTOPIC'))
+                                                ->where('subtopic_n_id', $subTopic->id_subtopic)
+                                                ->where('student_id', \Auth::id())
+                                                ->whereColumn('grade', '>=', 'min_grade')
+                                                ->where('is_deleted', false)
+                                                ->where('is_evaluation', false)
+                                                ->orderBy('grade', 'DESC')
+                                                ->get();
+
+                    if (count($controls) > 0) {
+                        $subTopic->ended = $controls[0];
+                    }
+                    else {
+                        $subTopic->ended = null;
+                    }
+                }
             }
         }
         else {
             return;
         }
 
-        return view('uni.courses.course')->with('oCourse', $oCourse);
+        //Inserción o actualización de la tabla toma de curso
+        $controller = new TakesController();
+        $takeGrouper = $controller->takeCourse($oCourse->id_course, $oCourse->university_points);
+
+        return view('uni.courses.course')->with('oCourse', $oCourse)
+                                        ->with('takeGrouper', $takeGrouper);
     }
 
-    public function playSubtopic($subtopic = 0)
+    public function playSubtopic($subtopic = 0, $takeGrouper = 0)
     {
         $lContents = \DB::table('uni_contents_vs_elements AS ce')
                             ->join('uni_edu_contents AS c', 'ce.content_id', '=', 'c.id_content')
                             ->where('element_type_id', 5)
-                            ->where('element_id', $subtopic)
+                            ->where('subtopic_n_id', $subtopic)
                             ->orderBy('order', 'ASC')
                             ->get();
 
@@ -123,7 +149,19 @@ class UniversityController extends Controller
             $oContent->view_path = json_encode($path);
         }
 
+        if (count($lContents) > 0) {
+            //Inserción o actualización de la tabla de toma de contenido
+            $controller = new TakesController();
+
+            $idSubtopicTaken = $controller->takeSubtopic($takeGrouper, $oSubtopic);
+            $iContent = $controller->takeContent($idSubtopicTaken);
+        }
+
         return view('uni.courses.play.view')->with('lContents', $lContents)
-                                            ->with('oSubtopic', $oSubtopic);
+                                            ->with('iContent', $iContent)
+                                            ->with('oSubtopic', $oSubtopic)
+                                            ->with('takeGrouper', $takeGrouper)
+                                            ->with('idSubtopicTaken', $idSubtopicTaken)
+                                            ->with('registryContentRoute', 'take.content');
     }
 }

@@ -26,7 +26,7 @@ class CreateQuestions extends Migration
             $table->timestamps();
             
         //	$table->foreign('answer_id')->references('id_answer')->on('uni_answers')->onDelete('cascade');
-            $table->foreign('subtopic')->references('id_subtopic')->on('uni_subtopics')->onDelete('cascade');
+            $table->foreign('subtopic_id')->references('id_subtopic')->on('uni_subtopics')->onDelete('cascade');
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
         });	

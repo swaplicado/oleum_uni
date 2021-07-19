@@ -109,14 +109,20 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/modules/{area?}', 'UniversityController@indexModules')->name('uni.modules.index');
         Route::get('/courses/{module?}', 'UniversityController@indexCourses')->name('uni.courses.index');
         Route::get('/course/{course?}', 'UniversityController@viewCourse')->name('uni.courses.course');
-        Route::get('/course/play/{subtopic}', 'UniversityController@playSubtopic')->name('uni.courses.course.play');
-    
+        Route::get('/course/play/{subtopic}/{takecourse}', 'UniversityController@playSubtopic')->name('uni.courses.course.play');
+
+        /**
+         * Toma de curso
+         */
+        Route::post('/takecourse', 'TakesController@takeCourse')->name('take.course');
+        Route::post('/takecontent', 'TakesController@takeSubtopicContent')->name('take.content');
     
         /**
          * Exámenes
          */
-        Route::get('/exam/{subtopic}', 'ExamsController@exam')->name('exam.evaluate');
-        Route::post('/exam/recordanswer', 'ExamsController@recordAnswer')->name('exam.recordanswer');
+        Route::get('/exam/{subtopic}/{taken}/{grouper}', 'ExamsController@exam')->name('exam.evaluate');
+        Route::post('/exam/recordanswer', 'ExamsController@recordAnswer')->name('exam.record.answer');
+        Route::post('/exam/recordexam', 'ExamsController@recordExam')->name('exam.record.exam');
     });
 });
 

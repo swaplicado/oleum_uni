@@ -20,9 +20,9 @@ class ElementsContentsController extends Controller
     {
         $lElementContents = \DB::table('uni_contents_vs_elements AS ce')
                     ->join('uni_edu_contents AS c', 'ce.content_id', '=', 'c.id_content')
-                    ->join('uni_subtopics AS s', 'ce.element_id', '=', 's.id_subtopic')
+                    ->join('uni_subtopics AS s', 'ce.subtopic_n_id', '=', 's.id_subtopic')
                     ->where('ce.element_type_id', 5)
-                    ->where('ce.element_id', $idSubtopic)
+                    ->where('ce.subtopic_n_id', $idSubtopic)
                     ->get();
 
         $lContents = EduContent::where('is_deleted', false)
@@ -55,7 +55,7 @@ class ElementsContentsController extends Controller
         $elem->order = $request->order;
         $elem->content_id = $request->content;
         $elem->element_type_id = 5;
-        $elem->element_id = $request->subtopic;
+        $elem->subtopic_n_id = $request->subtopic;
         $elem->created_by_id = \Auth::id();
         $elem->updated_by_id = \Auth::id();
 
@@ -63,7 +63,7 @@ class ElementsContentsController extends Controller
 
         $lElementContents = \DB::table('uni_contents_vs_elements AS ce')
                     ->join('uni_edu_contents AS c', 'ce.content_id', '=', 'c.id_content')
-                    ->join('uni_subtopics AS s', 'ce.element_id', '=', 's.id_subtopic')
+                    ->join('uni_subtopics AS s', 'ce.subtopic_n_id', '=', 's.id_subtopic')
                     ->where('ce.element_type_id', 5)
                     ->where('ce.id', $elem->id)
                     ->take(1)

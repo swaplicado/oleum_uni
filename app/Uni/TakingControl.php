@@ -4,21 +4,21 @@ namespace App\Uni;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ElementContent extends Model
+class TakingControl extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'uni_contents_vs_elements';
+    protected $table = 'uni_taken_controls';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_taken_control';
 
     /**
      * The attributes that are mass assignable.
@@ -26,15 +26,21 @@ class ElementContent extends Model
      * @var array
      */
     protected $fillable = [
-        'order',
-        'content_id',
+        'grouper',
+        'dtt_take',
+        'dtt_end',
+        'min_grade',
+        'grade',
+        'university_points',
+        'num_questions',
+        'is_deleted',
         'element_type_id',
-        'knowledge_artea_n_id',
+        'knowledge_area_n_id',
         'module_n_id',
         'course_n_id',
         'topic_n_id',
         'subtopic_n_id',
-        'created_by_id',
-        'updated_by_id'
+        'student_id',
+        'status_id'
     ];
 }

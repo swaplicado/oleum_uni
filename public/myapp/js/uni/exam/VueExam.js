@@ -29,7 +29,6 @@ var app = new Vue({
         }
 
         this.setQuestion();
-        delete localStorage.questions;
     },
     methods: {
         next() {
@@ -80,25 +79,28 @@ var app = new Vue({
 
             this.recordAnswer(this.oQuestion.id_question, idAnswer, isCorrect);
         },
-        async recordAnswer(idQuestion, idAnswer, isCorrect) {
-            let questions = JSON.parse(localStorage.getItem('questions'));
+        recordAnswer(idQuestion, idAnswer, isCorrect) {
+            let question = { id_question: idQuestion, id_answer: idAnswer, is_correct: isCorrect, take_evaluation: this.oData.takeEvaluation };
 
-            if (questions == undefined || questions.length == 0) {
-                questions = [];
-            }
-
-            let question = { id_question: idQuestion, id_answer: idAnswer, is_correct: isCorrect };
-
-            questions.push(question);
-
-            localStorage.setItem('questions', JSON.stringify(questions));
+            axios
+                .post(this.oData.sRecordRoute, {
+                    'question': JSON.stringify(question)
+                })
+                .then(response => {
+                    let res = response.data;
+                })
+                .catch(err => {
+                    SGui.showError(err);
+                });
         },
-        async recordExam() {
+        recordExam() {
             SGui.showWaiting(3000);
 
-            await axios
-                .post(this.oData.sRecordRoute, {
-                    'questions': localStorage.getItem('questions')
+            axios
+                .post(this.oData.sRecordExam, {
+                    'number_questions': this.nQuestions,
+                    'take_evaluation': this.oData.takeEvaluation,
+                    'take_subtopic': this.oData.idSubtopicTaken
                 })
                 .then(response => {
                     let res = response.data;

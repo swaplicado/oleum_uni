@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name', 100);
             $table->string('names', 100);
             $table->string('full_name', 150);
+            $table->string('profile_picture', 150);
             $table->boolean('is_active');
             $table->boolean('is_deleted');
             $table->integer('external_id')->unsigned();

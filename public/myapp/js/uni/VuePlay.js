@@ -10,34 +10,52 @@ var app = new Vue({
         sFileName: ""
     },
     mounted() {
-        this.setContent();
+        this.setContent(this.oData.iContent);
     },
     methods: {
-        setContent() {
+        setContent(idContent = 0) {
+            if (idContent > 0) {
+                let index = 0;
+                for (const content of this.oData.lContents) {
+                    if (content.id_content == idContent) {
+                        this.indexContent = index;
+                        break;
+                    }
+                    index++;
+                }
+            }
+
             this.oContent = this.oData.lContents[this.indexContent];
-            console.log(this.oContent);
 
             this.fileType = this.oContent.file_type;
             this.fileUrl = JSON.parse(this.oContent.view_path);
 
-            switch (this.fileType) {
-                case 'video':
-                    let video = document.getElementById('idVideo');
-                    video.load();
-                    break;
-                case 'text':
-                    this.sText = this.fileUrl;
-                    break;
-                case 'audio':
-                    let audio = document.getElementById('idAudio');
-                    audio.load();
-                    break;
-                case 'file':
-                    this.sFileName = this.oContent.file_name;
-                    break;
+            try {
+                switch (this.fileType) {
+                    case 'video':
+                        let video = document.getElementById('idVideo');
+                        video.load();
+                        break;
+                    case 'text':
+                        this.sText = this.fileUrl;
+                        break;
+                    case 'audio':
+                        let audio = document.getElementById('idAudio');
+                        audio.load();
+                        break;
+                    case 'file':
+                        this.sFileName = this.oContent.file_name;
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+            if (idContent == 0) {
+                this.registryContent();
             }
         },
         next() {
@@ -47,6 +65,22 @@ var app = new Vue({
         previous() {
             this.indexContent--;
             this.setContent();
+        },
+        registryContent() {
+            /**
+             * Petición al Controlador
+             */
+            axios.post(this.oData.registryContentRoute, {
+                    'content': this.oContent.id_content,
+                    'take_control': this.oData.idSubtopicTaken
+                })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                });
         }
     },
 })
