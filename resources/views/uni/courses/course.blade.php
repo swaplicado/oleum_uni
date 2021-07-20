@@ -29,7 +29,7 @@
                     </div>
                     <div class="row" style="background-color: #59359a; border-radius: 15%">
                         <div class="col-4" style="text-align: center">
-                            <i class='bx bxs-time-five bx-lg bx-flashing' ></i>
+                            <i class='bx bxs-time-five bx-flashing' ></i>
                         </div>
                         <div class="col-8">
                             <b>8 horas de contenido</b>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="row" style="background-color: #59359a; border-radius: 15%">
                         <div class="col-4" style="text-align: center">
-                            <i class='bx bxs-timer bx-lg bx-flashing'></i>
+                            <i class='bx bxs-timer bx-flashing'></i>
                         </div>
                         <div class="col-8">
                             <b>1 hora de evaluación</b>
@@ -51,6 +51,7 @@
                                 <h2 class="accordion-header" id="{{ 'heading'.$topic->id_topic }}">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#{{ 'collapse'.$topic->id_topic }}" aria-expanded="true" aria-controls="collapseOne">
                                     {{ $topic->topic }}
+                                    {!! $topic->ended != null ? '<span style="color: green" class="success"><i class="bx bx-check"></i></span>' : '' !!}
                                     </button>
                                 </h2>
                                 <div id="{{ 'collapse'.$topic->id_topic }}" class="accordion-collapse collapse show" aria-labelledby="{{ 'heading'.$topic->id_topic }}" data-bs-parent="#accordionThemes">

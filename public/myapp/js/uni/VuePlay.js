@@ -66,13 +66,14 @@ var app = new Vue({
             this.indexContent--;
             this.setContent();
         },
-        registryContent() {
+        registryContent(bClose = false) {
             /**
              * Petición al Controlador
              */
             axios.post(this.oData.registryContentRoute, {
                     'content': this.oContent.id_content,
-                    'take_control': this.oData.idSubtopicTaken
+                    'take_control': this.oData.idSubtopicTaken,
+                    'is_close': bClose,
                 })
                 .then(response => {
                     console.log(response.data);

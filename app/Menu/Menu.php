@@ -65,7 +65,7 @@ class Menu {
 
     private static function createMenuElement($route, $icon, $name)
     {
-        return '<a href="'.$route.'" class="nav_link">
+        return '<a href="'.$route.'" class="nav_link" title="'.$name.'">
                     <i class="'.$icon.' nav_icon"></i> 
                     <span class="nav_name">'.$name.'</span>
                 </a>';

@@ -19,10 +19,11 @@ class CreateSysTakenStatus extends Migration
             $table->string('code', 5)->unique();
         });	
             
-        DB::table('sys_take_status')->insert([	
+        DB::table('sys_take_status')->insert([
             ['id_status' => '5','status' => 'Cursando','code' => 'CUR'],
             ['id_status' => '6','status' => 'Evaluando','code' => 'EVA'],
             ['id_status' => '7','status' => 'Completado','code' => 'COM'],
+            ['id_status' => '8','status' => 'Cancelado','code' => 'CAN'],
         ]);	
     }
 

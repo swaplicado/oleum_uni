@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Utils\TakeUtils;
 
 class HomeController extends Controller
 {
@@ -24,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $title = "¡Bienvenido ".(\Auth::user()->names)."!";
+        $title = "¡Bienvenid@ ".(\Auth::user()->names)."!";
 
         $lAssignments = \DB::table('uni_assignments AS a')
                             ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
@@ -33,9 +34,14 @@ class HomeController extends Controller
                             ->where('a.is_over', false)
                             ->get();
 
-        
+        $lCourses = TakeUtils::getTakingCourses(\Auth::id());
+
+        foreach ($lCourses as $course) {
+            $course->completed_percent = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id());
+        }
 
         return view('home')->with('title', $title)
+                            ->with('lCourses', $lCourses)
                             ->with('lAssignments', $lAssignments);
     }
 }

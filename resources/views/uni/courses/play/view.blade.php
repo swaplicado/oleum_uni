@@ -7,7 +7,7 @@
 @section('content')
     @section('content_title', 'Contenido '.$oSubtopic->subtopic)
     @section('right_header')
-        <a href="{{ route('exam.evaluate', [$oSubtopic->id_subtopic, $idSubtopicTaken, $takeGrouper]) }}" class="btn btn-info">Iniciar Evaluación <i class='bx bxs-spreadsheet'></i></a>
+        <a href="{{ route('exam.evaluate', [$oSubtopic->id_subtopic, $idSubtopicTaken, $takeGrouper]) }}" v-on:click="registryContent(true); return true;" class="btn btn-info">Iniciar Evaluación <i class='bx bxs-spreadsheet'></i></a>
     @endsection
     <div class="row" id="playApp">
         <div class="col-12">          

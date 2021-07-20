@@ -6,11 +6,17 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
+use App\Utils\TakeUtils;
+
 use App\Uni\TakingControl;
 use App\Uni\TakingContent;
 use App\Uni\TakingSubTopicQuestion;
+use App\Uni\Assignment;
+use App\Uni\KnowledgeArea;
 use App\Uni\Module;
 use App\Uni\Course;
+use App\Uni\Topic;
+use App\Uni\SubTopic;
 
 class TakesController extends Controller
 {
@@ -43,6 +49,7 @@ class TakesController extends Controller
             $oTakeArea->grade = 0;
             $oTakeArea->university_points = 0;
             $oTakeArea->num_questions = 0;
+            $oTakeArea->is_evaluation = false;
             $oTakeArea->is_deleted = false;
             $oTakeArea->element_type_id = config('csys.elem_type.AREA');
             $oTakeArea->knowledge_area_n_id = $oModule->knowledge_area_id;
@@ -128,6 +135,7 @@ class TakesController extends Controller
             $oTakeTopic->grade = 0;
             $oTakeTopic->university_points = 0;
             $oTakeTopic->num_questions = 0;
+            $oTakeTopic->is_evaluation = false;
             $oTakeTopic->is_deleted = false;
             $oTakeTopic->element_type_id = config('csys.elem_type.TOPIC');
             $oTakeTopic->knowledge_area_n_id = null;
@@ -152,6 +160,7 @@ class TakesController extends Controller
         $oTakeSubtopic->grade = 0;
         $oTakeSubtopic->university_points = 0;
         $oTakeSubtopic->num_questions = 0;
+        $oTakeSubtopic->is_evaluation = false;
         $oTakeSubtopic->is_deleted = false;
         $oTakeSubtopic->element_type_id = config('csys.elem_type.SUBTOPIC');
         $oTakeSubtopic->knowledge_area_n_id = null;
@@ -169,10 +178,10 @@ class TakesController extends Controller
 
     public function takeSubtopicContent(Request $request)
     {
-        return $this->takeContent($request->take_control, $request->content);
+        return $this->takeContent($request->take_control, $request->is_close, $request->content);
     }
 
-    public function takeContent($takeControl, $content = 0)
+    public function takeContent($takeControl, $isClose, $content = 0)
     {
         $lastContentTake = \DB::table('uni_taken_controls AS tc')
                                 ->join('uni_taken_contents AS tco', 'tc.id_taken_control', '=', 'tco.take_control_id')
@@ -195,6 +204,10 @@ class TakesController extends Controller
             $oLastTake->save();
         }
         else if ($content == 0) {
+            return 0;
+        }
+
+        if ($isClose) {
             return 0;
         }
 
@@ -240,6 +253,56 @@ class TakesController extends Controller
             $oTakenQuestion->answer_n_id = null;
 
             $oTakenQuestion->save();
+        }
+    }
+
+    public function verifyCompleted($oTakeSubtopic)
+    {
+        $oSubtopic = SubTopic::find($oTakeSubtopic->subtopic_n_id);
+
+        $lSubtopics = \DB::table('uni_subtopics AS sub')
+                            ->where('topic_id', $oSubtopic->topic_id)
+                            ->where('is_deleted', false)
+                            ->get();
+
+        $subIds = $lSubtopics->pluck('id_subtopic');
+        
+        $takes = \DB::table('uni_taken_controls AS tc')
+                            ->where('grouper', $oTakeSubtopic->grouper)
+                            ->where('is_deleted', false)
+                            ->where('is_evaluation', false)
+                            ->where('student_id', \Auth::id())
+                            ->where('status_id', '=', config('csys.take_status.COM'))
+                            ->whereColumn('grade', '>=', 'min_grade')
+                            ->where('element_type_id', config('csys.elem_type.SUBTOPIC'))
+                            ->whereIn('subtopic_n_id', $subIds)
+                            ->get();
+
+        if (count($takes) == count($lSubtopics)) {
+            $sum = 0;
+            foreach ($takes as $take) {
+                $sum += $take->grade;
+            }
+
+            $grade = $sum / count($takes);
+
+            $topicTake = \DB::table('uni_taken_controls AS tc')
+                            ->where('grouper', $oTakeSubtopic->grouper)
+                            ->where('is_deleted', false)
+                            ->where('is_evaluation', false)
+                            ->where('student_id', \Auth::id())
+                            ->where('element_type_id', config('csys.elem_type.TOPIC'))
+                            ->where('topic_n_id', $oSubtopic->topic_id)
+                            ->take(1)
+                            ->get();
+            
+            TakingControl::where('id_taken_control', $topicTake[0]->id_taken_control)
+                            ->update([
+                                        'dtt_end' => Carbon::now()->toDateTimeString(),
+                                        'status_id' => (config('csys.take_status.COM')),
+                                        'grade' => $grade,
+                                        'min_grade' => $oTakeSubtopic->min_grade,
+                                    ]);
         }
     }
 }

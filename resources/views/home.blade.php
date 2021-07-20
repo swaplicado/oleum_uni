@@ -55,8 +55,9 @@
             <div class="row">
               @foreach($lAssignments as $ka)
                 <div class="col-3">
+                  <a href="{{ route('uni.modules.index', $ka->id_knowledge_area) }}">
                     <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
-                      <div class="card-header"><a href="{{ route('uni.modules.index', $ka->id_knowledge_area) }}">{{ $ka->knowledge_area }}</a></div>
+                      <div class="card-header">{{ $ka->knowledge_area }}</div>
                       <div class="card-body">
                         <h5 class="card-title">{{ $ka->knowledge_area }}</h5>
                         <p class="card-text">{{ $ka->description }}</p>
@@ -64,7 +65,8 @@
                       <div class="card-footer text-muted">
                         {{ "Termina ".(\Carbon\Carbon::parse($ka->dt_end)->diffForHumans()) }}
                       </div>
-                  </div>
+                    </div>
+                  </a>
                 </div>
               @endforeach
             </div>
@@ -75,41 +77,25 @@
               </div>
             </div>
             <div class="row">
+              @foreach ($lCourses as $course)
                 <div class="col-3">
-                  <div class="card border-success mb-3" style="max-width: 540px;">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img src="{{ asset('img/curso-capacitacion-snb.png') }}" class="img-fluid rounded-start" alt="">
+                  <a href="{{ route('uni.courses.course', $course->id_course) }}">
+                    <div class="card border-success">
+                      <img src="{{ asset('img/curso-capacitacion-snb.png') }}" class="card-img-top" alt="">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ $course->course }}</h5>
+                        <p class="card-text">{{ $course->description }}</p>
+                        <p class="card-text"><small class="text-muted">{{ "Comenzado ".(\Carbon\Carbon::parse($course->dtt_take)->diffForHumans()) }}</small></p>
                       </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                      <div class="card-footer text-muted">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style="{{ "width: ".$course->completed_percent."%" }}" aria-valuenow="{{ $course->completed_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                       </div>
                     </div>
-                    <div class="card-footer text-muted">
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                    </div>
-                  </div>
+                  </a>
                 </div>
-                <div class="col-3">
-                  <div class="card border-success">
-                    <img src="{{ asset('img/curso-capacitacion-snb.png') }}" class="card-img-top" alt="">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    </div>
-                    <div class="card-footer text-muted">
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              @endforeach
             </div>
         </div>
     </div>

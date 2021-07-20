@@ -9,11 +9,16 @@ return [
                         'PUB' => 3
                     ],
 
+    'sys_sequences' => [
+                        'SEQUENTIAL' => 1, 
+                        'SHUFFLE' => 2,
+                    ],
+
     'take_status' => [
             'CUR' => 5,
             'EVA' => 6,
             'COM' => 7,
-            'VEN' => 8
+            'CAN' => 8
     ],
 
     'elem_type' => [

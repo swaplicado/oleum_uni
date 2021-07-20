@@ -217,6 +217,9 @@ class ExamsController extends Controller
             $oTakeEval->status_id = config('csys.take_status.COM');
             $oTakeEval->save();
 
+            $controller = new TakesController();
+            $takeEvaluation = $controller->verifyCompleted($oTakeSub);
+
             \DB::commit();
         }
         catch (\Throwable $th) {

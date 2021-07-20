@@ -18,7 +18,7 @@ class ProfilesController extends Controller
 
     public function updatePassword(Request $request)
     {
-        if (!(\Hash::check($request->get('current_password'), \Auth::user()->password))) {
+        if (! (\Hash::check($request->get('current_password'), \Auth::user()->password))) {
             // The passwords matches
             return redirect()->back()->with("error","La contraseña actual no coincide con la contraseña que introdujiste. Por favor intenta de nuevo.");
         }

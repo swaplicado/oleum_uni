@@ -7,8 +7,7 @@
         <div class="nav_list" style="width: 100%; height: 600px; overflow-y: auto;">
             {!! session()->has('menu') ? session('menu') : "" !!}
             @auth
-                <a class="nav_link" onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
+                <a class="nav_link" title="Salir" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="bx bx-log-out nav_icon"></i>
                     <span class="nav_name">Salir</span>
                 </a>

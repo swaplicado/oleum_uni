@@ -24,13 +24,13 @@
                         <div class="row">
                             <div class="col-9"></div>
                             <div class="col-3">
-                                <a :href="'{{ route('uni.courses.course') }}' + '/' + course.id_course" class="btn btn-success">Ver Curso</a>
+                                <a :href="'{{ route('uni.courses.course') }}' + '/' + course.id_course" class="btn btn-success">Iniciar Curso</a>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-transparent border-warning">
                         <div class="progress">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-success" role="progressbar" :style="'width: ' + course.percent_completed + '%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>

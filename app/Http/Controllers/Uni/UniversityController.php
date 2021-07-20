@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
+use App\Utils\TakeUtils;
+
 use App\Uni\KnowledgeArea;
 use App\Uni\Module;
 use App\Uni\Assignment;
@@ -22,6 +24,8 @@ class UniversityController extends Controller
                             ->where('a.student_id', \Auth::id())
                             ->where('a.is_deleted', false)
                             ->where('a.is_over', false)
+                            ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                            ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                             ->get();
 
         return view('uni.areas.index')->with('lAssignments', $lAssignments)
@@ -39,6 +43,8 @@ class UniversityController extends Controller
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $area)
+                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
 
         $oKa = KnowledgeArea::find($area);
@@ -59,9 +65,15 @@ class UniversityController extends Controller
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('c.module_id', $module)
+                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
 
         $oModule = Module::find($module);
+
+        foreach ($lCourses as $course) {
+            $course->percent_completed = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id());
+        }
 
         return view('uni.courses.index')->with('lCourses', $lCourses)
                                         ->with('module', $oModule->module);
@@ -79,6 +91,8 @@ class UniversityController extends Controller
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('c.id_course', $course)
+                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->take(1)
                         ->get();
 
@@ -93,6 +107,22 @@ class UniversityController extends Controller
                 $topic->lSubtopics = SubTopic::where('topic_id', $topic->id_topic)
                                             ->where('is_deleted', false)
                                             ->get();
+
+                $topic->ended = null;
+
+                $topicCtrls = TakingControl::where('status_id', '=', config('csys.take_status.COM'))
+                                                ->where('element_type_id', config('csys.elem_type.TOPIC'))
+                                                ->where('topic_n_id', $topic->id_topic)
+                                                ->where('student_id', \Auth::id())
+                                                ->whereColumn('grade', '>=', 'min_grade')
+                                                ->where('is_deleted', false)
+                                                ->where('is_evaluation', false)
+                                                ->orderBy('grade', 'DESC')
+                                                ->get();
+
+                if (count($topicCtrls) > 0) {
+                    $topic->ended = $topicCtrls;
+                }
 
                 foreach ($topic->lSubtopics as $subTopic) {
                     $controls = TakingControl::where('status_id', '=', config('csys.take_status.COM'))
@@ -128,6 +158,10 @@ class UniversityController extends Controller
 
     public function playSubtopic($subtopic = 0, $takeGrouper = 0)
     {
+        if (! TakeUtils::validateSubtopicTake($subtopic)) {
+            return redirect()->back()->withError('No puedes iniciar este subtema sin antes terminar el anterior.');
+        }
+
         $lContents = \DB::table('uni_contents_vs_elements AS ce')
                             ->join('uni_edu_contents AS c', 'ce.content_id', '=', 'c.id_content')
                             ->where('element_type_id', 5)
@@ -154,7 +188,7 @@ class UniversityController extends Controller
             $controller = new TakesController();
 
             $idSubtopicTaken = $controller->takeSubtopic($takeGrouper, $oSubtopic);
-            $iContent = $controller->takeContent($idSubtopicTaken);
+            $iContent = $controller->takeContent($idSubtopicTaken, false);
         }
 
         return view('uni.courses.play.view')->with('lContents', $lContents)
