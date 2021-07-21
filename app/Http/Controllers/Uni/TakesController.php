@@ -20,12 +20,12 @@ use App\Uni\SubTopic;
 
 class TakesController extends Controller
 {
-    public function takeCourse($course, $points)
+    public function takeCourse($course, $points, $idAssignment)
     {
-        return $this->processTake($course, $points);
+        return $this->processTake($course, $points, $idAssignment);
     }
 
-    private function processTake($idCourse, $points)
+    private function processTake($idCourse, $points, $idAssignment)
     {
         $oCourse = Course::find($idCourse);
         $oModule = Module::find($oCourse->module_id);
@@ -34,6 +34,7 @@ class TakesController extends Controller
                                 ->where('element_type_id', config('csys.elem_type.AREA'))
                                 ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
                                 ->where('student_id', \Auth::id())
+                                ->where('assignment_id', $idAssignment)
                                 ->orderBy('dtt_take', 'DESC')
                                 ->get();
 
@@ -59,6 +60,7 @@ class TakesController extends Controller
             $oTakeArea->subtopic_n_id = null;
             $oTakeArea->student_id = \Auth::id();
             $oTakeArea->status_id = config('csys.take_status.CUR');
+            $oTakeArea->assignment_id = $idAssignment;
 
             // Crear toma de modulo con agrupador de área
             $oTakeModule = clone $oTakeArea;
@@ -98,13 +100,14 @@ class TakesController extends Controller
         }
     }
 
-    public function takeSubtopic($takeGrouper, $oSubtopic)
+    public function takeSubtopic($takeGrouper, $oSubtopic, $idAssignment)
     {
         // Validar si ya existe la toma de subtema
         $lTake = TakingControl::where('status_id', '<=', config('csys.take_status.EVA'))
                                 ->where('element_type_id', config('csys.elem_type.SUBTOPIC'))
                                 ->where('subtopic_n_id', $oSubtopic->id_subtopic)
                                 ->where('grouper', $takeGrouper)
+                                ->where('assignment_id', $idAssignment)
                                 ->where('is_deleted', false)
                                 ->where('is_evaluation', false)
                                 ->where('student_id', \Auth::id())
@@ -120,6 +123,7 @@ class TakesController extends Controller
                                 ->where('element_type_id', config('csys.elem_type.TOPIC'))
                                 ->where('topic_n_id', $oSubtopic->topic_id)
                                 ->where('grouper', $takeGrouper)
+                                ->where('assignment_id', $idAssignment)
                                 ->where('student_id', \Auth::id())
                                 ->orderBy('dtt_take', 'DESC')
                                 ->get();
@@ -145,6 +149,7 @@ class TakesController extends Controller
             $oTakeTopic->subtopic_n_id = null;
             $oTakeTopic->student_id = \Auth::id();
             $oTakeTopic->status_id = config('csys.take_status.CUR');
+            $oTakeTopic->assignment_id = $idAssignment;
 
             $oTakeTopic->save();
         }
@@ -170,6 +175,7 @@ class TakesController extends Controller
         $oTakeSubtopic->subtopic_n_id = $oSubtopic->id_subtopic;
         $oTakeSubtopic->student_id = \Auth::id();
         $oTakeSubtopic->status_id = config('csys.take_status.CUR');
+        $oTakeSubtopic->assignment_id = $idAssignment;
 
         $oTakeSubtopic->save();
 
@@ -238,7 +244,7 @@ class TakesController extends Controller
 
         $oTakeControlEval->save();
 
-        return $oTakeControlEval->id_taken_control;
+        return [$oTakeControlEval->id_taken_control, $oTakeControlEval->assignment_id];
     }
 
     public function saveQuestions($takeEvaluation, $lQuestions)
@@ -269,6 +275,7 @@ class TakesController extends Controller
         
         $takes = \DB::table('uni_taken_controls AS tc')
                             ->where('grouper', $oTakeSubtopic->grouper)
+                            ->where('assignment_id', $oTakeSubtopic->assignment_id)
                             ->where('is_deleted', false)
                             ->where('is_evaluation', false)
                             ->where('student_id', \Auth::id())
@@ -288,6 +295,7 @@ class TakesController extends Controller
 
             $topicTake = \DB::table('uni_taken_controls AS tc')
                             ->where('grouper', $oTakeSubtopic->grouper)
+                            ->where('assignment_id', $oTakeSubtopic->assignment_id)
                             ->where('is_deleted', false)
                             ->where('is_evaluation', false)
                             ->where('student_id', \Auth::id())

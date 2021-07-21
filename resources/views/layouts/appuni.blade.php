@@ -386,7 +386,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-9">
-                                <h2><b style="color: green">@yield('content_title', 'Unknow')</b></h2>
+                                <h2><b style="color: #426BC2">@yield('content_title', 'Unknow')</b></h2>
                             </div>
                             <div class="col-3">
                                 <div style="float: right;">

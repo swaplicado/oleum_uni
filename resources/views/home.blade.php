@@ -49,7 +49,7 @@
             <hr>
             <div class="row">
               <div class="col-12">
-                <a href="{{ route('areas.index') }}"><h2 style="color: rgb(1, 95, 1)">Áreas de competencia...</h2></a>
+                <a href="{{ route('areas.index') }}"><h2 style="color: #426BC2">Áreas de competencia...</h2></a>
               </div>
             </div>
             <div class="row">
@@ -73,7 +73,7 @@
             <hr>
             <div class="row">
               <div class="col-12">
-                <h2 style="color: rgb(1, 95, 1)">Cursando actualmente...</h2>
+                <h2 style="color: #426BC2">Cursando actualmente...</h2>
               </div>
             </div>
             <div class="row">

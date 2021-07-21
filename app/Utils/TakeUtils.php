@@ -32,6 +32,7 @@ class TakeUtils {
                                         'tc.grade',
                                         'tc.university_points',
                                         'tc.status_id',
+                                        'tc.assignment_id',
                                         'co.id_course',
                                         'co.course',
                                         'co.course_key',
@@ -39,7 +40,6 @@ class TakeUtils {
                                         'co.description',
                                         'co.objectives',
                                         'co.completion_days',
-                                        'co.university_points',
                                         'co.is_deleted',
                                         'co.module_id',
                                         'co.elem_status_id',
@@ -59,7 +59,7 @@ class TakeUtils {
         return $lCourses;
     }
 
-    public static function validateSubtopicTake($idSubtopic)
+    public static function validateSubtopicTake($idSubtopic, $idAssignment)
     {
         $oSubTopic = SubTopic::find($idSubtopic);
         $oTopic = Topic::find($oSubTopic->topic_id);
@@ -80,7 +80,7 @@ class TakeUtils {
 
         $index = 0;
         while ($subtopics[$index]->id_subtopic != $idSubtopic) {
-            if (TakeUtils::isSubtopicApproved($subtopics[$index]->id_subtopic, \Auth::id())) {
+            if (TakeUtils::isSubtopicApproved($subtopics[$index]->id_subtopic, \Auth::id(), $idAssignment)) {
                 $index++;
             }
             else {
@@ -91,10 +91,11 @@ class TakeUtils {
         return true;
     }
 
-    public static function isSubtopicApproved($idSubtopic, $student)
+    public static function isSubtopicApproved($idSubtopic, $student, $idAssignment, $withGrade = false)
     {
         $takes = \DB::table('uni_taken_controls AS tc')
                     ->where('tc.student_id', $student)
+                    ->where('tc.assignment_id', $idAssignment)
                     ->where('tc.element_type_id', config('csys.elem_type.SUBTOPIC'))
                     ->where('tc.subtopic_n_id', $idSubtopic)
                     ->where('tc.is_deleted', false)
@@ -103,16 +104,23 @@ class TakeUtils {
                     ->get();
 
         if (count($takes) == 0) {
-            return false;
+            return $withGrade ? [false, null] : false;
         }
 
-        return $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        if ($withGrade) {
+            return [$approved, $takes[0]->grade];
+        }
+
+        return $approved;
     }
 
-    public static function isTopicApproved($idTopic, $student)
+    public static function isTopicApproved($idTopic, $student, $idAssignment, $withGrade = false)
     {
         $takes = \DB::table('uni_taken_controls AS tc')
                     ->where('tc.student_id', $student)
+                    ->where('tc.assignment_id', $idAssignment)
                     ->where('tc.element_type_id', config('csys.elem_type.TOPIC'))
                     ->where('tc.topic_n_id', $idTopic)
                     ->where('tc.is_deleted', false)
@@ -121,13 +129,44 @@ class TakeUtils {
                     ->get();
 
         if (count($takes) == 0) {
-            return false;
+            return $withGrade ? [false, null] : false;
         }
 
-        return $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        if ($withGrade) {
+            return [$approved, $takes[0]->grade];
+        }
+
+        return $approved;
     }
 
-    public static function getCoursePercentCompleted($iCourse, $student)
+    public static function isCourseApproved($idCourse, $student, $idAssignment, $withGrade = false)
+    {
+        $takes = \DB::table('uni_taken_controls AS tc')
+                    ->where('tc.student_id', $student)
+                    ->where('tc.assignment_id', $idAssignment)
+                    ->where('tc.element_type_id', config('csys.elem_type.COURSE'))
+                    ->where('tc.course_n_id', $idCourse)
+                    ->where('tc.is_deleted', false)
+                    ->where('tc.is_evaluation', false)
+                    ->orderBy('id_taken_control', 'DESC')
+                    ->get();
+
+        if (count($takes) == 0) {
+            return $withGrade ? [false, null] : false;
+        }
+
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        if ($withGrade) {
+            return [$approved, $takes[0]->grade];
+        }
+
+        return $approved;
+    }
+
+    public static function getCoursePercentCompleted($iCourse, $student, $idAssignment)
     {
         $subtopics = \DB::table('uni_topics AS top')
                         ->join('uni_subtopics AS sub', 'top.id_topic', '=', 'sub.topic_id')
@@ -138,7 +177,7 @@ class TakeUtils {
 
         $approved = 0;
         foreach ($subtopics as $idSub) {
-            if (TakeUtils::isSubtopicApproved($idSub, $student)) {
+            if (TakeUtils::isSubtopicApproved($idSub, $student, $idAssignment)) {
                 $approved++;
             }
         }

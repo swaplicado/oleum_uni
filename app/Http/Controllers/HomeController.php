@@ -37,7 +37,7 @@ class HomeController extends Controller
         $lCourses = TakeUtils::getTakingCourses(\Auth::id());
 
         foreach ($lCourses as $course) {
-            $course->completed_percent = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id());
+            $course->completed_percent = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->assignment_id);
         }
 
         return view('home')->with('title', $title)

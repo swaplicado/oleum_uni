@@ -55,7 +55,7 @@ class ExamsController extends Controller
             //Registrar toma de evaluación y preguntas
             $controller = new TakesController();
             $takeEvaluation = $controller->takeEvaluation($idSubtopicTaken);
-            $controller->saveQuestions($takeEvaluation, $lQuestions);
+            $controller->saveQuestions($takeEvaluation[0], $lQuestions);
 
             \DB::commit();
         }
@@ -68,8 +68,10 @@ class ExamsController extends Controller
                                         ->with('oTopic', $oTopic)
                                         ->with('oSubtopic', $oSubtopic)
                                         ->with('idSubtopicTaken', $idSubtopicTaken)
-                                        ->with('takeEvaluation', $takeEvaluation)
+                                        ->with('takenGrouper', $takenGrouper)
+                                        ->with('takeEvaluation', $takeEvaluation[0])
                                         ->with('idCourse', $oTopic->course_id)
+                                        ->with('idAssignment', $takeEvaluation[1])
                                         ->with('sSuccessRoute', 'uni.courses.course') // course parameter
                                         ->with('sFailRoute', 'uni.courses.course.play') // subtopic parameter
                                         ->with('sRecordRoute', 'exam.record.answer')

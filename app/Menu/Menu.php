@@ -17,8 +17,8 @@ class Menu {
                     (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
                     (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
                     (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia'],
-                    (object) ['route' => route('home'), 'icon' => 'bx bxs-school', 'name' => 'Cursos'],
                     (object) ['route' => route('home'), 'icon' => 'bx bx-coin-stack', 'name' => 'Mis recompensas'],
+                    (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                 ];
                 break;
 
@@ -30,7 +30,9 @@ class Menu {
                     (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
                     (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión de áreas'],
                     (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
-                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia']
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia'],
+                    (object) ['route' => route('home'), 'icon' => 'bx bx-coin-stack', 'name' => 'Mis recompensas'],
+                    (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                 ];
                 break;
 

@@ -5,11 +5,13 @@
             this.oSubtopic = <?php echo json_encode( $oSubtopic ) ?>;
             this.oTopic = <?php echo json_encode( $oTopic ) ?>;
             this.idSubtopicTaken = <?php echo json_encode( $idSubtopicTaken ) ?>;
+            this.takenGrouper = <?php echo json_encode( $takenGrouper ) ?>;
+            this.idAssignment = <?php echo json_encode( $idAssignment ) ?>;
             this.takeEvaluation = <?php echo json_encode( $takeEvaluation ) ?>;
             this.sRecordRoute = <?php echo json_encode( route($sRecordRoute) ) ?>;
             this.sRecordExam = <?php echo json_encode( route($sRecordExam) ) ?>;
             this.sSuccessRoute = <?php echo json_encode( route($sSuccessRoute, $idCourse) ) ?>;
-            this.sFailRoute = <?php echo json_encode( route($sFailRoute, [$oSubtopic->id_subtopic, $idSubtopicTaken]) ) ?>;
+            this.sFailRoute = <?php echo json_encode( route($sFailRoute, [$oSubtopic->id_subtopic, $takenGrouper, $idAssignment]) ) ?>;
         }
         
         var oServerData = new GlobalData();

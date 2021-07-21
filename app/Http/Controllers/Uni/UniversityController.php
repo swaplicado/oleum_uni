@@ -59,7 +59,7 @@ class UniversityController extends Controller
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
-                        ->select('c.*')
+                        ->select('c.*', 'a.id_assignment')
                         ->where('a.is_deleted', false)
                         ->where('a.is_over', false)
                         ->where('a.student_id', \Auth::id())
@@ -72,7 +72,7 @@ class UniversityController extends Controller
         $oModule = Module::find($module);
 
         foreach ($lCourses as $course) {
-            $course->percent_completed = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id());
+            $course->percent_completed = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->id_assignment);
         }
 
         return view('uni.courses.index')->with('lCourses', $lCourses)
@@ -85,7 +85,7 @@ class UniversityController extends Controller
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
-                        ->select('c.*')
+                        ->select('c.*', 'a.id_assignment')
                         ->where('a.is_deleted', false)
                         ->where('a.is_over', false)
                         ->where('a.student_id', \Auth::id())
@@ -117,6 +117,7 @@ class UniversityController extends Controller
                                                 ->whereColumn('grade', '>=', 'min_grade')
                                                 ->where('is_deleted', false)
                                                 ->where('is_evaluation', false)
+                                                ->where('assignment_id', $oCourse->id_assignment)
                                                 ->orderBy('grade', 'DESC')
                                                 ->get();
 
@@ -132,6 +133,7 @@ class UniversityController extends Controller
                                                 ->whereColumn('grade', '>=', 'min_grade')
                                                 ->where('is_deleted', false)
                                                 ->where('is_evaluation', false)
+                                                ->where('assignment_id', $oCourse->id_assignment)
                                                 ->orderBy('grade', 'DESC')
                                                 ->get();
 
@@ -150,15 +152,16 @@ class UniversityController extends Controller
 
         //Inserción o actualización de la tabla toma de curso
         $controller = new TakesController();
-        $takeGrouper = $controller->takeCourse($oCourse->id_course, $oCourse->university_points);
+        $takeGrouper = $controller->takeCourse($oCourse->id_course, $oCourse->university_points, $oCourse->id_assignment);
 
         return view('uni.courses.course')->with('oCourse', $oCourse)
+                                        ->with('idAssignment', $oCourse->id_assignment)
                                         ->with('takeGrouper', $takeGrouper);
     }
 
-    public function playSubtopic($subtopic = 0, $takeGrouper = 0)
+    public function playSubtopic($subtopic = 0, $takeGrouper = 0, $idAssignment = 0)
     {
-        if (! TakeUtils::validateSubtopicTake($subtopic)) {
+        if (! TakeUtils::validateSubtopicTake($subtopic, $idAssignment)) {
             return redirect()->back()->withError('No puedes iniciar este subtema sin antes terminar el anterior.');
         }
 
@@ -187,7 +190,7 @@ class UniversityController extends Controller
             //Inserción o actualización de la tabla de toma de contenido
             $controller = new TakesController();
 
-            $idSubtopicTaken = $controller->takeSubtopic($takeGrouper, $oSubtopic);
+            $idSubtopicTaken = $controller->takeSubtopic($takeGrouper, $oSubtopic, $idAssignment);
             $iContent = $controller->takeContent($idSubtopicTaken, false);
         }
 
