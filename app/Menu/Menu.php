@@ -14,41 +14,54 @@ class Menu {
             //Estándar
             case '1':
                 $lMenus = [
-                    (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
+                    // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
                     (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
-                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia'],
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-coin-stack', 'name' => 'Mis recompensas'],
                     (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia'],
+                    (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                 ];
                 break;
 
             //Administrador
             case '2':
                 $lMenus = [
-                    (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
+                    // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis áreas de competencia'],
+                    (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                     (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
                     (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión de áreas'],
                     (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
-                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia'],
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-coin-stack', 'name' => 'Mis recompensas'],
-                    (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
-                ];
-                break;
-
-            //Administrador Sistema
-            case '3':
-                $lMenus = [
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
+                    (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Programadas'],
+                    (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                 ];
                 break;
 
             //GH
+            case '3':
+                $lMenus = [
+                    // (object) ['route' => route('home'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis áreas de competencia'],
+                    (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
+                    (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
+                    (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión de áreas'],
+                    (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
+                    (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Programadas'],
+                    (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                ];
+                break;
+
+            //Administrador Sistema
             case '4':
                 $lMenus = [
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
+                    // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis áreas de competencia'],
+                    (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
+                    (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
+                    (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión de áreas'],
+                    (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
+                    (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Programadas'],
+                    (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    (object) ['route' => route('users'), 'icon' => 'bx bxs-user-account', 'name' => 'Usuarios'],
                 ];
                 break;
             

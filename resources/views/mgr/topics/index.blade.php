@@ -42,8 +42,8 @@
                             <li v-for="subtopic in topic.lSubtopics" class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
                                     @{{ subtopic.subtopic }}
-                                    <a :href="'./' + subtopic.topic_id + '/subtopics/' + subtopic.id_subtopic + '/contents'"><i class='bx bxs-movie-play'></i></a>
                                     <a href=""><i class='bx bxs-edit-alt'></i></a>
+                                    <a :href="'./' + subtopic.topic_id + '/subtopics/' + subtopic.id_subtopic + '/contents'"><i class='bx bxs-movie-play'></i></a>
                                     <a :href="'./' + subtopic.topic_id + '/subtopics/' + subtopic.id_subtopic + '/questions'"><i class='bx bx-question-mark'></i></a>
                                 </div>
                                 <span class="badge bg-primary rounded-pill">@{{ subtopic.number_questions }}</span>

@@ -14,14 +14,16 @@
                             <div class="fw-bold" style="color: brown">{{ $module->module }}</div>
                             Cursado: <i>{{ $module->dt_assignment.' - '.$module->dt_end }}</i>
                             <br>
-                            <a href="{{ route('kardex.courses', $module->id_module) }}">Ver Cursos</a>
+                            <a href="{{ route('kardex.courses', [$module->id_module, $student]) }}">Ver Cursos</a>
                         </div>
                         <div style="text-align: center">
-                            <span class="badge bg-secondary rounded-pill">100</span>
+                            <span class="badge bg-secondary rounded-pill">{{ $module->grade[1] == null || $module->grade[1] == 0 ? "-" : $module->grade[1] }}</span>
                             <br>
-                            <a href="#" target="_blank" >
-                                <i class='bx bx-paperclip'></i>
-                            </a>
+                            @if ($module->elem_status_id == 3 && $module->grade[0])
+                                <a href="{{ route('certificate', [config('csys.elem_type.MODULE'), $module->id_module, $module->id_assignment]) }}" target="_blank">
+                                    <i class='bx bx-paperclip'></i>
+                                </a>
+                            @endif
                         </div>
                     </li>
                 @endforeach

@@ -16,7 +16,7 @@ class SubTopicsController extends Controller
         $oSubTopic = new SubTopic();
         
         $oSubTopic->subtopic = $subtopic->subtopic;
-        $oSubTopic->hash_id = hash('ripemd160', $oSubTopic->topic);
+        $oSubTopic->hash_id = hash('ripemd160', $oSubTopic->subtopic);
         $oSubTopic->number_questions = $subtopic->number_questions;
         $oSubTopic->is_deleted = false;
         $oSubTopic->topic_id = $subtopic->topic_id;

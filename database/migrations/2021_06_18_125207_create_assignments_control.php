@@ -25,6 +25,7 @@ class CreateAssignmentsControl extends Migration
             $table->integer('department_n_id')->unsigned()->nullable();
             $table->integer('job_n_id')->unsigned()->nullable();
             $table->integer('student_n_id')->unsigned()->nullable();
+            $table->integer('scheduled_n_id')->unsigned()->nullable();
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
@@ -36,6 +37,7 @@ class CreateAssignmentsControl extends Migration
             $table->foreign('department_n_id')->references('id_department')->on('adm_departments')->onDelete('cascade');
             $table->foreign('job_n_id')->references('id_job')->on('adm_jobs')->onDelete('cascade');
             $table->foreign('student_n_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('scheduled_n_id')->references('id_scheduled')->on('uni_scheduled_assignments')->onDelete('cascade');
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
         });	

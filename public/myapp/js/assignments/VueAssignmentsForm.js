@@ -137,7 +137,7 @@ var app = new Vue({
             return true;
         },
         discardAssignment(assignment) {
-            this.lAssignments.splice(this.lAssignments.indexOf(assignment), 2);
+            this.lAssignments.splice(this.lAssignments.indexOf(assignment), 1);
             SGui.showOk();
         },
         assignArea() {

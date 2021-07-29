@@ -29,6 +29,7 @@ class AssignmentsController extends Controller
     {
         $this->newRoute = "assignments.create";
         $this->storeRoute = "assignments.store";
+        $this->deleteRoute = "assignments.delete";
     }
 
      /**
@@ -51,11 +52,15 @@ class AssignmentsController extends Controller
                         ->join('users AS u', 'a.student_id', '=', 'u.id')
                         ->select('a.*', 'ka.knowledge_area AS ka', 'u.full_name AS student')
                         ->whereRaw('NOW() between a.dt_assignment AND a.dt_end')
+                        ->where('a.is_deleted', false)
+                        ->where('ka.is_deleted', false)
+                        ->where('u.is_deleted', false)
                         ->get();
 
         return view("mgr.assignments.index")->with('title', "Todas las asignaciones")
                                             ->with('newRoute', $this->newRoute)
                                             ->with('updateRoute', 'assignments.updateassignment')
+                                            ->with('deleteRoute', 'assignments.delete')
                                             ->with('lAssignments', $lAssignments);
     }
 
@@ -243,6 +248,15 @@ class AssignmentsController extends Controller
         $oAssignment->save();
 
         return;
+    }
+
+    public function delete($id)
+    {
+        Assignment::where('id_assignment', $id)
+            ->update(['is_deleted' => true,
+            'updated_by_id' => \Auth::id()]);
+
+        return json_encode("OK");
     }
 
 }

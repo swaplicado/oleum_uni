@@ -29,6 +29,11 @@ Route::get('/401', function () {
 Route::middleware(['auth', 'menu'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/profile', 'ProfilesController@myProfile')->name('profile');
+    Route::get('/users', 'UsersController@index')->name('users')->middleware('manager');
+    Route::put('/users/resetpass', 'UsersController@resetPassword')->name('users.reset.pass')->middleware('manager');
+    Route::put('/users/updemail', 'UsersController@updateEmail')->name('users.update.mail')->middleware('manager');
+    Route::put('/users/updusername', 'UsersController@updateUsername')->name('users.update.username')->middleware('manager');
+
     /**
      * password
      */
@@ -97,7 +102,13 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/getstudents', 'AssignmentsController@getStudents')->name('assignments.getstudents');
         Route::get('/assignments/create', 'AssignmentsController@create')->name('assignments.create');
         Route::post('/assignments', 'AssignmentsController@store')->name('assignments.store');
+        Route::delete('/assignments/delete/{id}', 'AssignmentsController@delete')->name('assignments.delete');
         Route::put('/assignments/updateassignment', 'AssignmentsController@updateAssignment')->name('assignments.updateassignment');
+
+        Route::get('/assignments/scheduled', 'ScheduledAssignmentsController@index')->name('assignments.scheduled.index');
+        Route::get('/assignments/scheduled/create', 'ScheduledAssignmentsController@create')->name('assignments.scheduled.create');
+        Route::post('/assignments/scheduled', 'ScheduledAssignmentsController@store')->name('assignments.scheduled.store');
+        Route::get('/assignments/manualschedule', 'ScheduledAssignmentsController@processAssignmentSchedule')->name('assignments.manual.schedule');
     });
     
     // Controllers Within The "App\Http\Controllers\Uni" Namespace
@@ -108,7 +119,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/areas', 'UniversityController@indexAreas')->name('areas.index');
         Route::get('/modules/{area?}', 'UniversityController@indexModules')->name('uni.modules.index');
         Route::get('/courses/{module?}', 'UniversityController@indexCourses')->name('uni.courses.index');
-        Route::get('/course/{course?}', 'UniversityController@viewCourse')->name('uni.courses.course');
+        Route::get('/course/{course?}/{assignment?}', 'UniversityController@viewCourse')->name('uni.courses.course');
         Route::get('/course/play/{subtopic}/{grouper}/{assignment}', 'UniversityController@playSubtopic')->name('uni.courses.course.play');
 
         /**
@@ -125,11 +136,17 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::post('/exam/recordexam', 'ExamsController@recordExam')->name('exam.record.exam');
         
         /**
-         * 
+         * Kardex
          */
-        Route::get('/kardex', 'KardexController@index')->name('kardex.index');
-        Route::get('/kardex/modules/{area}', 'KardexController@kardexModules')->name('kardex.modules');
-        Route::get('/kardex/courses/{module}', 'KardexController@kardexCourses')->name('kardex.courses');
+        Route::get('/kardex/{student?}', 'KardexController@index')->name('kardex.index')->middleware('head');
+        Route::get('/kardex/index/head', 'KardexController@indexHead')->name('kardex.head');
+        Route::get('/kardex/modules/{area}/{student?}', 'KardexController@kardexModules')->name('kardex.modules')->middleware('head');
+        Route::get('/kardex/courses/{module}/{student?}', 'KardexController@kardexCourses')->name('kardex.courses')->middleware('head');
+
+        /**
+         * Certificados
+         */
+        Route::get('/certificate/{elem_type}/{id}/{assignment}', 'CertificatesController@generateAreaCertificate')->name('certificate');
     });
 });
 

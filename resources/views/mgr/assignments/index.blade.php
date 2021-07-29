@@ -29,6 +29,7 @@
                 }
             },
             "colReorder": true,
+            "responsive": true,
             "dom": 'Bfrtip',
             "lengthMenu": [
                 [ 10, 25, 50, 100, -1 ],
@@ -53,6 +54,7 @@
 <script>
     function GlobalData () {
             this.updateRoute = <?php echo json_encode( route($updateRoute) ) ?>;
+            this.deleteRoute = <?php echo json_encode( "" ) ?>;
     }
 
     var oServerData = new GlobalData();
@@ -91,7 +93,7 @@
                                         <button class="btn btn-info" v-on:click="editAssignment('{{ $oAssign->dt_assignment }}', '{{ $oAssign->dt_end }}', '{{ $oAssign->student }}', '{{ $oAssign->id_assignment }}')">
                                             Editar <i class='bx bxs-edit-alt'></i>
                                         </button>
-                                        <button class="btn btn-danger">
+                                        <button class="btn btn-danger" v-on:click="deleteAssignment('{{ $oAssign->id_assignment }}', '{{ route($deleteRoute, $oAssign->id_assignment) }}')">
                                             Borrar <i class='bx bx-x'></i>
                                         </button>
                                     </td>

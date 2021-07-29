@@ -52,7 +52,7 @@ class TopicsController extends Controller
                             ]);
 
         if (isset($courseId) && $courseId > 0) {
-            $lTopics = $lTopics->where('module_id', $courseId);
+            $lTopics = $lTopics->where('co.id_course', $courseId);
         }
 
         $lTopics = $lTopics->get();

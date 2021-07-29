@@ -34,4 +34,14 @@ class Job extends Model
         'external_id',
         'department_id'
     ];
+
+    /**
+     * Obtiene el objeto departamento (Department) asociado al puesto
+     *
+     * @return Adm/Department
+     */
+    public function department()
+    {
+        return $this->belongsTo('App\Adm\Department', 'department_id', 'id_department');
+    }
 }

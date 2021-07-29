@@ -23,8 +23,8 @@ class CreateAdmUserTypes extends Migration
         DB::table('adm_user_types')->insert([	
             ['id_user_type' => '1','user_type' => 'ESTÁNDAR', 'is_deleted' => '0'],
             ['id_user_type' => '2','user_type' => 'ADMINISTRADOR', 'is_deleted' => '0'],
-            ['id_user_type' => '3','user_type' => 'ADMINISTRADOR SISTEMA', 'is_deleted' => '0'],
-            ['id_user_type' => '4','user_type' => 'GH', 'is_deleted' => '0'],
+            ['id_user_type' => '3','user_type' => 'GH', 'is_deleted' => '0'],
+            ['id_user_type' => '4','user_type' => 'ADMINISTRADOR SISTEMA', 'is_deleted' => '0'],
         ]);
     }
 

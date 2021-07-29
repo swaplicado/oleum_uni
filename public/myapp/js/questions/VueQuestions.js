@@ -50,6 +50,9 @@ var app = new Vue({
                     SGui.showError(err);
                 });
         },
+        discardAnswer(answer) {
+            this.oQuestion.lAnswers.splice(this.oQuestion.lAnswers.indexOf(answer), 1);
+        },
         /**
          * Determina si se realizará una inserción o un update en la BD
          */

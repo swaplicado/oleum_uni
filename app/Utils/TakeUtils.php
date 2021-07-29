@@ -166,6 +166,56 @@ class TakeUtils {
         return $approved;
     }
 
+    public static function isModuleApproved($idModule, $student, $idAssignment, $withGrade = false)
+    {
+        $takes = \DB::table('uni_taken_controls AS tc')
+                    ->where('tc.student_id', $student)
+                    ->where('tc.assignment_id', $idAssignment)
+                    ->where('tc.element_type_id', config('csys.elem_type.MODULE'))
+                    ->where('tc.module_n_id', $idModule)
+                    ->where('tc.is_deleted', false)
+                    ->where('tc.is_evaluation', false)
+                    ->orderBy('id_taken_control', 'DESC')
+                    ->get();
+
+        if (count($takes) == 0) {
+            return $withGrade ? [false, null] : false;
+        }
+
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        if ($withGrade) {
+            return [$approved, $takes[0]->grade];
+        }
+
+        return $approved;
+    }
+
+    public static function isAreaApproved($idArea, $student, $idAssignment, $withGrade = false)
+    {
+        $takes = \DB::table('uni_taken_controls AS tc')
+                    ->where('tc.student_id', $student)
+                    ->where('tc.assignment_id', $idAssignment)
+                    ->where('tc.element_type_id', config('csys.elem_type.AREA'))
+                    ->where('tc.knowledge_area_n_id', $idArea)
+                    ->where('tc.is_deleted', false)
+                    ->where('tc.is_evaluation', false)
+                    ->orderBy('id_taken_control', 'DESC')
+                    ->get();
+
+        if (count($takes) == 0) {
+            return $withGrade ? [false, null] : false;
+        }
+
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        if ($withGrade) {
+            return [$approved, $takes[0]->grade];
+        }
+
+        return $approved;
+    }
+
     public static function getCoursePercentCompleted($iCourse, $student, $idAssignment)
     {
         $subtopics = \DB::table('uni_topics AS top')
@@ -185,5 +235,37 @@ class TakeUtils {
         $total = count($subtopics);
 
         return $total == 0 ? 0 : ($approved * 100 / $total);
+    }
+
+    public static function getAreaPercentCompleted($iArea, $student, $idAssignment)
+    {
+        $subtopics = TakeUtils::getSubTopicsOfArea($iArea);
+
+        $approved = 0;
+        foreach ($subtopics as $idSub) {
+            if (TakeUtils::isSubtopicApproved($idSub, $student, $idAssignment)) {
+                $approved++;
+            }
+        }
+
+        $total = count($subtopics);
+
+        return $total == 0 ? 0 : ($approved * 100 / $total);
+    }
+
+    public static function getSubTopicsOfArea($iArea)
+    {
+        $subtopics = \DB::table('uni_topics AS top')
+                        ->join('uni_subtopics AS sub', 'top.id_topic', '=', 'sub.topic_id')
+                        ->join('uni_courses AS cou', 'top.course_id', '=', 'cou.id_course')
+                        ->join('uni_modules AS mo', 'cou.module_id', '=', 'mo.id_module')
+                        ->where('mo.knowledge_area_id', $iArea)
+                        ->where('top.is_deleted', false)
+                        ->where('sub.is_deleted', false)
+                        ->where('cou.is_deleted', false)
+                        ->where('mo.is_deleted', false)
+                        ->pluck('sub.id_subtopic');
+
+        return ($subtopics);
     }
 }

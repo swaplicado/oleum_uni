@@ -79,9 +79,9 @@ class UniversityController extends Controller
                                         ->with('module', $oModule->module);
     }
 
-    public function viewCourse($course = 0)
+    public function viewCourse($course, $assignment)
     {
-        $courses = \DB::table('uni_assignments AS a')
+        $oCourse = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
@@ -91,14 +91,12 @@ class UniversityController extends Controller
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('c.id_course', $course)
+                        ->where('a.id_assignment', $assignment)
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
-                        ->take(1)
-                        ->get();
+                        ->first();
 
-        if (count($courses) == 1) {
-            $oCourse = $courses[0];
-
+        if ($oCourse != null) {
             $oCourse->lTopics = Topic::where('course_id', $oCourse->id_course)
                                         ->where('is_deleted', false)
                                         ->get();
@@ -150,12 +148,15 @@ class UniversityController extends Controller
             return;
         }
 
+        $aGrade = TakeUtils::isCourseApproved($oCourse->id_course, \Auth::id(), $assignment, true);
+        
         //Inserción o actualización de la tabla toma de curso
         $controller = new TakesController();
-        $takeGrouper = $controller->takeCourse($oCourse->id_course, $oCourse->university_points, $oCourse->id_assignment);
+        $takeGrouper = $controller->takeCourse($oCourse->id_course, $oCourse->university_points, $oCourse->id_assignment, $aGrade[0]);
 
         return view('uni.courses.course')->with('oCourse', $oCourse)
                                         ->with('idAssignment', $oCourse->id_assignment)
+                                        ->with('aGrade', $aGrade)
                                         ->with('takeGrouper', $takeGrouper);
     }
 
@@ -186,17 +187,20 @@ class UniversityController extends Controller
             $oContent->view_path = json_encode($path);
         }
 
+        $aGrade = [false, null];
         if (count($lContents) > 0) {
             //Inserción o actualización de la tabla de toma de contenido
             $controller = new TakesController();
+            $aGrade = TakeUtils::isSubtopicApproved($oSubtopic->id_subtopic, \Auth::id(), $idAssignment, true);
 
-            $idSubtopicTaken = $controller->takeSubtopic($takeGrouper, $oSubtopic, $idAssignment);
+            $idSubtopicTaken = $controller->takeSubtopic($takeGrouper, $oSubtopic, $idAssignment, $aGrade[0]);
             $iContent = $controller->takeContent($idSubtopicTaken, false);
         }
 
         return view('uni.courses.play.view')->with('lContents', $lContents)
                                             ->with('iContent', $iContent)
                                             ->with('oSubtopic', $oSubtopic)
+                                            ->with('aGrade', $aGrade)
                                             ->with('takeGrouper', $takeGrouper)
                                             ->with('idSubtopicTaken', $idSubtopicTaken)
                                             ->with('registryContentRoute', 'take.content');

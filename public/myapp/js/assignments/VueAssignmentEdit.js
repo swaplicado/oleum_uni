@@ -38,6 +38,32 @@ var app = new Vue({
                     console.log(error);
                     SGui.showError(error);
                 });
+        },
+        deleteAssignment(id, route) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se eliminará la asignación de competencia.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, bórrala'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    SGui.showWaiting(3000);
+
+                    axios
+                        .delete(route)
+                        .then(response => {
+                            SGui.showOk();
+                            location.reload();
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            SGui.showError(err);
+                        });
+                }
+            })
         }
     },
 })

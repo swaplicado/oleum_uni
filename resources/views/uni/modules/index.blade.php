@@ -11,7 +11,7 @@
 @section('content')
     @section('content_title', 'Módulos de '.$knowledgeArea)
     <div class="row" id="indexModulesApp">
-        <div class="col-3" v-for="module in oData.lModules">
+        <div class="col-lg-3 col-md-6 col-12" v-for="module in oData.lModules">
             <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
               <div class="card-header">
                 <a :href="'{{ route('uni.courses.index') }}' + '/' + module.id_module">

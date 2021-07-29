@@ -54,7 +54,7 @@
             </div>
             <div class="row">
               @foreach($lAssignments as $ka)
-                <div class="col-3">
+                <div class="col-lg-3 col-md-6 col-12">
                   <a href="{{ route('uni.modules.index', $ka->id_knowledge_area) }}">
                     <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
                       <div class="card-header">{{ $ka->knowledge_area }}</div>
@@ -78,8 +78,8 @@
             </div>
             <div class="row">
               @foreach ($lCourses as $course)
-                <div class="col-3">
-                  <a href="{{ route('uni.courses.course', $course->id_course) }}">
+                <div class="col-lg-3 col-md-6 col-12">
+                  <a href="{{ route('uni.courses.course', [$course->id_course, $course->assignment_id]) }}">
                     <div class="card border-success">
                       <img src="{{ asset('img/curso-capacitacion-snb.png') }}" class="card-img-top" alt="">
                       <div class="card-body">

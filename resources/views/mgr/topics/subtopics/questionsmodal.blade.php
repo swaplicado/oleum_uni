@@ -31,7 +31,7 @@
                   <input v-model="oAnswer.answer" class="form-control" type="text">
                 </div>
                 <div class="col-1">
-                  <button class="btn btn-danger"><i class='bx bx-x'></i></button>
+                  <button v-on:click="discardAnswer(oAnswer)" class="btn btn-danger"><i class='bx bx-x'></i></button>
                 </div>
               </div>
               <br>

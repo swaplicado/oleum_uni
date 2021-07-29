@@ -20,15 +20,15 @@
         href="{{ asset('datatables/Buttons-1.7.1/css/buttons.bootstrap5.min.css') }}" />
     <link rel="stylesheet" type="text/css"
         href="{{ asset('datatables/ColReorder-1.5.4/css/colReorder.bootstrap5.min.css') }}" />
-    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('datatables/DateTime-1.1.0/css/dataTables.dateTime.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/DateTime-1.1.0/css/dataTables.dateTime.min.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('datatables/Responsive-2.2.9/css/responsive.bootstrap5.min.css') }}" />
     <link rel="stylesheet" type="text/css"
         href="{{ asset('datatables/FixedColumns-3.3.3/css/fixedColumns.bootstrap5.min.css') }}" />
-    <link rel="stylesheet" type="text/css"
+    {{-- <link rel="stylesheet" type="text/css"
         href="{{ asset('datatables/FixedHeader-3.1.9/css/fixedHeader.bootstrap5.min.css') }}" />
     <link rel="stylesheet" type="text/css"
         href="{{ asset('datatables/KeyTable-2.6.2/css/keyTable.bootstrap5.min.css') }}" />
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('datatables/Responsive-2.2.9/css/responsive.bootstrap5.min.css') }}" />
     <link rel="stylesheet" type="text/css"
         href="{{ asset('datatables/RowGroup-1.1.3/css/rowGroup.bootstrap5.min.css') }}" />
     <link rel="stylesheet" type="text/css"
@@ -341,10 +341,9 @@
     <script type="text/javascript" src="{{ asset('datatables/JSZip-2.5.0/jszip.min.js') }}"></script>
     {{-- <script type="text/javascript" src="{{ asset('datatables/pdfmake-0.1.36/pdfmake.min.js') }}"></script> --}}
     <script type="text/javascript" src="{{ asset('datatables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('datatables/DataTables-1.10.25/js/jquery.dataTables.min.js') }}">
-    </script>
-    <script type="text/javascript" src="{{ asset('datatables/AutoFill-2.3.7/js/dataTables.autoFill.min.js') }}">
-    </script>
+    <script type="text/javascript" src="{{ asset('datatables/DataTables-1.10.25/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/Responsive-2.2.9/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('datatables/AutoFill-2.3.7/js/dataTables.autoFill.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/dataTables.buttons.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.colVis.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/Buttons-1.7.1/js/buttons.html5.min.js') }}"></script>

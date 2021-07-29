@@ -18,7 +18,7 @@ class ScheduledAssignment extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id_schedule';
+    protected $primaryKey = 'id_scheduled';
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +28,7 @@ class ScheduledAssignment extends Model
     protected $fillable = [
         'dt_start',
         'dt_end',
+        'num_days',
         'is_always',
         'is_deleted',
         'knowledge_area_id',

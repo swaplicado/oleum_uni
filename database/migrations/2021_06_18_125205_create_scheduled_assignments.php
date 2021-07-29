@@ -14,7 +14,7 @@ class CreateScheduledAssignments extends Migration
     public function up()
     {
         Schema::create('uni_scheduled_assignments', function (Blueprint $table) {	
-            $table->bigIncrements('id_schedule');
+            $table->bigIncrements('id_scheduled');
             $table->date('dt_start');
             $table->date('dt_end');
             $table->boolean('is_always');
@@ -39,7 +39,7 @@ class CreateScheduledAssignments extends Migration
             $table->foreign('student_n_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
-        });	
+        });
     }
 
     /**

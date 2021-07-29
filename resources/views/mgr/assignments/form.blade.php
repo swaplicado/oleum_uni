@@ -35,7 +35,7 @@
     <div>
         <select class="form-control" name="student" v-model="student" style="width: 85%">
             @foreach ($lStudents as $oStudent)
-                <option value="{{ $oStudent->id }}">{{ $oStudent->num_employee.'-'.$oStudent->full_name }}</option>
+                <option value="{{ $oStudent->id }}">{{ $oStudent->full_name.'-'.$oStudent->num_employee }}</option>
             @endforeach
         </select>
     </div>

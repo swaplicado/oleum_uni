@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\User;
+
 class ProfilesController extends Controller
 {
     public function myProfile()
     {
-        return view('profile');
+        $idBoss = \Auth::user()->job->department->head_user_n_id;
+
+        $boss = $idBoss == null ? null : User::find($idBoss);
+
+        return view('profile')->with('boss', $boss);
     }
 
     public function changePassword()

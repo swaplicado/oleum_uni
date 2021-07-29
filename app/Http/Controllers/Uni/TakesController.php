@@ -20,17 +20,17 @@ use App\Uni\SubTopic;
 
 class TakesController extends Controller
 {
-    public function takeCourse($course, $points, $idAssignment)
+    public function takeCourse($course, $points, $idAssignment, $bApproved = false)
     {
-        return $this->processTake($course, $points, $idAssignment);
+        return $this->processTake($course, $points, $idAssignment, $bApproved);
     }
 
-    private function processTake($idCourse, $points, $idAssignment)
+    private function processTake($idCourse, $points, $idAssignment, $bApproved)
     {
         $oCourse = Course::find($idCourse);
         $oModule = Module::find($oCourse->module_id);
 
-        $lTake = TakingControl::where('status_id', '<=', config('csys.take_status.CUR'))
+        $lTake = TakingControl::where('status_id', '<=', !$bApproved ? config('csys.take_status.CUR') : config('csys.take_status.COM'))
                                 ->where('element_type_id', config('csys.elem_type.AREA'))
                                 ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
                                 ->where('student_id', \Auth::id())
@@ -100,10 +100,10 @@ class TakesController extends Controller
         }
     }
 
-    public function takeSubtopic($takeGrouper, $oSubtopic, $idAssignment)
+    public function takeSubtopic($takeGrouper, $oSubtopic, $idAssignment, $bApproved = false)
     {
         // Validar si ya existe la toma de subtema
-        $lTake = TakingControl::where('status_id', '<=', config('csys.take_status.EVA'))
+        $lTake = TakingControl::where('status_id', '<=', !$bApproved ? config('csys.take_status.EVA') : config('csys.take_status.COM'))
                                 ->where('element_type_id', config('csys.elem_type.SUBTOPIC'))
                                 ->where('subtopic_n_id', $oSubtopic->id_subtopic)
                                 ->where('grouper', $takeGrouper)
@@ -283,6 +283,7 @@ class TakesController extends Controller
                             ->whereColumn('grade', '>=', 'min_grade')
                             ->where('element_type_id', config('csys.elem_type.SUBTOPIC'))
                             ->whereIn('subtopic_n_id', $subIds)
+                            ->orderBy('id_taken_control', 'DESC')
                             ->get();
 
         if (count($takes) == count($lSubtopics)) {
@@ -301,6 +302,7 @@ class TakesController extends Controller
                             ->where('student_id', \Auth::id())
                             ->where('element_type_id', config('csys.elem_type.TOPIC'))
                             ->where('topic_n_id', $oSubtopic->topic_id)
+                            ->orderBy('id_taken_control', 'DESC')
                             ->take(1)
                             ->get();
             
@@ -311,6 +313,151 @@ class TakesController extends Controller
                                         'grade' => $grade,
                                         'min_grade' => $oTakeSubtopic->min_grade,
                                     ]);
+
+            $oTopic = Topic::find($oSubtopic->topic_id);
+
+            $completed = $this->verifyCourse($oTopic->course_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
+
+            if ($completed) {
+                $oCourse = Course::find($oTopic->course_id);
+
+                $moduleCompleted = $this->verifyModule($oCourse->module_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
+
+                if ($moduleCompleted) {
+                    $oModule = Module::find($oCourse->module_id);
+    
+                    $areaCompleted = $this->verifyArea($oModule->knowledge_area_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
+                }
+            }
         }
+    }
+
+    public function verifyCourse($idCourse, $idStudent, $grouper, $assignment, $minGrade)
+    {
+        $lTopics = \DB::table('uni_topics AS top')
+                            ->where('course_id', $idCourse)
+                            ->where('is_deleted', false)
+                            ->get();
+
+        $sum = 0;
+        foreach ($lTopics as $oTopic) {
+            $grade = TakeUtils::isTopicApproved($oTopic->id_topic, $idStudent, $assignment, true);
+
+            if ($grade[0]) {
+                $sum += $grade[1];
+            }
+            else {
+                return false;
+            }
+        }
+
+        $courseGrade = count($lTopics) == 0 ? 0 : ($sum / count($lTopics));
+
+        $courseTake = \DB::table('uni_taken_controls AS tc')
+                        ->where('grouper', $grouper)
+                        ->where('assignment_id', $assignment)
+                        ->where('is_deleted', false)
+                        ->where('is_evaluation', false)
+                        ->where('student_id', $idStudent)
+                        ->where('element_type_id', config('csys.elem_type.COURSE'))
+                        ->where('course_n_id', $idCourse)
+                        ->orderBy('id_taken_control', 'DESC')
+                        ->first();
+        
+        TakingControl::where('id_taken_control', $courseTake->id_taken_control)
+                        ->update([
+                                    'dtt_end' => Carbon::now()->toDateTimeString(),
+                                    'status_id' => (config('csys.take_status.COM')),
+                                    'grade' => $courseGrade,
+                                    'min_grade' => $minGrade,
+                                    ]);
+        
+        return true;
+    }
+
+    public function verifyModule($idModule, $idStudent, $grouper, $assignment, $minGrade)
+    {
+        $lCourses = \DB::table('uni_courses AS co')
+                            ->where('module_id', $idModule)
+                            ->where('is_deleted', false)
+                            ->get();
+
+        $sum = 0;
+        foreach ($lCourses as $oCourse) {
+            $grade = TakeUtils::isCourseApproved($oCourse->id_course, $idStudent, $assignment, true);
+
+            if ($grade[0]) {
+                $sum += $grade[1];
+            }
+            else {
+                return false;
+            }
+        }
+
+        $moduleGrade = count($lCourses) == 0 ? 0 : ($sum / count($lCourses));
+
+        $moduleTake = \DB::table('uni_taken_controls AS tc')
+                        ->where('grouper', $grouper)
+                        ->where('assignment_id', $assignment)
+                        ->where('is_deleted', false)
+                        ->where('is_evaluation', false)
+                        ->where('student_id', $idStudent)
+                        ->where('element_type_id', config('csys.elem_type.MODULE'))
+                        ->where('module_n_id', $idModule)
+                        ->orderBy('id_taken_control', 'DESC')
+                        ->first();
+        
+        TakingControl::where('id_taken_control', $moduleTake->id_taken_control)
+                        ->update([
+                                    'dtt_end' => Carbon::now()->toDateTimeString(),
+                                    'status_id' => (config('csys.take_status.COM')),
+                                    'grade' => $moduleGrade,
+                                    'min_grade' => $minGrade,
+                                    ]);
+        
+        return true;
+    }
+
+    public function verifyArea($idArea, $idStudent, $grouper, $assignment, $minGrade)
+    {
+        $lModules = \DB::table('uni_modules AS mo')
+                            ->where('knowledge_area_id', $idArea)
+                            ->where('is_deleted', false)
+                            ->get();
+
+        $sum = 0;
+        foreach ($lModules as $oModule) {
+            $grade = TakeUtils::isModuleApproved($oModule->id_module, $idStudent, $assignment, true);
+
+            if ($grade[0]) {
+                $sum += $grade[1];
+            }
+            else {
+                return false;
+            }
+        }
+
+        $areaGrade = count($lModules) == 0 ? 0 : ($sum / count($lModules));
+
+        $areaTake = \DB::table('uni_taken_controls AS tc')
+                        ->where('grouper', $grouper)
+                        ->where('assignment_id', $assignment)
+                        ->where('is_deleted', false)
+                        ->where('is_evaluation', false)
+                        ->where('student_id', $idStudent)
+                        ->where('element_type_id', config('csys.elem_type.AREA'))
+                        ->where('knowledge_area_n_id', $idArea)
+                        ->orderBy('id_taken_control', 'DESC')
+                        ->first();
+        
+        TakingControl::where('id_taken_control', $areaTake->id_taken_control)
+                        ->update([
+                                    'dtt_end' => Carbon::now()->toDateTimeString(),
+                                    'status_id' => (config('csys.take_status.COM')),
+                                    'grade' => $areaGrade,
+                                    'min_grade' => $minGrade,
+                                    ]);
+        
+        return true;
     }
 }

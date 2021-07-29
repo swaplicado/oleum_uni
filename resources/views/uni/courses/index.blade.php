@@ -24,7 +24,7 @@
                         <div class="row">
                             <div class="col-9"></div>
                             <div class="col-3">
-                                <a :href="'{{ route('uni.courses.course') }}' + '/' + course.id_course" class="btn btn-success">Iniciar Curso</a>
+                                <a :href="'{{ route('uni.courses.course') }}' + '/' + course.id_course + '/' + course.id_assignment" class="btn btn-success">Iniciar Curso</a>
                             </div>
                         </div>
                     </div>

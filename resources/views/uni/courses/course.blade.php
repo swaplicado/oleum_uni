@@ -64,9 +64,7 @@
                                                             {{ $subtopic->subtopic }}
                                                             {!! $subtopic->ended != null ? '<span style="color: green" class="success"><i class="bx bx-check"></i></span>' : '' !!}
                                                         </div>
-                                                        @if ($subtopic->ended == null)
-                                                            <a href="{{ route('uni.courses.course.play', [$subtopic->id_subtopic, $takeGrouper, $idAssignment]) }}" class="btn btn-dark">Comenzar</a>
-                                                        @endif
+                                                        <a href="{{ route('uni.courses.course.play', [$subtopic->id_subtopic, $takeGrouper, $idAssignment]) }}" class="btn {{ $subtopic->ended != null ? "btn-success" : "btn-dark" }}">{{ $subtopic->ended != null ? "Ver" : "Comenzar" }}</a>
                                                     </li>
                                                 @endforeach
                                             </ul>

@@ -55,4 +55,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * Obtiene el objeto puesto (Job) asociado al empleado
+     *
+     * @return Adm/Job
+     */
+    public function job()
+    {
+        return $this->belongsTo('App\Adm\Job', 'job_id', 'id_job');
+    }
+
+    /**
+     * Obtiene el objeto Sucursal (Branch) asociado al empleado
+     *
+     * @return Adm/Branch
+     */
+    public function branch()
+    {
+        return $this->belongsTo('App\Adm\Branch', 'branch_id', 'id_branch');
+    }
 }
