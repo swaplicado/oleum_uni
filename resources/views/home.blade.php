@@ -55,7 +55,7 @@
             <div class="row">
               @foreach($lAssignments as $ka)
                 <div class="col-lg-3 col-md-6 col-12">
-                  <a href="{{ route('uni.modules.index', $ka->id_knowledge_area) }}">
+                  <a href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}">
                     <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
                       <div class="card-header">{{ $ka->knowledge_area }}</div>
                       <div class="card-body">

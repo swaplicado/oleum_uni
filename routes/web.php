@@ -109,6 +109,13 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/assignments/scheduled/create', 'ScheduledAssignmentsController@create')->name('assignments.scheduled.create');
         Route::post('/assignments/scheduled', 'ScheduledAssignmentsController@store')->name('assignments.scheduled.store');
         Route::get('/assignments/manualschedule', 'ScheduledAssignmentsController@processAssignmentSchedule')->name('assignments.manual.schedule');
+
+        /**
+         * Premios administración
+         */
+        Route::get('/gifts', 'GiftsController@gifts')->name('gifts.index');
+        Route::get('/gifts/create', 'GiftsController@createGift')->name('gifts.create');
+        Route::post('/gifts', 'GiftsController@storeGift')->name('gifts.store');
     });
     
     // Controllers Within The "App\Http\Controllers\Uni" Namespace
@@ -117,8 +124,8 @@ Route::middleware(['auth', 'menu'])->group(function () {
          * Universidad Alumno
          */
         Route::get('/areas', 'UniversityController@indexAreas')->name('areas.index');
-        Route::get('/modules/{area?}', 'UniversityController@indexModules')->name('uni.modules.index');
-        Route::get('/courses/{module?}', 'UniversityController@indexCourses')->name('uni.courses.index');
+        Route::get('/modules/{assignment}/{area?}', 'UniversityController@indexModules')->name('uni.modules.index');
+        Route::get('/courses/{assignment}/{module}', 'UniversityController@indexCourses')->name('uni.courses.index');
         Route::get('/course/{course?}/{assignment?}', 'UniversityController@viewCourse')->name('uni.courses.course');
         Route::get('/course/play/{subtopic}/{grouper}/{assignment}', 'UniversityController@playSubtopic')->name('uni.courses.course.play');
 
@@ -147,6 +154,12 @@ Route::middleware(['auth', 'menu'])->group(function () {
          * Certificados
          */
         Route::get('/certificate/{elem_type}/{id}/{assignment}', 'CertificatesController@generateAreaCertificate')->name('certificate');
+
+        /**
+         * Premios
+         */
+        Route::get('/shop', 'ShopController@index')->name('shop');
+        Route::post('/shop', 'ShopController@exchange')->name('shop.exchange');
     });
 });
 

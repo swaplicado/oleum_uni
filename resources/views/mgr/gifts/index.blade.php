@@ -3,7 +3,7 @@
 @section('scripts_section')
 <script type="text/javascript">
     $(document).ready(function() {
-        var oKareasTable = $('#modules_table').DataTable({
+        var oGiftsTable = $('#gifts_table').DataTable({
             "language": {
                 "sProcessing":     "Procesando...",
                 "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -30,9 +30,6 @@
             },
             "colReorder": true,
             "responsive": true,
-            "columnDefs": [
-                    { responsivePriority: 1, targets: 5 }
-                ],
             "dom": 'Bfrtip',
             "lengthMenu": [
                 [ 10, 25, 50, 100, -1 ],
@@ -57,50 +54,65 @@
 @endsection
 
 @section('content')
-    @section('content_title', $title)
-    <a id="rightnew" href="{{ route($newRoute, $kArea) }}" class="btn btn-success">
-        Nuevo<i class='bx bx-plus'></i>
-    </a>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="modules_table" class="display stripe hover row-border order-column" style="width:100%">
-                <thead>
+    
+<div class="row">
+    <div class="col-12">
+        @section('content_title', 'Premios')
+        <a id="rightnew" href="{{ route($newRoute) }}" class="btn btn-success">
+            Nuevo<i class='bx bx-plus'></i>
+        </a>
+        <table id="gifts_table" class="display stripe hover row-border order-column" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Premio</th>
+                    <th>Descripción</th>
+                    <th>Puntos</th>
+                    <th>Activo</th>
+                    <th>Disponibles</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+               @foreach ($lGifts as $oGift)
                     <tr>
-                        <th>Módulo</th>
-                        <th>Descripción</th>
-                        <th>Secuencia</th>
-                        <th>Estatus</th>
-                        <th>Área de competencia</th>
-                        <th>Cursos</th>
+                        <td>
+                            {{ $oGift->code }}
+                        </td>
+                        <td>
+                            {{ $oGift->gift }}
+                        </td>
+                        <td>
+                            {{ $oGift->description }}
+                        </td>
+                        <td>
+                            {{ $oGift->points_value }}
+                        </td>
+                        <td>
+                            {{ $oGift->is_active }}
+                        </td>
+                        <td>
+                            {{ $oGift->stk != null ? $oGift->stk->d_stk : 0 }}
+                        </td>
+                        <td>
+                            <button class="btn btn-success"><i class='bx bxs-box'></i></button>
+                            <button class="btn btn-danger"><i class='bx bxs-archive-out'></i></button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($lModules as $module)
-                        <tr>
-                            <td>{{ $module->module }}</td>
-                            <td>{{ $module->description }}</td>
-                            <td>{{ $module->seq_code }}</td>
-                            <td>{{ $module->status_code }}</td>
-                            <td>{{ $module->knowledge_area }}</td>
-                            <td style="text-align: center">
-                                <a href="{{ route('courses.index', $module->id_module) }}">
-                                    <i class='bx bxs-category'></i>
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Módulo</th>
-                        <th>Descripción</th>
-                        <th>Secuencia</th>
-                        <th>Estatus</th>
-                        <th>Área de competencia</th>
-                        <th>Cursos</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+               @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Premio</th>
+                    <th>Descripción</th>
+                    <th>Puntos</th>
+                    <th>Activo</th>
+                    <th>Disponibles</th>
+                    <th>-</th>
+                </tr>
+            </tfoot>
+        </table>
     </div>
+</div>
 @endsection

@@ -32,12 +32,13 @@ class UniversityController extends Controller
                                         ->with('lContents', []);
     }
 
-    public function indexModules($area = 0)
+    public function indexModules($assignment = 0, $area = 0)
     {
         $lModules = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
-                        ->select('m.*')
+                        ->select('m.*', 'a.id_assignment', 'a.dt_end')
+                        ->where('a.id_assignment', $assignment)
                         ->where('a.is_deleted', false)
                         ->where('a.is_over', false)
                         ->where('a.student_id', \Auth::id())
@@ -53,13 +54,14 @@ class UniversityController extends Controller
                                         ->with('knowledgeArea', $oKa->knowledge_area);
     }
 
-    public function indexCourses($module = 0)
+    public function indexCourses($assignment, $module)
     {
         $lCourses = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
                         ->select('c.*', 'a.id_assignment')
+                        ->where('a.id_assignment', $assignment)
                         ->where('a.is_deleted', false)
                         ->where('a.is_over', false)
                         ->where('a.student_id', \Auth::id())

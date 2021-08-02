@@ -43,6 +43,14 @@
                             <b>1 hora de evaluación</b>
                         </div>
                     </div>
+                    <div class="row" style="background-color: #59359a; border-radius: 15%">
+                        <div class="col-4" style="text-align: center">
+                            <i class='bx bxs-coin bx-flashing'></i>
+                        </div>
+                        <div class="col-8">
+                            <b>Puedes ganar {{ $oCourse->university_points }} puntos universitarios</b>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="accordion" id="accordionThemes">

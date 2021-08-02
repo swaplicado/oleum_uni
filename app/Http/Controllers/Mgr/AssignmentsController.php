@@ -81,26 +81,32 @@ class AssignmentsController extends Controller
 
         $lOrganizations = Organization::where('is_deleted', false)
                                         ->select('id_organization', 'organization', 'acronym')
+                                        ->orderBy('organization', 'ASC')
                                         ->get();
 
         $lCompanies = Company::where('is_deleted', false)
                                         ->select('id_company', 'company', 'acronym')
+                                        ->orderBy('company', 'ASC')
                                         ->get();
 
         $lBranches = Branch::where('is_deleted', false)
                                         ->select('id_branch', 'branch', 'acronym')
+                                        ->orderBy('branch', 'ASC')
                                         ->get();
 
         $lDepartments = Department::where('is_deleted', false)
                                         ->select('id_department', 'department', 'acronym')
+                                        ->orderBy('department', 'ASC')
                                         ->get();
 
         $lJobs = Job::where('is_deleted', false)
                                         ->select('id_job', 'job', 'acronym')
+                                        ->orderBy('job', 'ASC')
                                         ->get();
                                         
         $lStudents = User::where('is_deleted', false)
                                         ->select('id', 'full_name', 'num_employee')
+                                        ->orderBy('full_name', 'ASC')
                                         ->get();
 
         return view("mgr.assignments.create")->with('title', "Asignación de área")

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+
 use App\User;
+use App\Uni\PointsControl;
 
 class ProfilesController extends Controller
 {
@@ -14,7 +17,40 @@ class ProfilesController extends Controller
 
         $boss = $idBoss == null ? null : User::find($idBoss);
 
-        return view('profile')->with('boss', $boss);
+        $sDate = Carbon::now()->toDateString();
+
+        $lPoints = \DB::table('uni_points_control AS pts')
+                            ->join('sys_points_mov_types AS pt', 'pts.mov_type_id', '=', 'pt.id_mov_type')
+                            ->leftJoin('uni_taken_controls AS ctrls', 'pts.take_control_n_id', '=', 'ctrls.id_taken_control')
+                            ->leftJoin('uni_courses AS cou', 'ctrls.course_n_id', '=', 'cou.id_course')
+                            ->leftJoin('uni_gifts_stock AS stk', 'pts.gift_stk_n_id', '=', 'stk.id_stock')
+                            ->leftJoin('uni_gifts AS g', 'stk.gift_id', '=', 'g.id_gift')
+                            ->select('pts.*', 'movement_type', 'course', 'gift')
+                            ->where('pts.student_id', \Auth::id())
+                            ->where('pts.is_deleted', false)
+                            ->where('pts.dt_date', '<=', $sDate)
+                            ->get();
+
+        $i = 1;
+        foreach ($lPoints as $pointRow) {
+            $pointRow->index = $i;
+            $i++;
+        }
+
+        $oPoints = PointsControl::where('student_id', \Auth::id())
+                        ->selectRaw('
+                            SUM(increment) AS increments, 
+                            SUM(decrement) AS decrements, 
+                            (SUM(increment) - SUM(decrement)) AS points
+                        ')
+                        ->where('is_deleted', false)
+                        ->where('dt_date', '<=', $sDate)
+                        ->groupBy('student_id')
+                        ->first();
+
+        return view('profile')->with('boss', $boss)
+                                ->with('lPoints', $lPoints)
+                                ->with('oPoints', $oPoints);
     }
 
     public function changePassword()

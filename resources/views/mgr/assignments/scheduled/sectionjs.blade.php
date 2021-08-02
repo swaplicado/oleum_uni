@@ -28,6 +28,9 @@
             },
             "colReorder": true,
             "responsive": true,
+            "columnDefs": [
+                    { responsivePriority: 1, targets: 8 }
+                ],
             "dom": 'Bfrtip',
             "lengthMenu": [
                 [ 10, 25, 50, 100, -1 ],

@@ -19,6 +19,7 @@ class Menu {
                     (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                     (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis áreas de competencia'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    (object) ['route' => route('shop'), 'icon' => 'bx bx-shopping-bag', 'name' => 'Premios'],
                 ];
                 break;
 
@@ -33,6 +34,7 @@ class Menu {
                     (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
                     (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Programadas'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    (object) ['route' => route('shop'), 'icon' => 'bx bx-shopping-bag', 'name' => 'Premios'],
                 ];
                 break;
 
@@ -47,6 +49,7 @@ class Menu {
                     (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
                     (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Programadas'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    (object) ['route' => route('shop'), 'icon' => 'bx bx-shopping-bag', 'name' => 'Premios'],
                 ];
                 break;
 
@@ -61,6 +64,7 @@ class Menu {
                     (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
                     (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Programadas'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    (object) ['route' => route('shop'), 'icon' => 'bx bx-shopping-bag', 'name' => 'Premios'],
                     (object) ['route' => route('users'), 'icon' => 'bx bxs-user-account', 'name' => 'Usuarios'],
                 ];
                 break;

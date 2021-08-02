@@ -30,6 +30,9 @@
             },
             "colReorder": true,
             "responsive": true,
+            "columnDefs": [
+                    { responsivePriority: 1, targets: [2,3] }
+                ],
             "dom": 'Bfrtip',
             "lengthMenu": [
                 [ 10, 25, 50, 100, -1 ],
@@ -122,24 +125,63 @@
             <hr>
             <div class="row">
                 <div class="col-12">
-                    <h5>Puntos por cambiar y calificaciones</h5>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h5>Puntos por cambiar y calificaciones</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Disponibles: <span style="font-size: 110%" class="badge bg-primary">{{ $oPoints != null ? $oPoints->points : 0 }}</span></h5>
+                        </div>
+                    </div>
                     <br>
                     <table id="profile" class="display stripe hover row-border order-column" style="width:100%">
                         <thead>
                             <tr>
+                                <th>#</th>
+                                <th>Fecha</th>
+                                <th>Ganados</th>
+                                <th>Descontados</th>
+                                <th>T. mov</th>
                                 <th>Curso</th>
-                                <th>Fecha término</th>
-                                <th>Puntos ganados</th>
+                                <th>Premio</th>
                             </tr>
                         </thead>
                         <tbody>
-                           
+                           @foreach ($lPoints as $pointRow)
+                                <tr>
+                                    <td>
+                                        {{ $pointRow->index }}
+                                    </td>
+                                    <td>
+                                        {{ $pointRow->dt_date }}
+                                    </td>
+                                    <td>
+                                        {{ $pointRow->increment }}
+                                    </td>
+                                    <td>
+                                        {{ $pointRow->decrement }}
+                                    </td>
+                                    <td>
+                                        {{ $pointRow->movement_type }}
+                                    </td>
+                                    <td>
+                                        {{ $pointRow->course }}
+                                    </td>
+                                    <td>
+                                        {{ $pointRow->gift }}
+                                    </td>
+                                </tr>
+                           @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Curso</th>
-                                <th>Fecha término</th>
+                                <th>#</th>
+                                <th>Fecha</th>
                                 <th>Puntos ganados</th>
+                                <th>Puntos perdidos</th>
+                                <th>T. mov</th>
+                                <th>Curso</th>
+                                <th>Premio</th>
                             </tr>
                         </tfoot>
                     </table>
