@@ -27,5 +27,3 @@ class Configuration {
         file_put_contents(base_path('univ_config.json'), stripslashes($newJsonString));
     }
 }
-
-?>

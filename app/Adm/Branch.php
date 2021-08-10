@@ -30,6 +30,7 @@ class Branch extends Model
         'acronym',
         'is_deleted',
         'external_id',
+        'company_id',
         'head_user_id'
     ];
 }

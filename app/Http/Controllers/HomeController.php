@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Sys\SyncController;
+
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Utils\TakeUtils;
@@ -16,6 +18,9 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        $sync = new SyncController();
+        $sync->toSynchronize(false);
     }
 
     /**

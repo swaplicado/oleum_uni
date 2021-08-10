@@ -106,7 +106,12 @@ var app = new Vue({
                     let res = response.data;
                     let route = "";
                     if (res.isApproved) {
-                        SGui.showMessage("¡Felicidades!\n Aprobaste.", "Calificación: " + res.grade, 'success');
+                        if (res.oCompleted.course) {
+                            SGui.showSuccess("¡Felicidades!\n Aprobaste el curso.", "Has ganado: " + res.oCompleted.points + " puntos.", 'success');
+                        } else {
+                            SGui.showSuccess("¡Felicidades!\n Aprobaste.", "Calificación: " + res.grade, 'success');
+                        }
+
                         route = this.oData.sSuccessRoute;
                     } else {
                         SGui.showMessage("Lo siento, intenta de nuevo.", "Calificación: " + res.grade, 'error');

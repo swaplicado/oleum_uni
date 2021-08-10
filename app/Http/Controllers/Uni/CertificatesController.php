@@ -66,20 +66,24 @@ class CertificatesController extends Controller
         $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'Letter', 'orientation' => 'L']);
 
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML('<div style="height: 130px"></div>');
+        $mpdf->WriteHTML('<h4 class="alg-center">Otorga el presente</h4>');
         $mpdf->WriteHTML('<h1 class="alg-center">CERTIFICADO</h1>');
+        $mpdf->WriteHTML('<h4 class="alg-center">a</h4>');
 
-        $mpdf->WriteHTML('<div align="center"><img src="img/tron2.png" alt="AETH"><div>');
+        // $mpdf->WriteHTML('<div align="center"><img src="img/tron2.png" alt="AETH"><div>');
 
         $oStudent = User::find($student);
-        
+        $mpdf->WriteHTML('<div style="height: 30px"></div>');
         $body = '<h2 class="alg-center">'.$oStudent->full_name.'</h2>';
         $mpdf->WriteHTML($body);
         
         $mpdf->WriteHTML('<br>');
-        
+        $mpdf->WriteHTML('<h4 class="alg-center">Por haber cursado el</h4>');
         $mpdf->WriteHTML('<h4 class="alg-center">'.$sTypeText.'</h4>');
         $mpdf->WriteHTML('<h3 class="alg-center">'.$title.'</h3>');
 
+        $mpdf->WriteHTML('<div style="height: 20px"></div>');
         $mpdf->WriteHTML('<h5 class="alg-center">'.$oAssignment->dt_assignment.' al '.$oAssignment->dt_end.'</h5>');
 
         $date = Carbon::now();

@@ -220,7 +220,7 @@ class ExamsController extends Controller
             $oTakeEval->save();
 
             $controller = new TakesController();
-            $takeEvaluation = $controller->verifyCompleted($oTakeSub);
+            $oCompleted = $controller->verifyCompleted($oTakeSub);
 
             \DB::commit();
         }
@@ -230,7 +230,8 @@ class ExamsController extends Controller
 
         $response = (object) [
                                 'isApproved' => ($grade >= $approved_grade),
-                                'grade' => $grade
+                                'grade' => $grade,
+                                'oCompleted' => $oCompleted
                             ];
 
         return json_encode($response);
