@@ -23,6 +23,8 @@ class CertificatesController extends Controller
 
         $student = $oAssignment->student_id;
         $sTypeText = "";
+        $sDocText = "";
+        $art = "";
         $title = "";
         $oObj = null;
 
@@ -32,21 +34,27 @@ class CertificatesController extends Controller
         switch ($elementType) {
             case config('csys.elem_type.AREA'):
                 $lTake = $lTake->where('knowledge_area_n_id', $id);
+                $art = "el";
+                $sDocText = "CERTIFICADO";
                 $sTypeText = "ÁREA DE COMPETENCIA";
                 $oObj = KnowledgeArea::find($id);
                 $title = $oObj->knowledge_area;
                 break;
             
             case config('csys.elem_type.MODULE'):
-                $sTypeText = "MÓDULO";
                 $lTake = $lTake->where('module_n_id', $id);
+                $art = "el";
+                $sDocText = "RECONOCIMIENTO";
+                $sTypeText = "MÓDULO";
                 $oObj = Module::find($id);
                 $title = $oObj->module;
                 break;
             
             case config('csys.elem_type.COURSE'):
-                $sTypeText = "CURSO";
                 $lTake = $lTake->where('course_n_id', $id);
+                $art = "la";
+                $sDocText = "CONSTANCIA";
+                $sTypeText = "CURSO";
                 $oObj = Course::find($id);
                 $title = $oObj->course;
                 break;
@@ -67,14 +75,15 @@ class CertificatesController extends Controller
 
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML('<div style="height: 130px"></div>');
-        $mpdf->WriteHTML('<h4 class="alg-center">Otorga el presente</h4>');
-        $mpdf->WriteHTML('<h1 class="alg-center">CERTIFICADO</h1>');
+        $mpdf->WriteHTML('<h4 class="alg-center">Otorga '.$art.' presente:</h4>');
+        // $mpdf->WriteHTML('<div style="height: 10px"></div>');
+        $mpdf->WriteHTML('<h1 style="font-size: 50px" class="alg-center">'.$sDocText.'</h1>');
         $mpdf->WriteHTML('<h4 class="alg-center">a</h4>');
 
         // $mpdf->WriteHTML('<div align="center"><img src="img/tron2.png" alt="AETH"><div>');
 
         $oStudent = User::find($student);
-        $mpdf->WriteHTML('<div style="height: 30px"></div>');
+        $mpdf->WriteHTML('<div style="height: 15px"></div>');
         $body = '<h2 class="alg-center">'.$oStudent->full_name.'</h2>';
         $mpdf->WriteHTML($body);
         
@@ -84,7 +93,9 @@ class CertificatesController extends Controller
         $mpdf->WriteHTML('<h3 class="alg-center">'.$title.'</h3>');
 
         $mpdf->WriteHTML('<div style="height: 20px"></div>');
-        $mpdf->WriteHTML('<h5 class="alg-center">'.$oAssignment->dt_assignment.' al '.$oAssignment->dt_end.'</h5>');
+        $oDateIni = Carbon::parse($oAssignment->dt_assignment);
+        $oDateFin = Carbon::parse($oAssignment->dt_end);
+        $mpdf->WriteHTML('<h5 class="alg-center">'.$oDateIni->format('d-m-Y').' al '.$oDateFin->format('d-m-Y').'</h5>');
 
         $date = Carbon::now();
 
@@ -99,7 +110,7 @@ class CertificatesController extends Controller
 
         $mpdf->WriteHTML($qr);
 
-        return $mpdf->Output($date->format('Y_m_d_H_i_s')."_certificate.pdf", "I");
+        return $mpdf->Output($date->format('Y_m_d_H_i_s')."_document_univ.pdf", "I");
     }
 
 }

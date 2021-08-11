@@ -21,7 +21,7 @@ class ProfilesController extends Controller
 
         $lPoints = \DB::table('uni_points_control AS pts')
                             ->join('sys_points_mov_types AS pt', 'pts.mov_type_id', '=', 'pt.id_mov_type')
-                            ->leftJoin('uni_taken_controls AS ctrls', 'pts.take_control_n_id', '=', 'ctrls.id_taken_control')
+                            ->leftJoin('uni_taken_controls AS ctrls', 'pts.taken_control_n_id', '=', 'ctrls.id_taken_control')
                             ->leftJoin('uni_courses AS cou', 'ctrls.course_n_id', '=', 'cou.id_course')
                             ->leftJoin('uni_gifts_stock AS stk', 'pts.gift_stk_n_id', '=', 'stk.id_stock')
                             ->leftJoin('uni_gifts AS g', 'stk.gift_id', '=', 'g.id_gift')
@@ -93,6 +93,10 @@ class ProfilesController extends Controller
     {
         // dd(config('cuni'));
         $images = config('cuni.images');
+
+        for ($i=2; $i <= 31; $i++) { 
+            $images[] = (object) ['name' => 'avatar_'.$i, 'route' => 'img/profiles/avatar'.$i.'.png'];
+        }
 
         return view('avatars')->with('images', $images);
     }

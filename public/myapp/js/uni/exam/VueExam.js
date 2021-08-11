@@ -98,6 +98,7 @@ var app = new Vue({
 
             axios
                 .post(this.oData.sRecordExam, {
+                    'id_course': this.oData.oTopic.course_id,
                     'number_questions': this.nQuestions,
                     'take_evaluation': this.oData.takeEvaluation,
                     'take_subtopic': this.oData.idSubtopicTaken

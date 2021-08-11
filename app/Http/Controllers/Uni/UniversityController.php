@@ -151,6 +151,27 @@ class UniversityController extends Controller
         }
 
         $aGrade = TakeUtils::isCourseApproved($oCourse->id_course, \Auth::id(), $assignment, true);
+
+        if (! $aGrade[0]) {
+            $module = Module::find($oCourse->module_id);
+            $valid = TakeUtils::validatePrerequisites(config('csys.elem_type.AREA'), $module->knowledge_area_id);
+
+            if (strlen($valid) > 0) {
+                return redirect()->back()->withError($valid);
+            }
+
+            $valid = TakeUtils::validatePrerequisites(config('csys.elem_type.MODULE'), $oCourse->module_id);
+
+            if (strlen($valid) > 0) {
+                return redirect()->back()->withError($valid);
+            }
+
+            $valid = TakeUtils::validatePrerequisites(config('csys.elem_type.COURSE'), $oCourse->id_course);
+
+            if (strlen($valid) > 0) {
+                return redirect()->back()->withError($valid);
+            }
+        }
         
         //Inserción o actualización de la tabla toma de curso
         $controller = new TakesController();

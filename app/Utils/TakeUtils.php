@@ -2,10 +2,13 @@
 
 use Carbon\Carbon;
 
+use App\Uni\Prerequisite;
+use App\Uni\PrerequisiteRow;
 use App\Uni\TakingControl;
+use App\Uni\Assignment;
 use App\Uni\KnowledgeArea;
 use App\Uni\Module;
-use App\Uni\Assignment;
+use App\Uni\Course;
 use App\Uni\Topic;
 use App\Uni\SubTopic;
 
@@ -216,6 +219,66 @@ class TakeUtils {
         return $approved;
     }
 
+    public static function isSomeAreaApproved($idArea, $student)
+    {
+        $takes = \DB::table('uni_taken_controls AS tc')
+                    ->where('tc.student_id', $student)
+                    ->where('tc.element_type_id', config('csys.elem_type.AREA'))
+                    ->where('tc.knowledge_area_n_id', $idArea)
+                    ->where('tc.is_deleted', false)
+                    ->where('tc.is_evaluation', false)
+                    ->orderBy('id_taken_control', 'DESC')
+                    ->get();
+
+        if (count($takes) == 0) {
+            return false;
+        }
+
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        return $approved;
+    }
+
+    public static function isSomeModuleApproved($idModule, $student)
+    {
+        $takes = \DB::table('uni_taken_controls AS tc')
+                    ->where('tc.student_id', $student)
+                    ->where('tc.element_type_id', config('csys.elem_type.MODULE'))
+                    ->where('tc.module_n_id', $idModule)
+                    ->where('tc.is_deleted', false)
+                    ->where('tc.is_evaluation', false)
+                    ->orderBy('id_taken_control', 'DESC')
+                    ->get();
+
+        if (count($takes) == 0) {
+            return false;
+        }
+
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        return $approved;
+    }
+
+    public static function isSomeCourseApproved($idCourse, $student)
+    {
+        $takes = \DB::table('uni_taken_controls AS tc')
+                    ->where('tc.student_id', $student)
+                    ->where('tc.element_type_id', config('csys.elem_type.COURSE'))
+                    ->where('tc.course_n_id', $idCourse)
+                    ->where('tc.is_deleted', false)
+                    ->where('tc.is_evaluation', false)
+                    ->orderBy('id_taken_control', 'DESC')
+                    ->get();
+
+        if (count($takes) == 0) {
+            return false;
+        }
+
+        $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
+
+        return $approved;
+    }
+
     public static function getCoursePercentCompleted($iCourse, $student, $idAssignment)
     {
         $subtopics = \DB::table('uni_topics AS top')
@@ -267,5 +330,78 @@ class TakeUtils {
                         ->pluck('sub.id_subtopic');
 
         return ($subtopics);
+    }
+
+    /**
+     * Valida que el usuario haya cursado todos los requisitos previos a este
+     *
+     * @param int config('csys.elem_type.AREA'), config('csys.elem_type.MODULE'), config('csys.elem_type.COURSE')
+     * @param [type] $idElement
+     * @return void
+     */
+    public static function validatePrerequisites($elementType, $idElement)
+    {
+        $lPres = Prerequisite::where('element_type_id', $elementType)
+                                ->where('is_deleted', false);
+
+        switch ($elementType) {
+            case config('csys.elem_type.AREA'):
+                $lPres = $lPres->where('knowledge_area_n_id', $idElement);
+                break;
+            case config('csys.elem_type.MODULE'):
+                $lPres = $lPres->where('module_n_id', $idElement);
+                break;
+            case config('csys.elem_type.COURSE'):
+                $lPres = $lPres->where('course_n_id', $idElement);
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        $oPre = $lPres->first();
+
+        if ($oPre == null) {
+            return "";
+        }
+
+        $lPres = \DB::table('uni_prerequisites_rows AS pr')
+                        ->join('sys_element_types AS et', 'pr.element_type_id', '=', 'et.id_element_type')
+                        ->leftJoin('uni_knowledge_areas AS a', 'pr.knowledge_area_n_id', '=', 'a.id_knowledge_area')
+                        ->leftJoin('uni_modules AS m', 'pr.module_n_id', '=', 'm.id_module')
+                        ->leftJoin('uni_courses AS c', 'pr.course_n_id', '=', 'c.id_course')
+                        ->where('pr.is_deleted', false)
+                        ->where('pr.prerequisite_id', $oPre->id_prerequisite)
+                        ->get();
+
+        foreach ($lPres as $pre) {
+            switch ($pre->id_element_type) {
+                case config('csys.elem_type.AREA'):
+                    $approved = TakeUtils::isSomeAreaApproved($pre->id_knowledge_area, \Auth::id());
+                    if (! $approved) {
+                        return "Debes aprobar antes la competencia: ".$pre->knowledge_area.".";
+                    }
+                    break;
+                case config('csys.elem_type.MODULE'):
+                    $approved = TakeUtils::isSomeModuleApproved($pre->id_module, \Auth::id());
+                    if (! $approved) {
+                        return "Debes aprobar antes el módulo: ".$pre->module.".";
+                    }
+                    break;
+                case config('csys.elem_type.COURSE'):
+                    $approved = TakeUtils::isSomeCourseApproved($pre->id_course, \Auth::id());
+                    if (! $approved) {
+                        return "Debes aprobar antes el curso: ".$pre->course.".";
+                    }
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+        return "";
     }
 }

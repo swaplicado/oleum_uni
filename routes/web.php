@@ -132,6 +132,13 @@ Route::middleware(['auth', 'menu'])->group(function () {
         // stock
         Route::get('/giftstk/create/{class}/{gift}', 'GiftsStockController@create')->name('giftstk.create');
         Route::post('/giftstk', 'GiftsStockController@store')->name('giftstk.store');
+
+        /**
+         * Prerrequisitos
+         */
+        Route::get('/getpredata', 'PrerequisitesController@getPreData')->name('get.pre.data');
+        Route::post('/predata', 'PrerequisitesController@storePreRequisite')->name('store.pre.data');
+        Route::put('/predatadelete', 'PrerequisitesController@deleteRow')->name('delete.pre.row');
     });
     
     // Controllers Within The "App\Http\Controllers\Uni" Namespace
