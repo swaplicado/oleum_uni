@@ -86,15 +86,18 @@
                 <div class="title m-b-md">
                     Universidad Virtual AETH
                 </div>
-
+                <div>
+                    <p style="font-size: 150%"><b>En AETH estamos comprometidos con tu desarrollo.</b></p>
+                </div>
+                <br>
                 <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="#">AETH</a>
+                    <a href="#">Grupo Tron Hermanos</a>
+                    <a href="#">SIIE 3.2</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Sistemas</a>
+                    <a href="#">Sofware Aplicado</a>
+                    <a href="#">Contacto</a>
                 </div>
             </div>
         </div>

@@ -112,8 +112,11 @@ class UsersController extends Controller
 
         $oUser = new User();
 
-        $oUser->username = strtolower($jUser->num_employee.'.'.$jUser->lastname1.'.'.$jUser->lastname2);
-        $oUser->password = bcrypt(strtolower($jUser->num_employee.'.'.$jUser->lastname1.'.'.$jUser->lastname2));
+        $usernameTmp = strtolower($jUser->num_employee.'.'.$jUser->lastname1.'.'.$jUser->lastname2);
+        $username = str_replace(['ñ', 'Ñ'], 'n', $usernameTmp);
+        $username = str_replace('-', '', $username);
+        $oUser->username = $username;
+        $oUser->password = bcrypt($username);
         $oUser->email = $jUser->email;
         $oUser->num_employee = $jUser->num_employee;
         $oUser->first_name = $jUser->lastname1;

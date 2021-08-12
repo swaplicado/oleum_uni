@@ -30,6 +30,9 @@
             },
             "colReorder": true,
             "responsive": true,
+            "columnDefs": [
+                    { responsivePriority: 1, targets: [5] }
+                ],
             "dom": 'Bfrtip',
             "lengthMenu": [
                 [ 10, 25, 50, 100, -1 ],
@@ -82,6 +85,7 @@
                 <thead>
                     <tr>
                         <th>Imagen</th>
+                        <th>Título</th>
                         <th>Texto</th>
                         <th>URL</th>
                         <th>Activo</th>
@@ -92,6 +96,7 @@
                     @foreach ($lElements as $element)
                         <tr>
                             <td>{{ $element->image }}</td>
+                            <td>{{ $element->title }}</td>
                             <td>{{ $element->text }}</td>
                             <td>{{ $element->url }}</td>
                             <td>{{ $element->is_active }}</td>
@@ -109,6 +114,7 @@
                 <tfoot>
                     <tr>
                         <th>Imagen</th>
+                        <th>Título</th>
                         <th>Texto</th>
                         <th>URL</th>
                         <th>Activo</th>
