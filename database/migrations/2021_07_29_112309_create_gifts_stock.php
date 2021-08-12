@@ -29,7 +29,7 @@ class CreateGiftsStock extends Migration
             
             $table->foreign('mov_type_id')->references('id_mov_type')->on('sys_stk_mov_types')->onDelete('cascade');
             $table->foreign('gift_id')->references('id_gift')->on('uni_gifts')->onDelete('cascade');
-            $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('student_n_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
         });

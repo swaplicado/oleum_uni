@@ -25,7 +25,7 @@ class CreateAssignmentsControl extends Migration
             $table->integer('department_n_id')->unsigned()->nullable();
             $table->integer('job_n_id')->unsigned()->nullable();
             $table->integer('student_n_id')->unsigned()->nullable();
-            $table->integer('scheduled_n_id')->unsigned()->nullable();
+            $table->bigInteger('scheduled_n_id')->unsigned()->nullable();
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
