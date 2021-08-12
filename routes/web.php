@@ -139,6 +139,16 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/getpredata', 'PrerequisitesController@getPreData')->name('get.pre.data');
         Route::post('/predata', 'PrerequisitesController@storePreRequisite')->name('store.pre.data');
         Route::put('/predatadelete', 'PrerequisitesController@deleteRow')->name('delete.pre.row');
+
+        /**
+         * Carrusel
+         */
+        Route::get('/carousel', 'CarouselController@index')->name('carousel.index');
+        Route::get('/carousel/create', 'CarouselController@create')->name('carousel.create');
+        Route::post('/carousel', 'CarouselController@store')->name('carousel.store');
+        Route::get('/carousel/edit/{id}', 'CarouselController@edit')->name('carousel.edit');
+        Route::put('/carousel/update', 'CarouselController@update')->name('carousel.update');
+        Route::delete('/carousel/{id}', 'CarouselController@delete')->name('carousel.delete');
     });
     
     // Controllers Within The "App\Http\Controllers\Uni" Namespace

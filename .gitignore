@@ -1,5 +1,6 @@
 /node_modules
 /public/images/gifts
+/public/images/carousel
 /public/hot
 /public/storage
 /storage/*.key

@@ -7,6 +7,7 @@ use App\Http\Controllers\Sys\SyncController;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Utils\TakeUtils;
+use App\Uni\Carousel;
 
 class HomeController extends Controller
 {
@@ -32,6 +33,8 @@ class HomeController extends Controller
     {
         $title = "¡Bienvenid@ ".(\Auth::user()->names)."!";
 
+        $lCarousel = Carousel::where('is_deleted', false)->where('is_active', true)->get();
+
         $lAssignments = \DB::table('uni_assignments AS a')
                             ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                             ->where('a.student_id', \Auth::id())
@@ -46,6 +49,7 @@ class HomeController extends Controller
         }
 
         return view('home')->with('title', $title)
+                            ->with('lCarousel', $lCarousel)
                             ->with('lCourses', $lCourses)
                             ->with('lAssignments', $lAssignments);
     }
