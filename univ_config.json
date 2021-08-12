@@ -12,5 +12,6 @@
     "grades": {
         "scale": 100,
         "approved": 80
-    }
+    },
+    "lastSyncDateTime": "2021-08-12 15:32:48"
 }

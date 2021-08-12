@@ -31,7 +31,7 @@
             "colReorder": true,
             "responsive": true,
             "columnDefs": [
-                    { responsivePriority: 1, targets: 4 }
+                    { responsivePriority: 1, targets: [4, 5] }
                 ],
             "dom": 'Bfrtip',
             "lengthMenu": [
@@ -61,7 +61,7 @@
     <a id="rightnew" href="{{ route($newRoute) }}" class="btn btn-success">
         Nuevo<i class='bx bx-plus'></i>
     </a>
-    <div class="row">
+    <div class="row" id="divPrerrequisites">
         <div class="col-md-12">
             <table id="example" class="display stripe hover row-border order-column" style="width:100%">
                 <thead>
@@ -71,6 +71,7 @@
                         <th>Secuencia</th>
                         <th>Estatus</th>
                         <th>Módulos</th>
+                        <th>Pre</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,6 +86,11 @@
                                     <i class='bx bxs-category'></i>
                                 </a>
                             </td>
+                            <td style="text-align: center">
+                                <a href="#" v-on:click="showPreviousModal({{ config('csys.elem_type.AREA') }}, {{ $area->id_knowledge_area }}, '{{ $area->knowledge_area }}')">
+                                    <i class='bx bxs-brightness'></i>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -95,9 +101,11 @@
                         <th>Secuencia</th>
                         <th>Estatus</th>
                         <th>Módulos</th>
+                        <th>Pre</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
+        @include('mgr.prerequisites_modal')
     </div>
 @endsection

@@ -262,8 +262,22 @@ class TakesController extends Controller
         }
     }
 
+    /**
+     * Verifica si los elementos han sido completados
+     *
+     * @param TakingControl $oTakeSubtopic
+     * 
+     * @return oCompleted [subtopic, topic, course, module, area]
+     */
     public function verifyCompleted($oTakeSubtopic)
     {
+        $oCompleted = (object) [ 'subtopic' => false, 
+                        'topic' => false, 
+                        'course' => false,
+                        'module' => false,
+                        'area' => false,
+                        'points' => 0 ];
+
         $oSubtopic = SubTopic::find($oTakeSubtopic->subtopic_n_id);
 
         $lSubtopics = \DB::table('uni_subtopics AS sub')
@@ -285,6 +299,8 @@ class TakesController extends Controller
                             ->whereIn('subtopic_n_id', $subIds)
                             ->orderBy('id_taken_control', 'DESC')
                             ->get();
+
+        $oCompleted->subtopic = true;
 
         if (count($takes) == count($lSubtopics)) {
             $sum = 0;
@@ -314,22 +330,33 @@ class TakesController extends Controller
                                         'min_grade' => $oTakeSubtopic->min_grade,
                                     ]);
 
+            $oCompleted->topic = true;
+
             $oTopic = Topic::find($oSubtopic->topic_id);
 
             $completed = $this->verifyCourse($oTopic->course_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
 
             if ($completed) {
+                
                 $oCourse = Course::find($oTopic->course_id);
+
+                $oCompleted->course = true;
+                $oCompleted->points = $oCourse->university_points;
 
                 $moduleCompleted = $this->verifyModule($oCourse->module_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
 
                 if ($moduleCompleted) {
+                    $oCompleted->module = true;
+                    
                     $oModule = Module::find($oCourse->module_id);
     
                     $areaCompleted = $this->verifyArea($oModule->knowledge_area_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
+                    $oCompleted->course = $areaCompleted;
                 }
             }
         }
+
+        return $oCompleted;
     }
 
     public function verifyCourse($idCourse, $idStudent, $grouper, $assignment, $minGrade)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Uni;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Uni\UnivPointsController;
 use Carbon\Carbon;
 
 use App\Uni\SubTopic;
@@ -196,6 +197,7 @@ class ExamsController extends Controller
         $oTakeCourse = TakingControl::where('is_deleted', false)
                                         ->where('element_type_id', config('csys.elem_type.COURSE'))
                                         ->where('grouper', $oTakeSub->grouper)
+                                        ->where('course_n_id', $request->id_course)
                                         ->orderBy('id_taken_control', 'DESC')
                                         ->get();
 
@@ -220,7 +222,12 @@ class ExamsController extends Controller
             $oTakeEval->save();
 
             $controller = new TakesController();
-            $takeEvaluation = $controller->verifyCompleted($oTakeSub);
+            $oCompleted = $controller->verifyCompleted($oTakeSub);
+
+            if ($oCompleted->course) {
+                $pointsC = new UnivPointsController();
+                $pointsC->registryPoints($oCompleted->points, $oTakeCourse[0]->id_taken_control);
+            }
 
             \DB::commit();
         }
@@ -230,7 +237,8 @@ class ExamsController extends Controller
 
         $response = (object) [
                                 'isApproved' => ($grade >= $approved_grade),
-                                'grade' => $grade
+                                'grade' => $grade,
+                                'oCompleted' => $oCompleted
                             ];
 
         return json_encode($response);

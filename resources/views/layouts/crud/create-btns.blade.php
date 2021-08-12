@@ -17,6 +17,6 @@
     <div class="col-9"></div>
     <div class="col-3">
         <button id="saveButton" onclick="onSave()"  class="btn btn-success">Guardar</button>
-        <button type="reset" class="btn btn-danger">Cancelar</button>
+        <button type="reset" onclick="window.history.back();" class="btn btn-danger">Cancelar</button>
     </div>
 </div>

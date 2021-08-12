@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Sys\SyncController;
+
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Utils\TakeUtils;
+use App\Uni\Carousel;
 
 class HomeController extends Controller
 {
@@ -16,6 +19,9 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        $sync = new SyncController();
+        $sync->toSynchronize(false);
     }
 
     /**
@@ -26,6 +32,8 @@ class HomeController extends Controller
     public function index()
     {
         $title = "¡Bienvenid@ ".(\Auth::user()->names)."!";
+
+        $lCarousel = Carousel::where('is_deleted', false)->where('is_active', true)->get();
 
         $lAssignments = \DB::table('uni_assignments AS a')
                             ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
@@ -41,6 +49,7 @@ class HomeController extends Controller
         }
 
         return view('home')->with('title', $title)
+                            ->with('lCarousel', $lCarousel)
                             ->with('lCourses', $lCourses)
                             ->with('lAssignments', $lAssignments);
     }

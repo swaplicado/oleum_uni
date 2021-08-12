@@ -98,6 +98,7 @@ var app = new Vue({
 
             axios
                 .post(this.oData.sRecordExam, {
+                    'id_course': this.oData.oTopic.course_id,
                     'number_questions': this.nQuestions,
                     'take_evaluation': this.oData.takeEvaluation,
                     'take_subtopic': this.oData.idSubtopicTaken
@@ -106,7 +107,12 @@ var app = new Vue({
                     let res = response.data;
                     let route = "";
                     if (res.isApproved) {
-                        SGui.showMessage("¡Felicidades!\n Aprobaste.", "Calificación: " + res.grade, 'success');
+                        if (res.oCompleted.course) {
+                            SGui.showSuccess("¡Felicidades!\n Aprobaste el curso.", "Has ganado: " + res.oCompleted.points + " puntos.", 'success');
+                        } else {
+                            SGui.showSuccess("¡Felicidades!\n Aprobaste.", "Calificación: " + res.grade, 'success');
+                        }
+
                         route = this.oData.sSuccessRoute;
                     } else {
                         SGui.showMessage("Lo siento, intenta de nuevo.", "Calificación: " + res.grade, 'error');

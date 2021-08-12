@@ -95,8 +95,12 @@
                             {{ $oGift->stk != null ? $oGift->stk->d_stk : 0 }}
                         </td>
                         <td>
-                            <button class="btn btn-success"><i class='bx bxs-box'></i></button>
-                            <button class="btn btn-danger"><i class='bx bxs-archive-out'></i></button>
+                            <a href="{{ route('giftstk.create', ['mov_in', $oGift->id_gift]) }}" title="Entrada" class="btn btn-success">
+                                <i class='bx bxs-box'></i>
+                            </a>
+                            <a href="{{ route('giftstk.create', ['mov_out', $oGift->id_gift]) }}" title="Salida" class="btn btn-danger">
+                                <i class='bx bxs-archive-out'></i>
+                            </a>
                         </td>
                     </tr>
                @endforeach

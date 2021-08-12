@@ -29,7 +29,7 @@ class PrerequisiteRow extends Model
         'is_deleted',
         'prerequisite_id',
         'element_type_id',
-        'knowledge_n_area_id',
+        'knowledge_area_n_id',
         'module_n_id',
         'course_n_id',
         'topic_n_id',

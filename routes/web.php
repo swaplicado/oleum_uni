@@ -45,8 +45,21 @@ Route::middleware(['auth', 'menu'])->group(function () {
      */
     Route::get('/changeavatar', 'ProfilesController@changeAvatar')->name('change.avatar');
     Route::post('/changeavatar', 'ProfilesController@updateAvatar')->name('update.avatar');
-    
+
     // Controllers Within The "App\Http\Controllers\Adm" Namespace
+    Route::prefix('adm')->namespace('Adm')->middleware('manager')->group( function () {
+        /**
+         * Rutas de CRUD de Sucursales
+         */
+        Route::resource('branches','BranchesController');
+
+        /**
+         * Rutas de CRUD de Empresas
+         */
+        Route::resource('companies','CompaniesController');
+    });
+    
+    // Controllers Within The "App\Http\Controllers\Mgr" Namespace
     Route::prefix('mgr')->namespace('Mgr')->middleware('manager')->group( function () {
         /**
          * Rutas de CRUD de Áreas de Competencia
@@ -116,6 +129,26 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/gifts', 'GiftsController@gifts')->name('gifts.index');
         Route::get('/gifts/create', 'GiftsController@createGift')->name('gifts.create');
         Route::post('/gifts', 'GiftsController@storeGift')->name('gifts.store');
+        // stock
+        Route::get('/giftstk/create/{class}/{gift}', 'GiftsStockController@create')->name('giftstk.create');
+        Route::post('/giftstk', 'GiftsStockController@store')->name('giftstk.store');
+
+        /**
+         * Prerrequisitos
+         */
+        Route::get('/getpredata', 'PrerequisitesController@getPreData')->name('get.pre.data');
+        Route::post('/predata', 'PrerequisitesController@storePreRequisite')->name('store.pre.data');
+        Route::put('/predatadelete', 'PrerequisitesController@deleteRow')->name('delete.pre.row');
+
+        /**
+         * Carrusel
+         */
+        Route::get('/carousel', 'CarouselController@index')->name('carousel.index');
+        Route::get('/carousel/create', 'CarouselController@create')->name('carousel.create');
+        Route::post('/carousel', 'CarouselController@store')->name('carousel.store');
+        Route::get('/carousel/edit/{id}', 'CarouselController@edit')->name('carousel.edit');
+        Route::put('/carousel/update', 'CarouselController@update')->name('carousel.update');
+        Route::delete('/carousel/{id}', 'CarouselController@delete')->name('carousel.delete');
     });
     
     // Controllers Within The "App\Http\Controllers\Uni" Namespace
@@ -161,5 +194,13 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/shop', 'ShopController@index')->name('shop');
         Route::post('/shop', 'ShopController@exchange')->name('shop.exchange');
     });
-});
+    
+    // Controllers Within The "App\Http\Controllers\Sys" Namespace
+    Route::prefix('sys')->namespace('Sys')->group( function () {
+        /**
+         * Sincronización
+         */
+        Route::get('/tosynchronize', 'SyncController@toSynchronize')->name('to.synchronize');
+    });
 
+});

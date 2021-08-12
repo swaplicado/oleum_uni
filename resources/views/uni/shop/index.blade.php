@@ -20,10 +20,10 @@
                                 <div class="carousel-inner">
                                     @for ($i = 0; $i < count($stock->lImages); $i++)
                                         <div class="carousel-item {{ $i == 0 ? 'active' : '' }}" data-bs-interval="5000">
-                                            <img src="{{ asset('img/termo.jpg') }}" class="d-block w-100" alt="...">
+                                            <img src="{{ asset($stock->lImages[$i]) }}" class="d-block w-100" alt="...">
                                             <div class="carousel-caption d-none d-md-block">
-                                            <h5>First slide label</h5>
-                                            <p>Some representative placeholder content for the first slide.</p>
+                                            {{-- <h5>First slide label</h5>
+                                            <p>Some representative placeholder content for the first slide.</p> --}}
                                             </div>
                                         </div>
                                     @endfor

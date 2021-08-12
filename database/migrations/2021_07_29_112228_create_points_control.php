@@ -21,14 +21,16 @@ class CreatePointsControl extends Migration
             $table->string('comments', 200);
             $table->enum('mov_class', ['mov_in', 'mov_out']);
             $table->integer('mov_type_id')->unsigned();
-            $table->bigInteger('assignment_n_id')->unsigned()->nullable();
+            $table->bigInteger('taken_control_n_id')->unsigned()->nullable();
+            $table->bigInteger('gift_stk_n_id')->unsigned();
             $table->integer('student_id')->unsigned();
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
             
             $table->foreign('mov_type_id')->references('id_mov_type')->on('sys_points_mov_types')->onDelete('cascade');
-            $table->foreign('assignment_n_id')->references('id_assignment')->on('uni_assignments')->onDelete('cascade');
+            $table->foreign('taken_control_n_id')->references('id_taken_control')->on('uni_taken_controls')->onDelete('cascade');
+            $table->foreign('gift_stk_n_id')->references('id_stock')->on('uni_gifts_stock')->onDelete('cascade');
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
