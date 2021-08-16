@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 use App\Http\Controllers\Adm\DepartmentsController;
 use App\Http\Controllers\Adm\JobsController;
@@ -41,7 +43,7 @@ class SyncController extends Controller
     public static function synchronizeWithERP($lastSyncDate = "")
     {
         // $jsonString = "";
-        $jsonString = file_get_contents(base_path('response_from_siie.json'));
+        // $jsonString = file_get_contents(base_path('response_from_siie.json'));
         $client = new Client([
             'base_uri' => '192.168.1.233:9001',
             'timeout' => 10.0,
