@@ -31,6 +31,8 @@ class QuestionsController extends Controller
                                                     ->with('storeRoute', 'questions.store')
                                                     ->with('sGetQuestion', 'questions.getquestion')
                                                     ->with('updateRoute', 'questions.update')
+                                                    ->with('deleteQuestionRoute', 'questions.delete')
+                                                    ->with('delAnswerRoute', 'questions.delanswer')
                                                     ->with('oSubtopic', $oSubtopic)
                                                     ->with('idTopic', $idTopic)
                                                     ->with('idSubtopic', $idSubtopic)
@@ -140,5 +142,33 @@ class QuestionsController extends Controller
         }
 
         return $answerId;
+    }
+
+    /**
+     * Set b_del = true to Question
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function delete(Request $request)
+    {
+        $res = Question::where('id_question', $request->question)->update(['is_deleted' => true]);
+
+        return json_encode($res);
+    }
+
+    /**
+     * * Set b_del = true to Answer
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function deleteAnswer(Request $request)
+    {
+        $id = $request->answer;
+
+        $res = Answer::where('id_answer', $id)->update(['is_deleted' => true]);
+
+        return json_encode($res);
     }
 }

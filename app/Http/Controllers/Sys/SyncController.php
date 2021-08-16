@@ -28,10 +28,10 @@ class SyncController extends Controller
 
         if ($withRedirect) {
             if ($synchronized) {
-                return redirect()->back()->with('mensaje', 'Sincronizado con siie');
+                return redirect()->back()->with('mensaje', 'Sincronizado con sistema externo');
             }
             else {
-                return redirect()->back()->with('mensaje', 'No se pudo sincronizar siie');
+                return redirect()->back()->with('mensaje', 'No se pudo sincronizar sistema externo');
             }
         }
 
@@ -40,16 +40,17 @@ class SyncController extends Controller
 
     public static function synchronizeWithERP($lastSyncDate = "")
     {
+        // $jsonString = "";
         $jsonString = file_get_contents(base_path('response_from_siie.json'));
-        // $client = new Client([
-        //     'base_uri' => '192.168.1.233:9001',
-        //     'timeout' => 10.0,
-        // ]);
+        $client = new Client([
+            'base_uri' => '192.168.1.233:9001',
+            'timeout' => 10.0,
+        ]);
 
         try {
             
-            // $response = $client->request('GET', 'getInfoERP/' . $lastSyncDate);
-            // $jsonString = $response->getBody()->getContents();
+            $response = $client->request('GET', 'getInfoERP/' . $lastSyncDate);
+            $jsonString = $response->getBody()->getContents();
             $data = json_decode($jsonString);
 
             $deptCont = new DepartmentsController();

@@ -51,7 +51,26 @@ var app = new Vue({
                 });
         },
         discardAnswer(answer) {
-            this.oQuestion.lAnswers.splice(this.oQuestion.lAnswers.indexOf(answer), 1);
+            if (!answer.id_answer > 0) {
+                return;
+            }
+
+            /**
+             * Petición al Controlador
+             */
+            axios.put(this.oData.delAnswerRoute, {
+                    'answer': JSON.stringify(answer.id_answer)
+                })
+                .then(response => {
+                    let res = response.data;
+                    this.oQuestion.lAnswers.splice(this.oQuestion.lAnswers.indexOf(answer), 1);
+
+                    SGui.showOk();
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                });
         },
         /**
          * Determina si se realizará una inserción o un update en la BD
@@ -70,6 +89,25 @@ var app = new Vue({
             } else {
                 this.storeQuestion();
             }
+        },
+        deleteQuestion(question) {
+            /**
+             * Petición al Controlador
+             */
+            axios.put(this.oData.deleteQuestionRoute, {
+                    'question': JSON.stringify(question.id_question)
+                })
+                .then(response => {
+                    let res = response.data;
+                    // this.oQuestion.lAnswers.splice(this.oQuestion.lAnswers.indexOf(answer), 1);
+
+                    SGui.showOk();
+                    location.reload();
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                });
         },
         /**
          * Valida el modal de captura de pregunta y respuestas

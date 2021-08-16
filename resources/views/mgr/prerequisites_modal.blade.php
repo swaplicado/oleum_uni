@@ -48,7 +48,7 @@
           <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button v-on:click="createPrerequisite()" class="btn btn-success"><i class='bx bx-list-plus'></i></button>
+              <button v-on:click="createPrerequisite()" class="btn btn-success"><i class='bx bx-plus-circle'></i></button>
             </div>
           </div>
           <br>

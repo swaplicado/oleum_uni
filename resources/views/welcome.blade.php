@@ -96,7 +96,7 @@
                     <a href="#">SIIE 3.2</a>
                     <a href="#">Blog</a>
                     <a href="#">Sistemas</a>
-                    <a href="#">Sofware Aplicado</a>
+                    <a href="#">Software Aplicado</a>
                     <a href="#">Contacto</a>
                 </div>
             </div>

@@ -29,7 +29,10 @@
                     }
                 },
                 "colReorder": true,
-            "responsive": true,
+                "responsive": true,
+                "columnDefs": [
+                    { responsivePriority: 1, targets: [3,4] }
+                ],
                 "dom": 'Bfrtip',
                 "lengthMenu": [
                     [ 10, 25, 50, 100, -1 ],
@@ -58,6 +61,8 @@
             this.lQuestions = <?php echo json_encode($lQuestions) ?>;            
             this.storeRoute = <?php echo json_encode(route($storeRoute)) ?>;
             this.updateRoute = <?php echo json_encode(route($updateRoute)) ?>;
+            this.deleteQuestionRoute = <?php echo json_encode(route($deleteQuestionRoute)) ?>;
+            this.delAnswerRoute = <?php echo json_encode(route($delAnswerRoute)) ?>;
             this.sGetRoute = <?php echo json_encode(route($sGetQuestion)) ?>;
             this.idTopic = <?php echo json_encode($idTopic) ?>;
             this.idSubtopic = <?php echo json_encode($idSubtopic) ?>;
@@ -83,6 +88,7 @@
                         <th>Número de respuestas</th>
                         <th>Respuesta correcta</th>
                         <th>Ver respuestas</th>
+                        <th>-</th>
                     </tr>
                 </thead>
                 <tbody>                    
@@ -96,6 +102,9 @@
                                     Ver respuestas<i class='bx bx-list-ol'></i></i>
                                 </button>
                             </td>
+                            <td>
+                                <button v-on:click="deleteQuestion(question)" class="btn btn-danger"><i class='bx bx-x'></i></button>
+                            </td>
                         </tr>
                 </tbody>
                 <tfoot>
@@ -104,6 +113,7 @@
                         <th>Número de respuestas</th>
                         <th>Respuesta correcta</th>
                         <th>Ver respuestas</th>
+                        <th>-</th>
                     </tr>
                 </tfoot>
             </table>

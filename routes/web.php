@@ -99,6 +99,8 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::post('/question', 'QuestionsController@store')->name('questions.store');
         Route::get('/question', 'QuestionsController@getQuestion')->name('questions.getquestion');
         Route::put('/question', 'QuestionsController@update')->name('questions.update');
+        Route::put('/questiondel', 'QuestionsController@delete')->name('questions.delete');
+        Route::put('/deleteanswer', 'QuestionsController@deleteAnswer')->name('questions.delanswer');
     
         /**
          * Rutas de Gestión de contenidos

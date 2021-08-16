@@ -68,7 +68,7 @@
                     <tr>
                         <th>Clave</th>
                         <th>Curso</th>
-                        <th>Duración</th>
+                        <th>Duración (días)</th>
                         <th>Puntos</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
@@ -106,7 +106,7 @@
                     <tr>
                         <th>Clave</th>
                         <th>Curso</th>
-                        <th>Duración</th>
+                        <th>Duración (días)</th>
                         <th>Puntos</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
