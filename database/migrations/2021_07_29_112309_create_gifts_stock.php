@@ -13,16 +13,17 @@ class CreateGiftsStock extends Migration
      */
     public function up()
     {
-        Schema::create('uni_gifts_stock', function (Blueprint $table) {
+        Schema::create('uni_gifts_stock', function (Blueprint $table) {	
             $table->bigIncrements('id_stock');
             $table->date('dt_date');
             $table->decimal('increment', 8,2);
             $table->decimal('decrement', 8,2);
             $table->string('comments', 200);
+            $table->boolean('is_deleted');
             $table->enum('mov_class', ['mov_in', 'mov_out']);
             $table->integer('mov_type_id')->unsigned();
             $table->integer('gift_id')->unsigned();
-            $table->integer('student_n_id')->unsigned()->nullable();
+            $table->integer('student_n_id')->unsigned();
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
@@ -32,7 +33,7 @@ class CreateGiftsStock extends Migration
             $table->foreign('student_n_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
-        });
+        });	
     }
 
     /**

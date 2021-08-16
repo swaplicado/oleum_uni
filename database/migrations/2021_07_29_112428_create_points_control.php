@@ -13,15 +13,16 @@ class CreatePointsControl extends Migration
      */
     public function up()
     {
-        Schema::create('uni_points_control', function (Blueprint $table) {
+        Schema::create('uni_points_control', function (Blueprint $table) {	
             $table->bigIncrements('id_points_control');
             $table->date('dt_date');
             $table->decimal('increment', 8,2);
             $table->decimal('decrement', 8,2);
             $table->string('comments', 200);
+            $table->boolean('is_deleted');
             $table->enum('mov_class', ['mov_in', 'mov_out']);
             $table->integer('mov_type_id')->unsigned();
-            $table->bigInteger('taken_control_n_id')->unsigned()->nullable();
+            $table->bigInteger('taken_control_n_id')->unsigned();
             $table->bigInteger('gift_stk_n_id')->unsigned();
             $table->integer('student_id')->unsigned();
             $table->integer('created_by_id')->unsigned();

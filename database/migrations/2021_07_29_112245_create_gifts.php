@@ -20,13 +20,15 @@ class CreateGifts extends Migration
             $table->string('description', 200);
             $table->longText('images');
             $table->integer('points_value');
+            $table->boolean('is_active');
+            $table->boolean('is_deleted');
             $table->integer('created_by_id')->unsigned();
             $table->integer('updated_by_id')->unsigned();
             $table->timestamps();
             
             $table->foreign('created_by_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('cascade');
-        });	
+        });
     }
 
     /**
