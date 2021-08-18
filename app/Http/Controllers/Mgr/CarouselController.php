@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Uni\Carousel;
+use App\Uni\EduContent;
 
 class CarouselController extends Controller
 {
@@ -19,7 +20,10 @@ class CarouselController extends Controller
 
     public function index()
     {
-        $lCarousel = Carousel::where('is_deleted', false)->get();
+        $lCarousel = \DB::table('uni_carousel AS c')
+                            ->leftJoin('uni_edu_contents AS ec', 'c.content_n_id', '=', 'ec.id_content')
+                            ->where('c.is_deleted', false)
+                            ->get();
 
         return view('mgr.carousel.index')->with('lElements', $lCarousel)
                                             ->with('title', 'Carrusel')
@@ -30,7 +34,18 @@ class CarouselController extends Controller
 
     public function create()
     {
+        $videos = EduContent::where('file_type', 'video')->where('is_deleted', false)->get();
+
+        foreach ($videos as $video) {
+            $url = asset($video->file_path);
+            $path = str_replace("public", "", $url);
+            $path = str_replace("storage", "storage/app", $path);
+
+            $video->path = $path;
+        }
+
         return view('mgr.carousel.create')->with('title', 'Carrusel')
+                                            ->with('videos', $videos)
                                             ->with('storeRoute', $this->storeRoute);
     }
 
@@ -38,27 +53,40 @@ class CarouselController extends Controller
     {
         $oCarousel = new Carousel();
 
-        $imageName = "";
-        if($request->hasfile('img'))
-        {
-            $img = $request->file('img');
-            $name = $img->getClientOriginalName();
-
-            // you can also use the original name
-            $imageName = time().'-'.$img->getClientOriginalName();
-            $imageField = 'images/carousel/'.time().'-'.$img->getClientOriginalName();
-            // Upload file to public path in images directory
-
-            $img->move(public_path('images/carousel'), $imageName);
+        if ($request->element_type == 'i') {
+            $imageName = "";
+            if($request->hasfile('img'))
+            {
+                $img = $request->file('img');
+                $name = str_replace(" ", "-", $img->getClientOriginalName());
+    
+                // you can also use the original name
+                $imageName = time().'-'.$name;
+                $imageField = 'images/carousel/'.$imageName;
+                // Upload file to public path in images directory
+    
+                $img->move(public_path('images/carousel'), $imageName);
+            }
+    
+            $oCarousel->title = $request->title;
+            $oCarousel->text = $request->text;
+            $oCarousel->text_color = $request->text_color;
+            $oCarousel->image = $imageField;
+            $oCarousel->is_active = isset($request->is_active);
+            $oCarousel->is_deleted = false;
+            $oCarousel->content_n_id = null;
+        }
+        else {
+            $oCarousel->title = "";
+            $oCarousel->text = "";
+            $oCarousel->text_color = "";
+            $oCarousel->image = "";
+            $oCarousel->is_active = isset($request->is_active);
+            $oCarousel->is_deleted = false;
+            $oCarousel->content_n_id = $request->id_content;
         }
 
-        $oCarousel->title = $request->title;
-        $oCarousel->text = $request->text;
-        $oCarousel->text_color = $request->text_color;
-        $oCarousel->url = $request->link;
-        $oCarousel->image = $imageField;
-        $oCarousel->is_active = isset($request->is_active);
-        $oCarousel->is_deleted = false;
+        $oCarousel->url = $request->link != null ? $request->link : "#";
         $oCarousel->created_by_id = \Auth::id();
         $oCarousel->updated_by_id = \Auth::id();
 
@@ -73,20 +101,63 @@ class CarouselController extends Controller
 
         $image = $oCarousel->image;
 
+        $videos = EduContent::where('file_type', 'video')->where('is_deleted', false)->get();
+
+        foreach ($videos as $video) {
+            $url = asset($video->file_path);
+            $path = str_replace("public", "", $url);
+            $path = str_replace("storage", "storage/app", $path);
+
+            $video->path = $path;
+        }
+
         return view('mgr.carousel.edit')->with('title', 'Carrusel')
                                             ->with('oCarousel', $oCarousel)
                                             ->with('image', $image)
+                                            ->with('videos', $videos)
                                             ->with('updateRoute', $this->updateRoute);
     }
 
     public function update(Request $request)
     {
+        if ($request->element_type == 'i') {
+            $imageName = "";
+            if($request->hasfile('img'))
+            {
+                $img = $request->file('img');
+                $name = str_replace(" ", "-", $img->getClientOriginalName());
+    
+                // you can also use the original name
+                $imageName = time().'-'.$name;
+                $imageField = 'images/carousel/'.$imageName;
+                // Upload file to public path in images directory
+    
+                $img->move(public_path('images/carousel'), $imageName);
+            }
+
+            $image = $imageField;
+            $title = $request->title;
+            $text = $request->text;
+            $text_color = $request->text_color;
+            $content_n_id = null;
+        }
+        else {
+            $title = "";
+            $text = "";
+            $text_color = "";
+            $image = "";
+            $content_n_id = $request->id_content;
+        }
+
         Carousel::where('id_slide', $request->id_slide)->update([
             'title' => $request->title,
             'text' => $request->text,
             'text_color' => $request->text_color,
-            'url' => $request->link,
+            'image' => $image,
+            'url' => $request->link != null ? $request->link : "#",
             'is_active' => isset($request->is_active),
+            'content_n_id' => $content_n_id,
+            'updated_by_id' => \Auth::id()
         ]);
 
         return redirect()->route('carousel.index')->with("success", "Se ha actualizado con éxito");

@@ -47,8 +47,8 @@
         :root {
             --header-height: 3rem;
             --nav-width: 68px;
-            --first-color: #4723D9;
-            --first-color-light: #AFA5D9;
+            --first-color: #05887F;
+            --first-color-light: #F9EA5C;
             --white-color: rgb(240, 245, 247);
             --body-font: 'Nunito', sans-serif;
             --normal-font-size: 1rem;
@@ -385,7 +385,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-9">
-                                <h2><b style="color: #426BC2">@yield('content_title', 'Unknow')</b></h2>
+                                <h2><b style="color: #05887F">@yield('content_title', 'Unknow')</b></h2>
                             </div>
                             <div class="col-3">
                                 <div style="float: right;">

@@ -16,12 +16,18 @@
                           @for ($i = 0; $i < count($lCarousel); $i++)
                             <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
                               <a href="{{ $lCarousel[$i]->url }}" target="_blank">
-                                <img src="{{ asset($lCarousel[$i]->image) }}" class="d-block w-100" alt="">
+                                @if ($lCarousel[$i]->content_n_id == null)
+                                  <img src="{{ asset($lCarousel[$i]->image) }}" class="d-block w-100" alt="">
+                                  <div class="carousel-caption d-none d-md-block">
+                                    <h5 style="color: {{ $lCarousel[$i]->text_color }}"><b>{{ $lCarousel[$i]->title }}</b></h5>
+                                    <p style="color: {{ $lCarousel[$i]->text_color }}">{{ $lCarousel[$i]->text }}</p>
+                                  </div>
+                                @else
+                                  <video controls="" autoplay="" name="media" width="100%" height="100%">
+                                    <source id="idSource" src="{{ $lCarousel[$i]->path }}" type="video/mp4">
+                                  </video>
+                                @endif
                               </a>
-                              <div class="carousel-caption d-none d-md-block">
-                                <h5 style="color: {{ $lCarousel[$i]->text_color }}"><b>{{ $lCarousel[$i]->title }}</b></h5>
-                                <p style="color: {{ $lCarousel[$i]->text_color }}">{{ $lCarousel[$i]->text }}</p>
-                              </div>
                             </div>
                           @endfor
                         </div>
@@ -39,7 +45,7 @@
             <hr>
             <div class="row">
               <div class="col-12">
-                <a href="{{ route('areas.index') }}"><h2 style="color: #426BC2">Áreas de competencia...</h2></a>
+                <a href="{{ route('areas.index') }}"><h2 style="color: #05887F">Áreas de competencia...</h2></a>
               </div>
             </div>
             <div class="row">
@@ -63,7 +69,7 @@
             <hr>
             <div class="row">
               <div class="col-12">
-                <h2 style="color: #426BC2">Cursando actualmente...</h2>
+                <h2 style="color: #05887F">Cursando actualmente...</h2>
               </div>
             </div>
             <div class="row">

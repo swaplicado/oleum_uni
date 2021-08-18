@@ -82,6 +82,7 @@ class ContentsController extends Controller
                     case 'mp4':
                     case 'wmv':
                     case 'mov':
+                    case 'avi':
                         $fileType = 'video';
                         $destinationPath = 'contents/videos';
                         $url = Storage::put($destinationPath, $file);
