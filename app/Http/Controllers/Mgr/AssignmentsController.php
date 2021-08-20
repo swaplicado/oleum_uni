@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Mgr;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 
+use App\Mail\KnowledgeAreaAssignment;
 use App\Uni\AssignmentControl;
 use App\Uni\Assignment;
 use App\Uni\KnowledgeArea;
@@ -226,6 +228,7 @@ class AssignmentsController extends Controller
             
             $assignments = json_decode($request->assignments);
 
+            $lAssigns = [];
             foreach ($assignments as $assignment) {
                 $oAssignment = new Assignment(((array) $assignment));
                 $oAssignment->control_id = $oAControl->id_control;
@@ -233,9 +236,27 @@ class AssignmentsController extends Controller
                 $oAssignment->updated_by_id = \Auth::id();
 
                 $oAssignment->save();
+
+                $lAssigns[] = $oAssignment;
             }
 
             \DB::commit();
+
+            foreach ($lAssigns as $assignment) {
+                $student = User::find($assignment->student_id);
+                if (strlen($student->email) == 0) {
+                    continue;
+                }
+
+                $rec = [];
+                $ua = [];
+                $ua['email'] = $student->email;
+                $ua['name'] = $student->full_name;
+
+                $rec[] = (object) $ua;
+
+                Mail::to($rec)->send(new KnowledgeAreaAssignment($assignment->id_assignment));
+            }
         }
         catch (\Throwable $th) {
             \DB::rollBack();

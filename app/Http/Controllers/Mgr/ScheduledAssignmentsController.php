@@ -149,7 +149,7 @@ class ScheduledAssignmentsController extends Controller
 
         $this->processAssignmentSchedule(false);
 
-        return redirect()->route('assignments.scheduled.index')->with("success","¡Se ha programado con éxito!");
+        return redirect()->route('assignments.scheduled.index')->with("success","¡Se programó con éxito!");
     }
 
     public function processAssignmentSchedule($bRedirect = true)
@@ -285,7 +285,7 @@ class ScheduledAssignmentsController extends Controller
         }
 
         if ($bRedirect) {
-            return redirect()->back()->with("success","¡Se ha programado con éxito!");
+            return redirect()->back()->with("success","¡Se programó con éxito!");
         }
     }
 }

@@ -92,7 +92,7 @@ class CarouselController extends Controller
 
         $oCarousel->save();
 
-        return redirect()->route('carousel.index')->with("success", "Se ha agregado con éxito");
+        return redirect()->route('carousel.index')->with("success", "El elemento se agregó con éxito.");
     }
 
     public function edit($idSlide)
@@ -160,7 +160,7 @@ class CarouselController extends Controller
             'updated_by_id' => \Auth::id()
         ]);
 
-        return redirect()->route('carousel.index')->with("success", "Se ha actualizado con éxito");
+        return redirect()->route('carousel.index')->with("success", "Se actualizó con éxito.");
     }
 
     public function delete($idSlide)

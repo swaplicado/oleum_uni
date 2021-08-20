@@ -49,6 +49,9 @@
               </div>
             </div>
             <div class="row">
+              @if (count($lAssignments) == 0)
+                  <h5>No tienes competencias asignadas</h5>
+              @endif
               @foreach($lAssignments as $ka)
                 <div class="col-lg-3 col-md-6 col-12">
                   <a href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}">
@@ -73,6 +76,9 @@
               </div>
             </div>
             <div class="row">
+              @if (count($lCourses) == 0)
+                <h5>No hay nada por aquí...</h5>
+              @endif
               @foreach ($lCourses as $course)
                 <div class="col-lg-3 col-md-6 col-12">
                   <a href="{{ route('uni.courses.course', [$course->id_course, $course->assignment_id]) }}">
