@@ -3,7 +3,7 @@ class SGui {
 
     static showWaiting(iTimer) {
         Swal.fire({
-            title: 'Espere...',
+            title: 'Espera...',
             timer: iTimer,
             timerProgressBar: true,
             didOpen: () => {

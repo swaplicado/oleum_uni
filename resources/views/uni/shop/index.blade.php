@@ -13,9 +13,9 @@
                         <div class="card h-100">
                             <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
                                 <div class="carousel-indicators">
-                                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                    @for ($i = 0; $i < count($stock->lImages); $i++)
+                                        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}" aria-current="{{ $i == 0 ? 'true' : 'false' }}" aria-label="Slide {{ $i+1 }}"></button>
+                                    @endfor
                                 </div>
                                 <div class="carousel-inner">
                                     @for ($i = 0; $i < count($stock->lImages); $i++)

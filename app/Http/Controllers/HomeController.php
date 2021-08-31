@@ -33,13 +33,30 @@ class HomeController extends Controller
     {
         $title = "¡Bienvenid@ ".(\Auth::user()->names)."!";
 
-        $lCarousel = Carousel::where('is_deleted', false)->where('is_active', true)->get();
+        $lCarousel = \DB::table('uni_carousel AS c')
+                            ->leftJoin('uni_edu_contents AS ec', 'c.content_n_id', '=', 'ec.id_content')
+                            ->where('c.is_deleted', false)
+                            ->where('c.is_active', true)
+                            ->get();
+
+        foreach ($lCarousel as $video) {
+            if ($video->content_n_id == null) {
+                continue;
+            }
+            
+            $url = asset($video->file_path);
+            $path = str_replace("public", "", $url);
+            $path = str_replace("storage", "storage/app", $path);
+
+            $video->path = $path;
+        }
 
         $lAssignments = \DB::table('uni_assignments AS a')
                             ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                             ->where('a.student_id', \Auth::id())
                             ->where('a.is_deleted', false)
                             ->where('a.is_over', false)
+                            ->whereRaw('NOW() BETWEEN dt_assignment AND dt_end')
                             ->get();
 
         $lCourses = TakeUtils::getTakingCourses(\Auth::id());

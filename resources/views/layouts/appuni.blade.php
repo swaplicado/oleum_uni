@@ -9,6 +9,7 @@
     <title>Univ AETH</title>
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('daterangepicker/css/daterangepicker.css') }}" rel="stylesheet">
     <link href="{{ asset('myapp/css/mycss.css') }}" rel="stylesheet">
     <link href="{{ asset('swal2/css/sweetalert2.css') }}" rel="stylesheet">
     <link href="{{ asset('select2/css/select2.min.css') }}" rel="stylesheet">
@@ -47,8 +48,8 @@
         :root {
             --header-height: 3rem;
             --nav-width: 68px;
-            --first-color: #4723D9;
-            --first-color-light: #AFA5D9;
+            --first-color: #05887F;
+            --first-color-light: #F9EA5C;
             --white-color: rgb(240, 245, 247);
             --body-font: 'Nunito', sans-serif;
             --normal-font-size: 1rem;
@@ -335,6 +336,7 @@
     <script type="text/javascript" src="{{ asset('vue/vue.js') }}"></script>
     <script type="text/javascript" src="{{ asset('axios/axios.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('swal2/js/sweetalert2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('daterangepicker/js/daterangepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myapp/js/myjs.js') }}"></script>
     <script type="text/javascript" src="{{ asset('select2/js/select2.full.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/datatables.min.js') }}"></script>
@@ -385,7 +387,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-9">
-                                <h2><b style="color: #426BC2">@yield('content_title', 'Unknow')</b></h2>
+                                <h2><b style="color: #05887F">@yield('content_title', 'Unknow')</b></h2>
                             </div>
                             <div class="col-3">
                                 <div style="float: right;">

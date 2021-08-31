@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Uni;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
+use App\Mail\GiftExchanged;
 use App\Uni\PointsControl;
 use App\Uni\GiftStock;
 use App\Uni\Gift;
@@ -99,7 +100,7 @@ class ShopController extends Controller
                         ->groupBy('student_id')
                         ->first();
 
-        if ($oPoints->points <= $oStock->points_value) {
+        if ($oPoints->points < $oStock->points_value) {
             return redirect()->route('shop')->withError("Los puntos que tienes no son suficientes para canjear este premio.");
         }
 
@@ -129,7 +130,7 @@ class ShopController extends Controller
             $points->is_deleted = false;
             $points->mov_class = "mov_out";
             $points->mov_type_id = 4;
-            $points->take_control_n_id = null;
+            $points->taken_control_n_id = null;
             $points->gift_stk_n_id = $stock->id_stock;
             $points->student_id = \Auth::id();
             $points->created_by_id = \Auth::id();
@@ -138,6 +139,7 @@ class ShopController extends Controller
             $points->save();
 
             // Notificación
+            $this->sendExchangeNotification($idGift, $sDate);
 
             \DB::commit();
         }
@@ -147,6 +149,40 @@ class ShopController extends Controller
             return redirect()->route('shop')->withError($th->getMessage());
         }
 
-        return redirect()->route('shop')->with("success", "El premio se ha canjeado con éxito.");
+        return redirect()->route('shop')->with("success", "Canjeaste tu premio, acude con el administrador de la tienda.");
+    }
+
+    private function sendExchangeNotification($idGift, $sDate)
+    {
+        $oPoints = PointsControl::where('student_id', \Auth::id())
+                        ->selectRaw('
+                            SUM(increment) AS increments, 
+                            SUM(decrement) AS decrements, 
+                            (SUM(increment) - SUM(decrement)) AS points
+                        ')
+                        ->where('is_deleted', false)
+                        ->where('dt_date', '<=', $sDate)
+                        ->groupBy('student_id')
+                        ->first();
+
+        $rec = [];
+        if (strlen(\Auth::user()->email) > 0) {
+            $ua = [];
+            $ua['email'] = \Auth::user()->email;
+            $ua['name'] = \Auth::user()->full_name;
+
+            $rec[] = (object) $ua;
+        }
+
+        $rec[] = env('MAIL_EXCHANGE_NOTIF');
+
+        Mail::to($rec)->send(new GiftExchanged($idGift, $oPoints->points));
+
+        return;
+    }
+
+    public function preview()
+    {
+        return view('mails.adm.giftexchanged');
     }
 }

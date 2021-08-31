@@ -110,11 +110,50 @@ class UsersController extends Controller
             return;
         }
 
+        $name = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->firstname);
+        $lastname1 = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->lastname1);
+        $lastname2 = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->lastname2);
+        // $usernameTmp = strtolower($jUser->num_employee.'.'.$jUser->lastname1.'.'.$jUser->lastname2);
+        
+        $names = explode(' ', $name);
+        $lastname1s = explode(' ', $lastname1);
+        $lastname2s = explode(' ', $lastname2);
+
+        $usr = [];
+        if (count($names) > 0 && count($lastname1s) > 0) {
+            $usernameTmp = strtolower($names[0].'.'.$lastname1s[0]);
+            $username = $this->getUserName($usernameTmp);
+            $usr = User::where('username', $username)->first();
+        }
+        
+        if ($usr != null) {
+            if (count($names) > 1) {
+                $usernameTmp = strtolower($names[1].'.'.$lastname1s[0]);
+                $username = $this->getUserName($usernameTmp);
+                $usr = User::where('username', $username)->first();
+            }
+
+            if ($usr != null) {
+                if (count($lastname2s) > 0) {
+                    $usernameTmp = strtolower($names[0].'.'.$lastname2s[0]);
+                    $username = $this->getUserName($usernameTmp);
+                    $usr = User::where('username', $username)->first();
+                }
+            }
+
+            if ($usr != null) {
+                $usernameTmp = strtolower($jUser->lastname1.'.'.$jUser->num_employee);
+                $username = $this->getUserName($usernameTmp);
+                $usr = User::where('username', $username)->first();
+
+                if ($usr != null) {
+                    return;
+                }
+            }
+        }
+
         $oUser = new User();
 
-        $usernameTmp = strtolower($jUser->num_employee.'.'.$jUser->lastname1.'.'.$jUser->lastname2);
-        $username = str_replace(['ñ', 'Ñ'], 'n', $usernameTmp);
-        $username = str_replace('-', '', $username);
         $oUser->username = $username;
         $oUser->password = bcrypt($username);
         $oUser->email = $jUser->email;
@@ -134,5 +173,14 @@ class UsersController extends Controller
         $oUser->updated_by_id = 1;
 
         $oUser->save();
+    }
+
+    private function getUserName($usernameTmp)
+    {
+        $username = str_replace(['ñ', 'Ñ'], 'n', $usernameTmp);
+        $username = str_replace('-', '', $username);
+        $username = str_replace(' ', '', $username);
+
+        return $username;
     }
 }

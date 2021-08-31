@@ -79,6 +79,8 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/courses/{mod?}', 'CoursesController@index')->name('courses.index');
         Route::get('/courses/{mod}/create', 'CoursesController@create')->name('courses.create');
         Route::post('/courses', 'CoursesController@store')->name('courses.store');
+        Route::get('/courses/edit/{id}', 'CoursesController@edit')->name('courses.edit');
+        Route::put('/courses/{id}', 'CoursesController@update')->name('courses.update');
     
         /**
          * Rutas de CRUD de Temas (Topics)

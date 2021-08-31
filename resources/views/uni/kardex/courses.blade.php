@@ -10,7 +10,7 @@
             <ol class="list-group list-group-numbered">
                 @foreach ($lCourses as $course)
                     <div class="card">
-                        <h5 class="card-header d-flex justify-content-between align-items-start" style="color: black; background-color: #FAC748">
+                        <h5 class="card-header d-flex justify-content-between align-items-start" style="color: black; background-color: #6FC1E1">
                             {{ $course->course }}
                             <div>
                                 <span class="badge bg-primary rounded-pill">{{ $course->grade[1] == null || $course->grade[1] == 0 ? "-" : $course->grade[1] }}</span>
@@ -23,7 +23,7 @@
                             </div>
                         </h5>
                         @foreach ($course->lTopics as $topic)
-                            <li class="list-group-item d-flex justify-content-between align-items-start" style="color: white; background-color: #8390FA">
+                            <li class="list-group-item d-flex justify-content-between align-items-start" style="color: black; background-color: #4CC4D0">
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">{{ $topic->topic }}</div>
                                 </div>

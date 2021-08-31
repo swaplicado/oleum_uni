@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Mgr;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
+use App\Mail\KnowledgeAreaAssignment;
+use App\Utils\TakeUtils;
 use App\Uni\AssignmentControl;
 use App\Uni\Assignment;
 use App\Uni\KnowledgeArea;
@@ -45,19 +49,41 @@ class AssignmentsController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        $aDates = $request->daterange == null ? 
+                        \App\Utils\DateUtils::getCurrentMonth(Carbon::now()) : 
+                        \App\Utils\DateUtils::getDates($request->daterange);
+
         $lAssignments = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('users AS u', 'a.student_id', '=', 'u.id')
-                        ->select('a.*', 'ka.knowledge_area AS ka', 'u.full_name AS student')
-                        ->whereRaw('NOW() between a.dt_assignment AND a.dt_end')
+                        ->join('adm_jobs AS j', 'u.job_id', '=', 'j.id_job')
+                        ->join('adm_departments AS d', 'j.department_id', '=', 'd.id_department')
+                        ->select('a.*', 'ka.knowledge_area AS ka', 'u.full_name AS student', 'd.department')
+                        ->where(function ($q) use ($aDates) {
+                            $q->whereBetween('a.dt_assignment', [$aDates[0]->format('Y-m-d'), $aDates[1]->format('Y-m-d')])
+                                ->orWhereBetween('a.dt_end', [$aDates[0]->format('Y-m-d'), $aDates[1]->format('Y-m-d')]);
+                        })
                         ->where('a.is_deleted', false)
                         ->where('ka.is_deleted', false)
                         ->where('u.is_deleted', false)
                         ->get();
 
+        foreach ($lAssignments as $element) {
+            if ($element->is_over) {
+                $aGrade = TakeUtils::isAreaApproved($element->knowledge_area_id, $element->student_id, $element->id_assignment, true);
+                $element->grade = $aGrade[1];
+            }
+            else {
+                $element->grade = 0;
+            }
+        }
+
+        $sFilterDate = $aDates[0]->format('d-m-Y').' - '.$aDates[1]->format('d-m-Y');
+            
         return view("mgr.assignments.index")->with('title', "Todas las asignaciones")
+                                            ->with('daterange', $sFilterDate)
                                             ->with('newRoute', $this->newRoute)
                                             ->with('updateRoute', 'assignments.updateassignment')
                                             ->with('deleteRoute', 'assignments.delete')
@@ -226,6 +252,7 @@ class AssignmentsController extends Controller
             
             $assignments = json_decode($request->assignments);
 
+            $lAssigns = [];
             foreach ($assignments as $assignment) {
                 $oAssignment = new Assignment(((array) $assignment));
                 $oAssignment->control_id = $oAControl->id_control;
@@ -233,9 +260,27 @@ class AssignmentsController extends Controller
                 $oAssignment->updated_by_id = \Auth::id();
 
                 $oAssignment->save();
+
+                $lAssigns[] = $oAssignment;
             }
 
             \DB::commit();
+
+            foreach ($lAssigns as $assignment) {
+                $student = User::find($assignment->student_id);
+                if (strlen($student->email) == 0) {
+                    continue;
+                }
+
+                $rec = [];
+                $ua = [];
+                $ua['email'] = $student->email;
+                $ua['name'] = $student->full_name;
+
+                $rec[] = (object) $ua;
+
+                Mail::to($rec)->send(new KnowledgeAreaAssignment($assignment->id_assignment));
+            }
         }
         catch (\Throwable $th) {
             \DB::rollBack();

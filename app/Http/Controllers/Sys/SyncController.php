@@ -66,8 +66,11 @@ class SyncController extends Controller
             
             $deptCont->setSupDeptAndHeadUser($data->departments);
 
-            $sch = new ScheduledAssignmentsController();
-            $sch->processAssignmentSchedule(false);
+            $config = \App\Utils\Configuration::getConfigurations();
+            if ($config->automaticSchedule) {
+                $sch = new ScheduledAssignmentsController();
+                $sch->processAssignmentSchedule(false);
+            }
         }
         catch (\Throwable $th) {
             //throw $th;

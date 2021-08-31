@@ -484,6 +484,9 @@ class TakesController extends Controller
                                     'grade' => $areaGrade,
                                     'min_grade' => $minGrade,
                                     ]);
+
+        Assignment::where('id_assignment', $assignment)
+                    ->update(['is_over' => true]);
         
         return true;
     }

@@ -85,6 +85,7 @@
                 <thead>
                     <tr>
                         <th>Imagen</th>
+                        <th>Video</th>
                         <th>Título</th>
                         <th>Texto</th>
                         <th>URL</th>
@@ -96,9 +97,10 @@
                     @foreach ($lElements as $element)
                         <tr>
                             <td>{{ $element->image }}</td>
+                            <td>{{ $element->content_n_id != null ? $element->file_name : "" }}</td>
                             <td>{{ $element->title }}</td>
                             <td>{{ $element->text }}</td>
-                            <td>{{ $element->url }}</td>
+                            <td><a href="{{ $element->url }}">{{ $element->url }}</a></td>
                             <td>{{ $element->is_active }}</td>
                             <td style="text-align: center">
                                 <a href="{{ route($editRoute, $element->id_slide) }}">
@@ -114,6 +116,7 @@
                 <tfoot>
                     <tr>
                         <th>Imagen</th>
+                        <th>Video</th>
                         <th>Título</th>
                         <th>Texto</th>
                         <th>URL</th>

@@ -6,7 +6,15 @@
         <div class="col-12">
             <div class="row">
                 <div class="col-md-3">
-                    <img src="{{ asset('img/aceites.jpg') }}" class="img-fluid rounded-start" alt="...">
+                    @if (! isset($oCourse->cover))
+                        <img src="{{ asset('img/aceites.jpg') }}" class="img-fluid rounded-start" alt="...">
+                    @elseif ($oCourse->cover->file_type == 'video')
+                        <video id="idVideo" controls="" autoplay="" name="media" width="100%" height="100%">
+                            <source id="idSource" src="{{ $oCourse->cover->view_path }}" type="video/mp4">
+                        </video>
+                    @else
+                        <img src="{{ $oCourse->cover->view_path }}" alt="" class="img-fluid rounded-start" width="100%" height="100%">
+                    @endif
                 </div>
                 <div class="col-md-9">
                     <p>{{ $oCourse->description }}</p>
