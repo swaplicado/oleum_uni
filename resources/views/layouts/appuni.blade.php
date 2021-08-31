@@ -9,6 +9,7 @@
     <title>Univ AETH</title>
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('daterangepicker/css/daterangepicker.css') }}" rel="stylesheet">
     <link href="{{ asset('myapp/css/mycss.css') }}" rel="stylesheet">
     <link href="{{ asset('swal2/css/sweetalert2.css') }}" rel="stylesheet">
     <link href="{{ asset('select2/css/select2.min.css') }}" rel="stylesheet">
@@ -335,6 +336,7 @@
     <script type="text/javascript" src="{{ asset('vue/vue.js') }}"></script>
     <script type="text/javascript" src="{{ asset('axios/axios.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('swal2/js/sweetalert2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('daterangepicker/js/daterangepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myapp/js/myjs.js') }}"></script>
     <script type="text/javascript" src="{{ asset('select2/js/select2.full.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('datatables/datatables.min.js') }}"></script>

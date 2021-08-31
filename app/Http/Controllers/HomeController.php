@@ -56,6 +56,7 @@ class HomeController extends Controller
                             ->where('a.student_id', \Auth::id())
                             ->where('a.is_deleted', false)
                             ->where('a.is_over', false)
+                            ->whereRaw('NOW() BETWEEN dt_assignment AND dt_end')
                             ->get();
 
         $lCourses = TakeUtils::getTakingCourses(\Auth::id());

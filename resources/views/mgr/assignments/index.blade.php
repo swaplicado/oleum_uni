@@ -31,7 +31,7 @@
             "colReorder": true,
             "responsive": true,
             "columnDefs": [
-                    { responsivePriority: 1, targets: 5 }
+                    { responsivePriority: 1, targets: 7 }
                 ],
             "dom": 'Bfrtip',
             "lengthMenu": [
@@ -62,6 +62,15 @@
 
     var oServerData = new GlobalData();
 </script>
+<script>
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+        opens: 'left'
+        }, function(start, end, label) {
+        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+</script>
 @endsection
 
 @section('content')
@@ -71,16 +80,30 @@
             <a id="rightnew" href="{{ route($newRoute) }}" class="btn btn-success">
                 Nuevo<i class='bx bx-plus'></i>
             </a>
+            <br>
+            <br>
+            <form action="{{ route('assignments.index') }}">
+                <div class="row justify-content-end">
+                    <div class="col-11 col-md-3">
+                        <input size="24" class="form-control" type="text" name="daterange" value="{{ $daterange }}" />
+                    </div>
+                    <div class="col-1">
+                        <button class="btn btn-primary btn-sm" type="submit"><i class='bx bx-search-alt bx-sm'></i></button>
+                    </div>
+                </div>
+            </form>
             <div class="row">
                 <div class="col-md-12">
                     <table id="assignments_table" class="display stripe hover row-border order-column" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Estudiante</th>
+                                <th>Departamento</th>
                                 <th>Área de competencia</th>
                                 <th>Fecha de asignación</th>
                                 <th>Fecha límite</th>
                                 <th>Terminada</th>
+                                <th>Calif.</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -88,10 +111,12 @@
                             @foreach ($lAssignments as $oAssign)
                                 <tr>
                                     <td>{{ $oAssign->student }}</td>
+                                    <td>{{ $oAssign->department }}</td>
                                     <td>{{ $oAssign->ka }}</td>
                                     <td>{{ $oAssign->dt_assignment }}</td>
                                     <td>{{ $oAssign->dt_end }}</td>
                                     <td>{{ $oAssign->is_over ? 'SÍ' : 'NO' }}</td>
+                                    <td>{{ $oAssign->grade > 0 ? $oAssign->grade : '' }}</td>
                                     <td style="text-align: center">
                                         <button class="btn btn-info" v-on:click="editAssignment('{{ $oAssign->dt_assignment }}', '{{ $oAssign->dt_end }}', '{{ $oAssign->student }}', '{{ $oAssign->id_assignment }}')">
                                             Editar <i class='bx bxs-edit-alt'></i>
@@ -106,10 +131,12 @@
                         <tfoot>
                             <tr>
                                 <th>Estudiante</th>
+                                <th>Departamento</th>
                                 <th>Área de competencia</th>
                                 <th>Fecha de asignación</th>
                                 <th>Fecha límite</th>
                                 <th>Terminada</th>
+                                <th>Calif.</th>
                                 <th>Acciones</th>
                             </tr>
                         </tfoot>

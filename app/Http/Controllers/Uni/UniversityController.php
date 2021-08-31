@@ -67,6 +67,7 @@ class UniversityController extends Controller
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('c.module_id', $module)
+                        ->where('c.elem_status_id', '>=', config('csys.elem_status.EDIT'))
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
@@ -74,7 +75,23 @@ class UniversityController extends Controller
         $oModule = Module::find($module);
 
         foreach ($lCourses as $course) {
-            $course->percent_completed = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->id_assignment);
+            $oContent = \DB::table('uni_contents_vs_elements AS ce')
+                            ->join('uni_edu_contents AS c', 'ce.content_id', '=', 'c.id_content')
+                            ->where('element_type_id', config('csys.elem_type.COURSE'))
+                            ->where('course_n_id', $course->id_course)
+                            ->orderBy('order', 'ASC')
+                            ->first();
+
+            if ($oContent == null) {
+                continue;
+            }
+
+            $url = asset($oContent->file_path);
+            $path = str_replace("public", "", $url);
+            $path = str_replace("storage", "storage/app", $path);
+            
+            $oContent->view_path = $path;
+            $course->cover = $oContent;
         }
 
         return view('uni.courses.index')->with('lCourses', $lCourses)
@@ -145,6 +162,23 @@ class UniversityController extends Controller
                     }
                 }
             }
+
+            $oContent = \DB::table('uni_contents_vs_elements AS ce')
+                            ->join('uni_edu_contents AS c', 'ce.content_id', '=', 'c.id_content')
+                            ->where('element_type_id', config('csys.elem_type.COURSE'))
+                            ->where('course_n_id', $oCourse->id_course)
+                            ->orderBy('order', 'ASC')
+                            ->first();
+
+            if ($oContent != null) {
+                $url = asset($oContent->file_path);
+                $path = str_replace("public", "", $url);
+                $path = str_replace("storage", "storage/app", $path);
+                
+                $oContent->view_path = $path;
+                $oCourse->cover = $oContent;
+            }
+
         }
         else {
             return;

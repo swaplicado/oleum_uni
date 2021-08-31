@@ -100,7 +100,6 @@ class QuestionsController extends Controller
             $oQuestion->save();
 
             \DB::commit();
-
         }
         catch (\Throwable $th) {
             \DB::rollBack();

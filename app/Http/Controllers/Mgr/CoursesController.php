@@ -9,6 +9,8 @@ use App\Sys\Sequence;
 use App\Uni\KnowledgeArea;
 use App\Uni\Module;
 use App\Uni\Course;
+use App\Uni\EduContent;
+use App\Uni\ElementContent;
 
 class CoursesController extends Controller
 {
@@ -25,6 +27,7 @@ class CoursesController extends Controller
     {
         $this->newRoute = "courses.create";
         $this->storeRoute = "courses.store";
+        $this->updateRoute = "courses.update";
     }
 
     /**
@@ -68,14 +71,23 @@ class CoursesController extends Controller
     public function create(Request $request, $moduleId)
     {
         $oModule = Module::find($moduleId);
-        $title = "Crear cursos para ".$oModule->module;
+        $title = "Crear curso para ".$oModule->module;
 
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();
 
+        $lContents = EduContent::where('is_deleted', false)
+                                ->whereIn('file_type', ['image', 'video'])
+                                ->get();
+
+        foreach ($lContents as $content) {
+            $content->f_type = $content->file_type == 'image' ? 'Imagen' : 'Video';
+        }
+
         return view('mgr.courses.create')->with('title', $title)
                                         ->with('storeRoute', $this->storeRoute)
                                         ->with('moduleId', $moduleId)
+                                        ->with('lContents', $lContents)
                                         ->with('sequences', $seq);
     }
 
@@ -98,9 +110,108 @@ class CoursesController extends Controller
             $oCourse->created_by_id = \Auth::id();
             $oCourse->updated_by_id = \Auth::id();
 
+            \DB::beginTransaction();
+
             $oCourse->save();
+
+            $elem = new ElementContent();
+
+            $elem->order = 1;
+            $elem->content_id = $request->course_cover;
+            $elem->element_type_id = config('csys.elem_type.COURSE');
+            $elem->course_n_id = $oCourse->id_course;
+            $elem->created_by_id = \Auth::id();
+            $elem->updated_by_id = \Auth::id();
+
+            $elem->save();
+
+            \DB::commit();
         }
         catch (\Throwable $th) {
+            \DB::rollBack();
+            return back()->withError($th->getMessage())->withInput();
+        }
+
+        return redirect()->route('courses.index', $oCourse->module_id);
+    }
+
+    public function edit($id)
+    {
+        $oCourse = Course::find($id);
+
+        $title = "Editar curso ".$oCourse->course;
+
+        $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
+                        ->get();
+
+        $lContents = EduContent::where('is_deleted', false)
+                                ->whereIn('file_type', ['image', 'video'])
+                                ->get();
+
+        foreach ($lContents as $content) {
+            $content->f_type = $content->file_type == 'image' ? 'Imagen' : 'Video';
+        }
+
+        $oCovert = ElementContent::where('course_n_id', $oCourse->id_course)
+                                    ->where('element_type_id', config('csys.elem_type.COURSE'))
+                                    ->orderBy('created_at', 'DESC')
+                                    ->first();
+
+        if ($oCovert != null) {
+            $oCover = EduContent::find($oCovert->content_id);
+        }
+        else {
+            $oCover = null;
+        }
+
+        return view('mgr.courses.edit')->with('title', $title)
+                                        ->with('updateRoute', $this->updateRoute)
+                                        ->with('oCourse', $oCourse)
+                                        ->with('lContents', $lContents)
+                                        ->with('oCover', $oCover)
+                                        ->with('sequences', $seq);
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            \DB::beginTransaction();
+            
+            $oCourse = Course::find($id);
+
+            $oCourse->course = $request->course;
+            $oCourse->course_key = $request->course_key;
+            $oCourse->completion_days = $request->completion_days;
+            $oCourse->university_points = $request->university_points;
+            $oCourse->description = $request->description;
+            $oCourse->objectives = $request->objectives;
+            $oCourse->elem_status_id = config('csys.elem_status.NEW');
+            $oCourse->sequence_id = $request->sequence;
+            $oCourse->created_by_id = \Auth::id();
+            $oCourse->updated_by_id = \Auth::id();
+
+            $oCourse->save();
+
+            ElementContent::where('element_type_id', config('csys.elem_type.COURSE'))
+                            ->where('course_n_id', $oCourse->id_course)
+                            ->delete();
+
+            $elem = new ElementContent();
+
+            $elem->order = 1;
+            $elem->content_id = $request->course_cover;
+            $elem->element_type_id = config('csys.elem_type.COURSE');
+            $elem->course_n_id = $oCourse->id_course;
+            $elem->created_by_id = \Auth::id();
+            $elem->updated_by_id = \Auth::id();
+
+            $elem->save();
+
+            \DB::commit();
+        }
+        catch (\Throwable $th) {
+            \DB::rollBack();
+            
             return back()->withError($th->getMessage())->withInput();
         }
 

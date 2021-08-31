@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Mgr;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+
+use App\Mail\KnowledgeAreaAssignment;
 
 use App\User;
 use App\Adm\Organization;
@@ -256,6 +258,7 @@ class ScheduledAssignmentsController extends Controller
             $oAControl->created_by_id = \Auth::id();
             $oAControl->updated_by_id = \Auth::id();
 
+            $lSchAssignments = [];
             try {
                 \DB::beginTransaction();
         
@@ -275,12 +278,30 @@ class ScheduledAssignmentsController extends Controller
                     $oAssignment->updated_by_id = \Auth::id();
 
                     $oAssignment->save();
+
+                    $lSchAssignments[] = $oAssignment;
                 }
     
                 \DB::commit();
             }
             catch (\Throwable $th) {
                 \DB::rollBack();
+            }
+
+            foreach ($lSchAssignments as $assignment) {
+                $student = User::find($assignment->student_id);
+                if (strlen($student->email) == 0) {
+                    continue;
+                }
+
+                $rec = [];
+                $ua = [];
+                $ua['email'] = $student->email;
+                $ua['name'] = $student->full_name;
+
+                $rec[] = (object) $ua;
+
+                Mail::to($rec)->send(new KnowledgeAreaAssignment($assignment->id_assignment));
             }
         }
 

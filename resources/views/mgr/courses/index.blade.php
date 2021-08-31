@@ -31,7 +31,7 @@
             "colReorder": true,
             "responsive": true,
             "columnDefs": [
-                    { responsivePriority: 1, targets: [8, 9] }
+                    { responsivePriority: 1, targets: [8] }
                 ],
             "dom": 'Bfrtip',
             "lengthMenu": [
@@ -74,8 +74,7 @@
                         <th>Secuencia</th>
                         <th>Estatus</th>
                         <th>Módulo</th>
-                        <th>Temas</th>
-                        <th>Pre</th>
+                        <th>-</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,10 +92,11 @@
                                 <a href="{{ route('topics.index', ['course' => $course->id_course]) }}">
                                     <i class='bx bxs-category'></i>
                                 </a>
-                            </td>
-                            <td style="text-align: center">
                                 <a href="#" v-on:click="showPreviousModal({{ config('csys.elem_type.COURSE') }}, {{ $course->id_course }}, '{{ $course->course }}')">
                                     <i class='bx bxs-brightness'></i>
+                                </a>
+                                <a href="{{ route('courses.edit', $course->id_course) }}">
+                                    <i class='bx bx-edit'></i>
                                 </a>
                             </td>
                         </tr>
@@ -112,8 +112,7 @@
                         <th>Secuencia</th>
                         <th>Estatus</th>
                         <th>Módulo</th>
-                        <th>Temas</th>
-                        <th>Pre</th>
+                        <th>-</th>
                     </tr>
                 </tfoot>
             </table>
