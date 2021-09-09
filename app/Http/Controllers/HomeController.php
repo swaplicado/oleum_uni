@@ -55,8 +55,7 @@ class HomeController extends Controller
                             ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                             ->where('a.student_id', \Auth::id())
                             ->where('a.is_deleted', false)
-                            ->where('a.is_over', false)
-                            ->whereRaw('NOW() BETWEEN dt_assignment AND dt_end')
+                            ->whereRaw('NOW() BETWEEN a.dt_assignment AND a.dt_end')
                             ->get();
 
         $lCourses = TakeUtils::getTakingCourses(\Auth::id());
