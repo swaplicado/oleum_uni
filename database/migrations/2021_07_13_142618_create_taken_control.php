@@ -22,6 +22,7 @@ class CreateTakenControl extends Migration
             $table->decimal('grade', 8,2);
             $table->integer('university_points');
             $table->integer('num_questions');
+            $table->boolean('is_evaluation');
             $table->boolean('is_deleted');
             $table->integer('element_type_id')->unsigned();
             $table->integer('knowledge_area_n_id')->unsigned()->nullable();
