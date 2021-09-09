@@ -26,7 +26,7 @@
                             <br> Fecha inicio: <b>{{ \Carbon\Carbon::parse($oAssignment->dt_assignment)->format('d-m-Y') }}</b>
                             <br> Fecha límite: <b>{{ \Carbon\Carbon::parse($oAssignment->dt_end)->format('d-m-Y') }}</b>
                         </p>
-                        <a href="#" class="btn btn-primary">Ir a Universidad</a>
+                        <a href="http://192.168.1.233:8080/univaeth/public/" class="btn btn-primary">Ir a Universidad</a>
                     </div>
                     <div class="card-footer text-muted">
                         {{ \Carbon\Carbon::now()->format('d-m-Y H:i:s') }}
