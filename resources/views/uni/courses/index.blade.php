@@ -34,7 +34,7 @@
                     </div>
                     <div class="card-footer bg-transparent border-warning">
                         <div class="progress">
-                            <div class="progress-bar bg-success" role="progressbar" :style="'width: ' + course.percent_completed + '%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-success" role="progressbar" :style="'width: ' + course.completed_percent + '%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>

@@ -92,6 +92,8 @@ class UniversityController extends Controller
             
             $oContent->view_path = $path;
             $course->cover = $oContent;
+
+            $course->completed_percent = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->id_assignment);
         }
 
         return view('uni.courses.index')->with('lCourses', $lCourses)
