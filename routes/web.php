@@ -138,6 +138,13 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::post('/giftstk', 'GiftsStockController@store')->name('giftstk.store');
 
         /**
+         * Control de puntos
+         */
+        Route::get('/points', 'PointsController@index')->name('points.index');
+        Route::get('/points/detail/{id?}', 'PointsController@getDetail')->name('points.detail');
+        Route::post('/points', 'PointsController@store')->name('points.store');
+
+        /**
          * Prerrequisitos
          */
         Route::get('/getpredata', 'PrerequisitesController@getPreData')->name('get.pre.data');

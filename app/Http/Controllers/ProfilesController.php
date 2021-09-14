@@ -79,6 +79,10 @@ class ProfilesController extends Controller
             'current_password' => 'required',
             'new_password' => 'required|string|min:4',
             'confirmed_new_password' => 'required|string|min:4',
+        ],
+        [
+            'current_password.required' => 'La contraseña actual es obligatoria',
+            'new_password.required' => 'La contraseña nueva es obligatoria'
         ]);
 
         //Change Password

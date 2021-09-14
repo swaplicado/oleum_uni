@@ -21,11 +21,11 @@
                     <label for="inputPassword5" class="col-form-label">Contraseña nueva:</label>
                     </div>
                     <div class="col-5">
-                    <input type="password" id="inputPassword5" name="new_password" class="form-control" aria-describedby="passwordHelpInline" required>
+                    <input type="password" minlength="4" id="inputPassword5" name="new_password" class="form-control" aria-describedby="passwordHelpInline" required>
                     </div>
                     <div class="col-auto">
                     <span id="passwordHelpInline" class="form-text">
-                        Debe ser de al menos 2 caracteres.
+                        Debe ser de al menos 4 caracteres.
                     </span>
                     </div>
                 </div>

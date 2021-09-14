@@ -51,6 +51,7 @@ class Menu {
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                     (object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Premios'],
                     (object) ['route' => route('gifts.index'), 'icon' => 'bx bxs-cabinet', 'name' => 'Gestión premios'],
+                    (object) ['route' => route('points.index'), 'icon' => 'bx bx-money', 'name' => 'Ctrl Puntos'],
                     (object) ['route' => route('carousel.index'), 'icon' => 'bx bx-images', 'name' => 'Carrusel'],
                 ];
                 break;
@@ -68,6 +69,7 @@ class Menu {
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                     (object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Premios'],
                     (object) ['route' => route('gifts.index'), 'icon' => 'bx bxs-cabinet', 'name' => 'Gestión premios'],
+                    (object) ['route' => route('points.index'), 'icon' => 'bx bx-money', 'name' => 'Ctrl Puntos'],
                     (object) ['route' => route('carousel.index'), 'icon' => 'bx bx-images', 'name' => 'Carrusel'],
                     (object) ['route' => route('users'), 'icon' => 'bx bxs-user-account', 'name' => 'Usuarios'],
                 ];
