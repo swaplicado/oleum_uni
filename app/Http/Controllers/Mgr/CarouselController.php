@@ -135,7 +135,10 @@ class CarouselController extends Controller
                 $img->move(public_path('images/carousel'), $imageName);
             }
 
-            $image = $imageField;
+            if (isset($imageField)) {
+                $image = $imageField;
+            }
+
             $title = $request->title;
             $text = $request->text;
             $text_color = $request->text_color;
@@ -149,16 +152,21 @@ class CarouselController extends Controller
             $content_n_id = $request->id_content;
         }
 
-        Carousel::where('id_slide', $request->id_slide)->update([
+        $fields = [
             'title' => $request->title,
             'text' => $request->text,
             'text_color' => $request->text_color,
-            'image' => $image,
             'url' => $request->link != null ? $request->link : "#",
             'is_active' => isset($request->is_active),
             'content_n_id' => $content_n_id,
             'updated_by_id' => \Auth::id()
-        ]);
+        ];
+
+        if (isset($image)) {
+            $fields['image'] = $image;
+        }
+
+        Carousel::where('id_slide', $request->id_slide)->update($fields);
 
         return redirect()->route('carousel.index')->with("success", "Se actualizó con éxito.");
     }
