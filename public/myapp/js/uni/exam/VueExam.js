@@ -66,11 +66,11 @@ var app = new Vue({
 
             if (isCorrect) {
                 this.sClassName = "alert alert-success";
-                this.sMessage = '¡La respuesta es CORRECTA!'
+                this.sMessage = '¡Bien hecho! La respuesta es CORRECTA.'
                 oStep.class = 'step step-success';
             } else {
                 this.sClassName = "alert alert-danger";
-                this.sMessage = '¡La respuesta es INCORRECTA!'
+                this.sMessage = 'Intenta de nuevo, la respuesta es INCORRECTA.'
                 oStep.class = 'step step-error';
             }
 
@@ -119,11 +119,15 @@ var app = new Vue({
                         route = this.oData.sFailRoute;
                     }
 
-                    location.href = route;
+                    this.endExam(route);
                 })
                 .catch(err => {
                     SGui.showError(err);
                 });
+        },
+        async endExam(route) {
+            await SGui.sleep(5000);
+            location.href = route;
         }
     }
 })

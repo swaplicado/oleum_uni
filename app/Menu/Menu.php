@@ -15,7 +15,6 @@ class Menu {
             case '1':
                 $lMenus = [
                     // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
-                    (object) ['route' => route('home'), 'icon' => 'bx bx-grid-alt', 'name' => 'Inicio'],
                     (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                     (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis competencias'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],

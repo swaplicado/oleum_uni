@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Univ AETH</title>
+    <title>{{ env('APP_NAME', false) }}</title>
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('boxicons/css/boxicons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('daterangepicker/css/daterangepicker.css') }}" rel="stylesheet">
@@ -42,292 +42,51 @@
         href="{{ asset('datatables/SearchPanes-1.3.0/css/searchPanes.bootstrap5.min.css') }}" />
     <link rel="stylesheet" type="text/css"
         href="{{ asset('datatables/Select-1.3.3/css/select.bootstrap5.min.css') }}" /> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('myapp/css/uni.css') }}" />
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('myapp/css/uni2.css') }}" /> --}}
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('myapp/css/uni3.css') }}" /> --}}
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
-
-        :root {
-            --header-height: 3rem;
-            --nav-width: 68px;
-            --first-color: #05887F;
-            --first-color-light: #F9EA5C;
-            --white-color: rgb(240, 245, 247);
-            --body-font: 'Nunito', sans-serif;
-            --normal-font-size: 1rem;
-            --z-fixed: 100
-        }
-
-        *,
-        ::before,
-        ::after {
-            box-sizing: border-box
-        }
-
-        body {            
-            margin: var(--header-height) 0 0 0;
-            padding: 0 1rem;
-            font-family: var(--body-font);
-            font-size: var(--normal-font-size);
-            transition: .5s
-        }
-
-        a {
-            text-decoration: none
-        }
-
-        .header {
-            width: 100%;
-            height: var(--header-height);
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1rem;
-            background-color: var(--white-color);
-            z-index: var(--z-fixed);
-            transition: .5s
-        }
-
-        .header_toggle {
-            color: var(--first-color);
-            font-size: 1.5rem;
-            cursor: pointer
-        }
-
-        .header_img {
-            width: 30px;
-            height: 35px;
-            justify-content: center;
-            border-radius: 50%;
-            /* overflow: hidden; */
-        }
-
-        .header_img img {
-            width: 40px
-        }
-
-        .header_usrname {
-            width: 35px;
-            height: 35px;
-            justify-content: center;
-        }
-
-        .l-navbar {
-            position: fixed;
-            top: 0;
-            left: -30%;
-            width: var(--nav-width);
-            height: 100vh;
-            background-color: var(--first-color);
-            padding: .5rem 1rem 0 0;
-            transition: .5s;
-            z-index: var(--z-fixed)
-        }
-
-        .nav {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden
-        }
-
-        .nav_logo,
-        .nav_link {
-            display: grid;
-            grid-template-columns: max-content max-content;
-            align-items: center;
-            column-gap: 1rem;
-            padding: .5rem 0 .5rem 1.5rem
-        }
-
-        .nav_logo {
-            margin-bottom: 2rem
-        }
-
-        .nav_logo-icon {
-            font-size: 1.25rem;
-            color: var(--white-color)
-        }
-
-        .nav_logo-name {
-            color: var(--white-color);
-            font-weight: 700
-        }
-
-        .nav_link {
-            position: relative;
-            color: var(--first-color-light);
-            margin-bottom: 1.5rem;
-            transition: .3s
-        }
-
-        .nav_link:hover {
-            color: var(--white-color)
-        }
-
-        .nav_icon {
-            font-size: 1.25rem
-        }
-
-        .showm {
-            left: 0
-        }
-
-        .body-pd {
-            padding-left: calc(var(--nav-width) + 1rem)
-        }
-
-        .active {
-            color: var(--white-color)
-        }
-
-        .active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            width: 2px;
-            height: 32px;
-            background-color: var(--white-color)
-        }
-
-        .height-100 {
-            height: 90vh
-        }
-
-        @media screen and (min-width: 768px) {
-            body {
-                margin: calc(var(--header-height) + 1rem) 0 0 0;
-                padding-left: calc(var(--nav-width) + 2rem)
+        /* Dropdown Button */
+            .dropbtn {
+                background-color: #64B8D7;
+                color: #3d3d3d;
+                /* padding: 16px;
+                font-size: 16px;
+                border: none; */
             }
 
-            .header {
-                height: calc(var(--header-height) + 1rem);
-                padding: 0 2rem 0 calc(var(--nav-width) + 2rem)
-            }
-
-            .header_img {
-                width: 30px;
-                height: 40px
-            }
-
-            .header_img img {
-                width: 35px
-            }
-
-            .l-navbar {
-                left: 0;
-                padding: 1rem 1rem 0 0
-            }
-
-            .showm {
-                width: calc(var(--nav-width) + 156px)
-            }
-
-            .body-pd {
-                padding-left: calc(var(--nav-width) + 188px)
-            }
-
-            /* ==========================
-
-    Contact
-
-=============================*/
-            .contact-us {
+            /* The container <div> - needed to position the dropdown content */
+            .dropdown {
                 position: relative;
-                z-index: 2;
-                margin-top: 65px;
-                display: -webkit-box;
-                display: -webkit-flex;
-                display: -moz-box;
-                display: -ms-flexbox;
-                display: flex;
-                -webkit-box-align: center;
-                -webkit-align-items: center;
-                -moz-box-align: center;
-                -ms-flex-align: center;
-                align-items: center;
-            }
-
-            .contact-icon {
-                position: absolute;
-            }
-
-            .contact-icon i {
-                font-size: 36px;
-                top: -5px;
-                position: relative;
-                color: #007bff;
-            }
-
-            .contact-info {
-                margin-left: 75px;
-                color: #fff;
-            }
-
-            .contact-info h3 {
-                font-size: 20px;
-                color: #fff;
-                margin-bottom: 0;
-            }
-
-            .copyright {
-                padding: 28px 0;
-                margin-top: 55px;
-                background-color: #202020;
-            }
-
-            .copyright span,
-            .copyright a {
-                color: #878787;
-                -webkit-transition: all 0.3s linear;
-                -o-transition: all 0.3s linear;
-                transition: all 0.3s linear;
-            }
-
-            .copyright a:hover {
-                color: #007bff;
-            }
-
-            .copyright-menu ul {
-                text-align: right;
-                margin: 0;
-            }
-
-            .copyright-menu li {
                 display: inline-block;
-                padding-left: 20px;
             }
 
-            .back-to-top {
-                position: relative;
-                z-index: 2;
-            }
-
-            .back-to-top .btn-dark {
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                padding: 0;
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: #2e2e2e;
-                border-color: #2e2e2e;
+            /* Dropdown Content (Hidden by Default) */
+            .dropdown-content {
                 display: none;
-                z-index: 999;
-                -webkit-transition: all 0.3s linear;
-                -o-transition: all 0.3s linear;
-                transition: all 0.3s linear;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
             }
 
-            .back-to-top .btn-dark:hover {
-                cursor: pointer;
-                background: #FA6742;
-                border-color: #FA6742;
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
             }
-        }
+
+            /* Change color of dropdown links on hover */
+            .dropdown-content a:hover {background-color: #ddd;}
+
+            /* Show the dropdown menu on hover */
+            .dropdown:hover .dropdown-content {display: block;}
+
+            /* Change the background color of the dropdown button when the dropdown content is shown */
+            .dropdown:hover .dropbtn {background-color: #08004d;}
     </style>
     @yield('css_section')
     <script type="text/javascript" src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
@@ -366,11 +125,29 @@
             <div class="header_img col">
                 <a href="{{ route('profile') }}"><img src="{{ asset(\Auth::user()->profile_picture) }}" alt=""></a>
             </div>
+            <div class="col"></div>
             <div class="col">
                 @guest
-                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                 @else
-                <a href="{{ route('profile') }}" class="btn btn-light ms-3">{{ Auth::user()->username }}</a>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropbtn" data-toggle="dropdown">
+                            {{ Auth::user()->username }}
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="{{ route('profile') }}">
+                                <i class='bx bxs-user-circle'></i>
+                                <span class="nav_name">Mi perfil</span>
+                            </a>
+                            <a class="nav_link" title="Salir" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bx bx-log-out nav_icon"></i>
+                                <span class="nav_name">Salir</span>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </div>
                 @endguest
             </div>
         </div>
@@ -387,7 +164,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-9">
-                                <h2><b style="color: #05887F">@yield('content_title', 'Unknow')</b></h2>
+                                <h2><b style="color: #F7F6F6">@yield('content_title', 'Unknow')</b></h2>
                             </div>
                             <div class="col-3">
                                 <div style="float: right;">
@@ -464,7 +241,7 @@
     </script>
     @yield('bottom_scripts')
 </body>
-{{-- <footer style="position: absolute; bottom: 0; width: 93%; height: 60px;">
+{{-- <footer style="position: bottom: 0; width: 105%; height: 60px;">
     <div class="copyright">
         <div class="container">
             <div class="row">

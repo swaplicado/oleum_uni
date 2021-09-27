@@ -51,8 +51,8 @@ class KardexController extends Controller
                         ->where('a.student_id', $iStudent)
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $area)
-                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
-                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
+                        // ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        // ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
 
         foreach ($lModules as $module) {
@@ -80,8 +80,8 @@ class KardexController extends Controller
                         ->where('a.student_id', $iStudent)
                         ->where('m.is_deleted', false)
                         ->where('c.module_id', $module)
-                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
-                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
+                        // ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        // ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
 
         $oModule = Module::find($module);

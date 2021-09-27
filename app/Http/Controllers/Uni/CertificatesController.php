@@ -73,6 +73,7 @@ class CertificatesController extends Controller
 
         $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'Letter', 'orientation' => 'L']);
 
+        $mpdf->SetTitle(env('APP_NAME', false));
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML('<div style="height: 130px"></div>');
         $mpdf->WriteHTML('<h4 class="alg-center">Otorga '.$art.' presente:</h4>');

@@ -17,6 +17,7 @@
                 </div>
             </div>
             <div v-if="bAnswered" :class="sClassName" role="alert">
+                <i v-if="sClassName == 'alert alert-success'" class='bx bxs-check-circle bx-sm'></i>
                 @{{ sMessage }}
             </div>
             <br>
@@ -28,8 +29,7 @@
             </div>
             <br v-if="bFeedback">
             <div class="row">
-                <div class="col-1"></div>
-                <div :id="'div' + answer.id_answer" class="col-3 form-check border-success" v-for="answer in oQuestion.lAnswers">
+                <div :id="'div' + answer.id_answer" class="offset-md-1 col-md-11 col-12 form-check border-success" v-for="answer in oQuestion.lAnswers">
                     <input v-on:click="checkAnswer(answer.id_answer)" type="radio" 
                             class="form-check-input" :value="answer.id_answer" :id="answer.id_answer" v-model="picked" :disabled="bAnswered">
                     <label class="form-check-label" :for="answer.id_answer">@{{ answer.answer }}</label>
@@ -48,7 +48,6 @@
                     <button v-on:click="recordExam()" class="btn btn-success">Terminar</button>
                 </div>
             </div>
-            <br>
             <br>
             <br>
             <hr>

@@ -31,7 +31,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $title = "¡Bienvenid@ ".(\Auth::user()->names)."!";
+        $title = "¡Bienvenid@ ".ucwords(strtolower((\Auth::user()->names)))."!";
 
         $lCarousel = \DB::table('uni_carousel AS c')
                             ->leftJoin('uni_edu_contents AS ec', 'c.content_n_id', '=', 'ec.id_content')
