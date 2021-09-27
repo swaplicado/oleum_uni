@@ -120,7 +120,16 @@
 
 <body class="snippet-body" id="body-pd">
     <header class="header" id="header">
-        <div class="header_toggle"> <i class="bx bx-menu" id="header-toggle"></i> </div>
+        <div class="header_toggle">
+            <div class="row">
+                <div class="col">
+                    <i class="bx bx-menu" id="header-toggle"></i>
+                </div>
+                <div class="col">
+                    <img src="{{ asset('img/aeth-header.png') }}" width="42px" height="40px" class="card-img-top" alt="">
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="header_img col">
                 <a href="{{ route('profile') }}"><img src="{{ asset(\Auth::user()->profile_picture) }}" alt=""></a>
