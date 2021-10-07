@@ -19,7 +19,7 @@ class CreateEduContents extends Migration
             $table->string('file_extension', 10);
             $table->string('file_sys_name', 200);
             $table->string('file_path', 250);
-            $table->enum('file_type', ['video', 'pdf', 'image', 'audio', 'text', 'file', 'link']);
+            $table->enum('file_type', ['video', 'pdf', 'image', 'audio', 'text', 'file', 'link', 'youtube']);
             $table->integer('file_size')->unsigned();
             $table->boolean('is_deleted');
             $table->integer('created_by_id')->unsigned();

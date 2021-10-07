@@ -7,9 +7,7 @@
 @section('content')
     @section('content_title', 'Contenido '.$oSubtopic->subtopic)
     @section('right_header')
-        @if (! $aGrade[0])
-            <a href="{{ route('exam.evaluate', [$oSubtopic->id_subtopic, $idSubtopicTaken, $takeGrouper]) }}" class="btn btn-info">Iniciar Evaluación <i class='bx bxs-spreadsheet'></i></a>
-        @endif
+        
     @endsection
     <div class="row" id="playApp">
         <div class="col-12">          
@@ -44,6 +42,11 @@
         
                         {{-- Previo file --}}
                         <a v-else-if="fileType == 'file'" :href="fileUrl" download>@{{ sFileName }} <i class='bx bxs-file-archive'></i></a>
+
+                        <div v-else-if="fileType == 'youtube'">
+                            <iframe width="420" height="345" :src="'https://www.youtube.com/embed/' + sVideoId">
+                            </iframe>
+                        </div>
                     </div>
                 </div>
                 <div class="col-1">
@@ -52,6 +55,11 @@
             </div>
         </div>
     </div>
+    @if (! $aGrade[0])
+    <div style="text-align: right">
+        <a href="{{ route('exam.evaluate', [$oSubtopic->id_subtopic, $idSubtopicTaken, $takeGrouper]) }}" class="btn btn-info">Iniciar Evaluación <i class='bx bxs-spreadsheet'></i></a>
+    </div>
+    @endif
 @endsection
 
 @section('bottom_scripts')

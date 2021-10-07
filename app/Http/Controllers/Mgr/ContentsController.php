@@ -62,93 +62,110 @@ class ContentsController extends Controller
     public function store(Request $request)
     {
         try {
-            $isFile = $request->isFile;
+            $tContent = $request->tcontent;
 
-            if ($isFile) {
-                $file = $request->file('theFile');
+            switch ($tContent) {
+                case 0:
+                    $file = $request->file('theFile');
     
-                $fileName = $file->getClientOriginalName();
-                $fileExt = $file->getClientOriginalExtension();
-                $filePath = $file->getRealPath();
-                $fileSize = $file->getSize();
-                $fileMimeType = $file->getMimeType();
+                    $fileName = $file->getClientOriginalName();
+                    $fileExt = $file->getClientOriginalExtension();
+                    $filePath = $file->getRealPath();
+                    $fileSize = $file->getSize();
+                    $fileMimeType = $file->getMimeType();
 
-                $fileType = "";
+                    $fileType = "";
 
-                /**
-                 * 'video', 'pdf', 'image', 'audio', 'text', 'file', 'link'
-                 */
-                switch ($fileExt) {
-                    case 'mp4':
-                    case 'wmv':
-                    case 'mov':
-                    case 'avi':
-                        $fileType = 'video';
-                        $destinationPath = 'contents/videos';
-                        $url = Storage::put($destinationPath, $file);
-                        break;
+                    /**
+                     * 'video', 'pdf', 'image', 'audio', 'text', 'file', 'link'
+                     */
+                    switch ($fileExt) {
+                        case 'mp4':
+                        case 'wmv':
+                        case 'mov':
+                        case 'avi':
+                            $fileType = 'video';
+                            $destinationPath = 'contents/videos';
+                            $url = Storage::put($destinationPath, $file);
+                            break;
 
-                    case 'jpg':
-                    case 'jpeg':
-                    case 'gif':
-                    case 'png':
-                        $fileType = 'image';
-                        $destinationPath = 'contents/images';
-                        $url = Storage::put($destinationPath, $file);
-                        break;
+                        case 'jpg':
+                        case 'jpeg':
+                        case 'gif':
+                        case 'png':
+                            $fileType = 'image';
+                            $destinationPath = 'contents/images';
+                            $url = Storage::put($destinationPath, $file);
+                            break;
 
-                    case 'pdf':
-                        $fileType = 'pdf';
-                        $destinationPath = 'contents/pdfs';
-                        $url = Storage::put($destinationPath, $file);
-                        break;
+                        case 'pdf':
+                            $fileType = 'pdf';
+                            $destinationPath = 'contents/pdfs';
+                            $url = Storage::put($destinationPath, $file);
+                            break;
 
-                    case 'mp3':
-                        $fileType = 'audio';
-                        $destinationPath = 'contents/audios';
-                        $url = Storage::put($destinationPath, $file);
-                        break;
+                        case 'mp3':
+                            $fileType = 'audio';
+                            $destinationPath = 'contents/audios';
+                            $url = Storage::put($destinationPath, $file);
+                            break;
 
-                    case 'txt':
-                        $fileType = 'text';
-                        $destinationPath = 'contents/texts';
-                        $url = Storage::put($destinationPath, $file);
-                        break;
+                        case 'txt':
+                            $fileType = 'text';
+                            $destinationPath = 'contents/texts';
+                            $url = Storage::put($destinationPath, $file);
+                            break;
 
-                    case '':
-                        $fileType = 'link';
-                        $destinationPath = '';
-                        $url = Storage::put($destinationPath, $file);
-                        break;
-                    
-                    default:
-                        $fileType = 'file';
-                        $destinationPath = 'contents/files';
-                        // $dt = Carbon::now();
-                        // $name = $dt->format('Y_m_d_h_m_s') . '.' . $file->getClientOriginalExtension();
-                        $url = Storage::putFileAs($destinationPath, new File($filePath), $fileName);
-                        break;
-                }
+                        case '':
+                            $fileType = 'link';
+                            $destinationPath = '';
+                            $url = Storage::put($destinationPath, $file);
+                            break;
+                        
+                        default:
+                            $fileType = 'file';
+                            $destinationPath = 'contents/files';
+                            // $dt = Carbon::now();
+                            // $name = $dt->format('Y_m_d_h_m_s') . '.' . $file->getClientOriginalExtension();
+                            $url = Storage::putFileAs($destinationPath, new File($filePath), $fileName);
+                            break;
+                    }
 
-                $oContent = new EduContent();
+                    $oContent = new EduContent();
 
-                $oContent->file_name = $fileName;
-                $oContent->file_extension = $fileExt;
-                $oContent->file_sys_name = $url;
-                $oContent->file_path = Storage::url($url);
-                $oContent->file_type = $fileType;
-                $oContent->file_size = $fileSize;
-            }
-            else {
+                    $oContent->file_name = $fileName;
+                    $oContent->file_extension = $fileExt;
+                    $oContent->file_sys_name = $url;
+                    $oContent->file_path = Storage::url($url);
+                    $oContent->file_type = $fileType;
+                    $oContent->file_size = $fileSize;
+                break;
 
-                $oContent = new EduContent();
+                case 1:
+                    $oContent = new EduContent();
     
-                $oContent->file_name = $request->theName;
-                $oContent->file_extension = "";
-                $oContent->file_sys_name = "";
-                $oContent->file_path = $request->theFile;
-                $oContent->file_type = "link";
-                $oContent->file_size = 0;
+                    $oContent->file_name = $request->theName;
+                    $oContent->file_extension = "";
+                    $oContent->file_sys_name = "";
+                    $oContent->file_path = $request->theFile;
+                    $oContent->file_type = "link";
+                    $oContent->file_size = 0;
+                break;
+
+                case 2:
+                    $oContent = new EduContent();
+    
+                    $oContent->file_name = $request->theName;
+                    $oContent->file_extension = "";
+                    $oContent->file_sys_name = "";
+                    $oContent->file_path = $request->video_id;
+                    $oContent->file_type = "youtube";
+                    $oContent->file_size = 0;
+                break;
+                
+                default:
+                    # code...
+                    break;
             }
 
             $oContent->is_deleted = false;

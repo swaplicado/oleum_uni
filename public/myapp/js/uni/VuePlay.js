@@ -7,7 +7,8 @@ var app = new Vue({
         oContent: [],
         nContents: oServerData.lContents.length,
         indexContent: 0,
-        sFileName: ""
+        sFileName: "",
+        sVideoId: ""
     },
     mounted() {
         this.setContent(this.oData.iContent);
@@ -45,6 +46,9 @@ var app = new Vue({
                         break;
                     case 'file':
                         this.sFileName = this.oContent.file_name;
+                        break;
+                    case 'youtube':
+                        this.sVideoId = this.oContent.file_path;
                         break;
 
                     default:
