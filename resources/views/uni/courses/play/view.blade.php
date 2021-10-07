@@ -44,7 +44,7 @@
                         <a v-else-if="fileType == 'file'" :href="fileUrl" download>@{{ sFileName }} <i class='bx bxs-file-archive'></i></a>
 
                         <div v-else-if="fileType == 'youtube'">
-                            <iframe width="420" height="345" :src="'https://www.youtube.com/embed/' + sVideoId">
+                            <iframe width="100%" height="100%" :src="'https://www.youtube.com/embed/' + sVideoId">
                             </iframe>
                         </div>
                     </div>
