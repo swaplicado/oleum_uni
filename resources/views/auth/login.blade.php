@@ -8,6 +8,9 @@
                 <div class="card-header">Inicio de sesión</div>
 
                 <div class="card-body">
+                    <div style="text-align: center">
+                        <img src="{{ asset('img/uvaeth_logo.jpg') }}" width="60%" height="60%" alt="">
+                    </div>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 

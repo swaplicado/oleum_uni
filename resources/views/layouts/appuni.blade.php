@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ env('APP_NAME', false) }}</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/uvaeth_aeth.png') }}">
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('boxicons/css/boxicons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('daterangepicker/css/daterangepicker.css') }}" rel="stylesheet">
@@ -124,9 +125,12 @@
             <div class="row">
                 <div class="col">
                     <i class="bx bx-menu" id="header-toggle"></i>
+                    {{-- <img src="{{ asset('img/uvaeth_black.jpg') }}" width="50%" height="110%"alt=""> --}}
+                    {{-- <img src="{{ asset('img/uvaeth_black_sf.png') }}" width="50%" height="110%" alt=""> --}}
                 </div>
                 <div class="col">
-                    <img src="{{ asset('img/aeth-header.png') }}" width="42px" height="40px" class="card-img-top" alt="">
+                    {{-- <img src="{{ asset('img/aeth-header.png') }}" width="42px" height="40px" class="card-img-top" alt=""> --}}
+                    
                 </div>
             </div>
         </div>
@@ -175,10 +179,11 @@
                             <div class="col-9">
                                 <h2><b style="color: #F7F6F6">@yield('content_title', 'Unknow')</b></h2>
                             </div>
-                            <div class="col-3">
+                            <div class="col-3" style="text-align: right;">
                                 <div style="float: right;">
                                     @yield('right_header')
                                 </div>
+                                <img style="text-align: right" src="{{ asset('img/uvaeth_black.jpg') }}" width="50%" height="100%" alt="">
                             </div>
                         </div>
                     </div>

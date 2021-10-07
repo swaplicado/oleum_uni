@@ -12,8 +12,8 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
-                color: #636b6f;
+                background-color: #1D2F41;
+                color: #f6f9fa;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
                 height: 100vh;
@@ -49,7 +49,7 @@
             }
 
             .links > a {
-                color: #636b6f;
+                color: #64B8D7;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -81,7 +81,11 @@
 
             <div class="content">
                 <div>
-                    <img src="{{ asset('img/logo.jpg') }}" alt="">
+                    {{-- <img src="{{ asset('img/logo.jpg') }}" alt=""> --}}
+                    <img src="{{ asset('img/aeth_logo.png') }}" width="60%" height="60%" alt="">
+                </div>
+                <div>
+                    <h2>Bienvenido a tu</h2>
                 </div>
                 <div class="title m-b-md">
                     Universidad Virtual AETH
@@ -90,6 +94,7 @@
                     <p style="font-size: 150%"><b>En AETH estamos comprometidos con tu desarrollo.</b></p>
                 </div>
                 <br>
+                {{-- <iframe src="https://drive.google.com/uc?export=preview&id=1gZgtYsgIdUfu-1JEiEVvMRvuJABYrD8Z" width="640" height="480" allow="autoplay"></iframe> --}}
                 <div class="links">
                     <a href="#">AETH</a>
                     <a href="#">Grupo Tron Hermanos</a>
