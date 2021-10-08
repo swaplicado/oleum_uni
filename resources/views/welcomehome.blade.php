@@ -82,7 +82,7 @@
             <div class="content">
                 <div>
                     {{-- <img src="{{ asset('img/logo.jpg') }}" alt=""> --}}
-                    <img src="{{ asset('img/uvaeth_black_sf.png') }}" width="60%" height="60%" alt="">
+                    <img src="{{ asset('img/aeth_logo.png') }}" width="60%" height="60%" alt="">
                 </div>
                 <div>
                     <h2>Bienvenido a tu</h2>
@@ -97,8 +97,10 @@
                 {{-- <iframe src="https://drive.google.com/uc?export=preview&id=1gZgtYsgIdUfu-1JEiEVvMRvuJABYrD8Z" width="640" height="480" allow="autoplay"></iframe> --}}
                 <div class="links">
                     <a href="#">AETH</a>
-                    <a href="#">Tutorial</a>
+                    <a href="#">Grupo Tron Hermanos</a>
+                    <a href="#">SIIE 3.2</a>
                     <a href="#">Blog</a>
+                    <a href="#">Sistemas</a>
                     <a href="#">Software Aplicado</a>
                     <a href="#">Contacto</a>
                 </div>

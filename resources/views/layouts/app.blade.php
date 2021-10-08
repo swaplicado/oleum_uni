@@ -24,13 +24,18 @@
             background-color: #1D2F41;
             color: white;
         }
+
+        .login-navbar {
+            background-color: #3895C1;
+            color: black;
+        }
     </style>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md login-navbar shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a style="color: white" class="navbar-brand" href="{{ url('/') }}">
                     {{ env('APP_NAME', false) }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -48,7 +53,7 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ "Iniciar sesión" }}</a>
+                                {{-- <a class="nav-link" href="{{ route('login') }}">{{ "Iniciar sesión" }}</a> --}}
                             </li>
                             {{-- @if (Route::has('register'))
                                 <li class="nav-item">
