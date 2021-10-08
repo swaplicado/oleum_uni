@@ -44,38 +44,38 @@ class SyncController extends Controller
     {
         // $jsonString = "";
         // $jsonString = file_get_contents(base_path('response_from_siie.json'));
-        $client = new Client([
-            'base_uri' => '192.168.1.233:9001',
-            'timeout' => 10.0,
-        ]);
+        // $client = new Client([
+        //     'base_uri' => '192.168.1.233:9001',
+        //     'timeout' => 10.0,
+        // ]);
 
-        try {
+        // try {
             
-            $response = $client->request('GET', 'getInfoERP/' . $lastSyncDate);
-            $jsonString = $response->getBody()->getContents();
-            $data = json_decode($jsonString);
+        //     $response = $client->request('GET', 'getInfoERP/' . $lastSyncDate);
+        //     $jsonString = $response->getBody()->getContents();
+        //     $data = json_decode($jsonString);
 
-            $deptCont = new DepartmentsController();
-            $deptCont->saveDeptsFromJSON($data->departments);
+        //     $deptCont = new DepartmentsController();
+        //     $deptCont->saveDeptsFromJSON($data->departments);
             
-            $jobCont = new JobsController();
-            $jobCont->saveJobsFromJSON($data->positions);
+        //     $jobCont = new JobsController();
+        //     $jobCont->saveJobsFromJSON($data->positions);
             
-            $usrCont = new UsersController();
-            $usrCont->saveUsersFromJSON($data->employees);
+        //     $usrCont = new UsersController();
+        //     $usrCont->saveUsersFromJSON($data->employees);
             
-            $deptCont->setSupDeptAndHeadUser($data->departments);
+        //     $deptCont->setSupDeptAndHeadUser($data->departments);
 
-            $config = \App\Utils\Configuration::getConfigurations();
-            if ($config->automaticSchedule) {
-                $sch = new ScheduledAssignmentsController();
-                $sch->processAssignmentSchedule(false);
-            }
-        }
-        catch (\Throwable $th) {
-            //throw $th;
-            return false;
-        }
+        //     $config = \App\Utils\Configuration::getConfigurations();
+        //     if ($config->automaticSchedule) {
+        //         $sch = new ScheduledAssignmentsController();
+        //         $sch->processAssignmentSchedule(false);
+        //     }
+        // }
+        // catch (\Throwable $th) {
+        //     //throw $th;
+        //     return false;
+        // }
         
         return true;
     }
