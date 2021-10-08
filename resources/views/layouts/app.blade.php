@@ -18,6 +18,13 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <style>
+        .card-body {
+            background-color: #1D2F41;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <div id="app">

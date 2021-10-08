@@ -9,8 +9,9 @@
 
                 <div class="card-body">
                     <div style="text-align: center">
-                        <img src="{{ asset('img/uvaeth_logo.jpg') }}" width="60%" height="60%" alt="">
+                        <img src="{{ asset('img/uvaeth_black_sf.png') }}" width="60%" height="60%" alt="">
                     </div>
+                    <br>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
