@@ -88,6 +88,12 @@
 
             /* Change the background color of the dropdown button when the dropdown content is shown */
             .dropdown:hover .dropbtn {background-color: #08004d;}
+
+            @media only screen and (max-width: 1026px) {
+                #hide-in-small {
+                    display: none;
+                }
+            }
     </style>
     @yield('css_section')
     <script type="text/javascript" src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
@@ -183,7 +189,7 @@
                                 <div style="float: right;">
                                     @yield('right_header')
                                 </div>
-                                <img style="text-align: right" src="{{ asset('img/uvaeth_black.jpg') }}" width="50%" height="100%" alt="">
+                                <img id="hide-in-small" style="text-align: right" src="{{ asset('img/uvaeth_black.jpg') }}" width="50%" height="100%" alt="">
                             </div>
                         </div>
                     </div>
