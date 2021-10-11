@@ -194,8 +194,8 @@ Route::middleware(['auth', 'menu'])->group(function () {
          */
         Route::get('/kardex/{student?}', 'KardexController@index')->name('kardex.index')->middleware('head');
         Route::get('/kardex/index/head', 'KardexController@indexHead')->name('kardex.head');
-        Route::get('/kardex/modules/{area}/{student?}', 'KardexController@kardexModules')->name('kardex.modules');
-        Route::get('/kardex/courses/{module}/{student?}', 'KardexController@kardexCourses')->name('kardex.courses');
+        Route::get('/kardex/modules/{area}/{assignment}/{student?}', 'KardexController@kardexModules')->name('kardex.modules');
+        Route::get('/kardex/courses/{module}/{assignment}/{student?}', 'KardexController@kardexCourses')->name('kardex.courses');
 
         /**
          * Certificados

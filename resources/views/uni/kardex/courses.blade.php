@@ -10,22 +10,22 @@
             <ol class="list-group list-group-numbered">
                 @foreach ($lCourses as $course)
                     <div class="card">
-                        <h5 class="card-header d-flex justify-content-between align-items-start" style="color: black; background-color: #6FC1E1">
-                            {{ $course->course }}
+                        <h5 class="card-header d-flex justify-content-between align-items-start" style="color: black; background-color: #64B8D7">
+                            {{ "Curso: ".$course->course }}
                             <div>
                                 <span class="badge bg-primary rounded-pill">{{ $course->grade[1] == null || $course->grade[1] == 0 ? "-" : $course->grade[1] }}</span>
                                 <br>
                                 @if ($course->elem_status_id == 3 && $course->grade[0])
                                     <a href="{{ route('certificate', [config('csys.elem_type.COURSE'), $course->id_course, $course->id_assignment]) }}" target="_blank">
-                                        <i class='bx bx-paperclip'></i>
+                                        <i class='bx bxs-file-doc'></i>
                                     </a>
                                 @endif
                             </div>
                         </h5>
                         @foreach ($course->lTopics as $topic)
-                            <li class="list-group-item d-flex justify-content-between align-items-start" style="color: black; background-color: #4CC4D0">
+                            <li class="list-group-item d-flex justify-content-between align-items-start" style="color: white; background-color: #10988B">
                                 <div class="ms-2 me-auto">
-                                    <div class="fw-bold">{{ $topic->topic }}</div>
+                                    <div class="fw-bold">{{ "Tema: ".$topic->topic }}</div>
                                 </div>
                                 <span class="badge bg-primary rounded-pill">{{ $topic->grade[1] == null || $topic->grade[1] == 0 ? "-" : $topic->grade[1] }}</span>
                             </li>
@@ -33,7 +33,7 @@
                                 <ul class="list-group">
                                     @foreach ($topic->lSubTopics as $subtopic)    
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ $subtopic->subtopic }}
+                                            {{ "Subtema: ".$subtopic->subtopic }}
                                         <span class="badge bg-primary rounded-pill">{{ $subtopic->grade[1] == null || $subtopic->grade[1] == 0 ? "-" : $subtopic->grade[1] }}</span>
                                         </li>
                                     @endforeach
