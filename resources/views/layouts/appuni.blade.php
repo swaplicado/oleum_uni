@@ -95,6 +95,7 @@
                 }
             }
     </style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('myapp/css/footer.css') }}" />
     @yield('css_section')
     <script type="text/javascript" src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
@@ -261,45 +262,5 @@
     </script>
     @yield('bottom_scripts')
 </body>
-{{-- <footer style="position: bottom: 0; width: 105%; height: 60px;">
-    <div class="copyright">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <span>Copyright © 2021, All Right Reserved Software Aplicado</span>
-                </div>
-                <!-- End Col -->
-                <div class="col-md-6">
-                    <div class="copyright-menu">
-                        <ul>
-                            <li>
-                                <a href="#">Home</a>
-                            </li>
-                            <li>
-                                <a href="#">Terms</a>
-                            </li>
-                            <li>
-                                <a href="#">Privacy Policy</a>
-                            </li>
-                            <li>
-                                <a href="#">Contact</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- End col -->
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Copyright Container -->
-    </div>
-    <!-- End Copyright -->
-    <!-- Back to top -->
-    <div id="back-to-top" class="back-to-top">
-        <button class="btn btn-dark" title="Back to Top" style="display: block;">
-            <i class='bx bxs-chevron-up-circle'></i>
-        </button>
-    </div>
-</footer> --}}
-
+@include('layouts.unifooter')
 </html>

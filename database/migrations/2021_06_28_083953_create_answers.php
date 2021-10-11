@@ -15,7 +15,7 @@ class CreateAnswers extends Migration
     {
         Schema::create('uni_answers', function (Blueprint $table) {	
             $table->bigIncrements('id_answer');
-            $table->string('answer', 200);
+            $table->string('answer', 500);
             $table->boolean('is_deleted');
             $table->bigInteger('content_n_id')->unsigned()->nullable();
             $table->bigInteger('question_id')->unsigned();
