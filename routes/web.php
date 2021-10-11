@@ -11,6 +11,9 @@
 |
 */
 
+Route::get('/json', 'MyControllers\ReadJsonController@index');
+Route::post('/json', 'MyControllers\ReadJsonController@readUploadFile');
+
 Route::get('/', function () {
     return view('welcome');
 });
