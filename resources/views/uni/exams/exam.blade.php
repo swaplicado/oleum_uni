@@ -56,7 +56,7 @@
                     <li :class="step.class" v-for="step in lSteps">
                       <div class="step-content">
                         <span class="step-circle">@{{ step.circle }}</span>
-                        <span class="step-text">@{{ step.text }}</span>
+                        <span style="white-space: nowrap;" class="step-text">@{{ step.text }}</span>
                       </div>
                     </li>
                 </ul>

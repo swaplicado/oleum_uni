@@ -38,7 +38,7 @@ class KardexController extends Controller
         return view('uni.kardex.index')->with('areas', $areas)->with('student', $iStudent);
     }
 
-    public function kardexModules($area = 0, $student = 0)
+    public function kardexModules($area, $asssignment, $student = 0)
     {
         $iStudent = $student == 0 ? \Auth::id() : $student;
 
@@ -51,6 +51,7 @@ class KardexController extends Controller
                         ->where('a.student_id', $iStudent)
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $area)
+                        ->where('a.id_assignment', $asssignment)
                         // ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         // ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
@@ -66,7 +67,7 @@ class KardexController extends Controller
                                             ->with('student', $iStudent);
     }
 
-    public function kardexCourses($module = 0, $student = 0)
+    public function kardexCourses($module, $asssignment, $student = 0)
     {
         $iStudent = $student == 0 ? \Auth::id() : $student;
 
@@ -80,6 +81,7 @@ class KardexController extends Controller
                         ->where('a.student_id', $iStudent)
                         ->where('m.is_deleted', false)
                         ->where('c.module_id', $module)
+                        ->where('a.id_assignment', $asssignment)
                         // ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         // ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
