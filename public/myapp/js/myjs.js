@@ -43,10 +43,10 @@ class SGui {
      * @param {String} sMessage
      * @param {String} sIcon
      */
-    static showSuccess(sTitle, sMessage, sIcon = 0) {
+    static showSuccess(sTitle, sMessage, sIcon, image) {
         let base_url = window.location.origin
         let url = location.pathname.split('/');
-        let img = base_url + "/" + url[1] + "/" + url[2] + "/images/success/source.gif";
+        let img = image;
         Swal.fire({
             icon: sIcon == 0 ? 'info' : sIcon,
             title: sTitle,
