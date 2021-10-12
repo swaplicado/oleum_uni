@@ -37,14 +37,12 @@
             </div>
             <br>
             <div v-if="((oData.oTopic.sequence_id == 2) || (oData.oTopic.sequence_id == 1 && bAnswered)) && indexQuestion < (nQuestions - 1)" class="row">
-                <div class="col-10"></div>
-                <div class="col-2">
+                <div class="col-md-2 offset-md-10 col-5 offset-7">
                     <button v-on:click="next()" class="btn btn-success">Siguiente</button>
                 </div>
             </div>
             <div v-if="indexQuestion == (nQuestions - 1)" class="row">
-                <div class="col-10"></div>
-                <div class="col-2">
+                <div class="col-md-2 offset-md-10 col-5 offset-7">
                     <button v-on:click="recordExam()" class="btn btn-success">Terminar</button>
                 </div>
             </div>
