@@ -51,14 +51,14 @@ a {
 
 .header_img {
     width: 30px;
-    height: 35px;
+    height: 40px;
     justify-content: center;
     border-radius: 50%;
     /* overflow: hidden; */
 }
 
 .header_img img {
-    width: 30px
+    width: 35px
 }
 
 .header_usrname {
