@@ -12,6 +12,7 @@
             this.sRecordExam = <?php echo json_encode( route($sRecordExam) ) ?>;
             this.sSuccessRoute = <?php echo json_encode( route($sSuccessRoute, [$idCourse, $idAssignment]) ) ?>;
             this.sFailRoute = <?php echo json_encode( route($sFailRoute, [$oSubtopic->id_subtopic, $takenGrouper, $idAssignment]) ) ?>;
+            this.sImageRoute = <?php echo json_encode( asset('images/success/source.gif') ) ?>;
         }
         
         var oServerData = new GlobalData();
