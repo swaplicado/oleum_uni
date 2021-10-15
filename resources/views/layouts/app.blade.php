@@ -21,8 +21,8 @@
 
     <style>
         .card-body {
-            background-color: #1D2F41;
-            color: white;
+            background-color: white;
+            color: #1D2F41;
         }
 
         .login-navbar {
