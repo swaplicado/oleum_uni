@@ -126,7 +126,7 @@ var app = new Vue({
                 });
         },
         async endExam(route) {
-            await SGui.sleep(5000);
+            await SGui.sleep(10000);
             location.href = route;
         }
     }

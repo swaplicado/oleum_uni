@@ -12,8 +12,8 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #1D2F41;
-                color: #f6f9fa;
+                background-color: rgba(0,0,0,.03);
+                color: black;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
                 height: 100vh;
@@ -49,7 +49,7 @@
             }
 
             .links > a {
-                color: #64B8D7;
+                color: #1173B0;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -82,7 +82,7 @@
             <div class="content">
                 <div>
                     {{-- <img src="{{ asset('img/logo.jpg') }}" alt=""> --}}
-                    <img src="{{ asset('img/uvaeth_black_sf.png') }}" width="60%" height="60%" alt="">
+                    <img src="{{ asset('img/uvaeth_logosf.png') }}" width="60%" height="60%" alt="">
                 </div>
                 <div>
                     <h2>Bienvenido a tu</h2>

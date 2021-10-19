@@ -14,6 +14,8 @@ use App\Uni\Assignment;
 use App\Uni\Topic;
 use App\Uni\SubTopic;
 use App\Uni\TakingControl;
+use App\Uni\ReviewCfg;
+use App\Uni\Review;
 
 class UniversityController extends Controller
 {
@@ -186,6 +188,8 @@ class UniversityController extends Controller
             return;
         }
 
+        $enableReview = false;
+        $lReviews = [];
         $aGrade = TakeUtils::isCourseApproved($oCourse->id_course, \Auth::id(), $assignment, true);
 
         if (! $aGrade[0]) {
@@ -208,6 +212,22 @@ class UniversityController extends Controller
                 return redirect()->back()->withError($valid);
             }
         }
+        else {
+            $lReviews = Review::where('review_type_id', 2)
+                            ->where('reference_id', $oCourse->id_course)
+                            ->where('is_deleted', false)
+                            ->where('student_by_id', \Auth::id())
+                            ->get();
+            
+            $enableReview = count($lReviews) == 0;
+
+            if ($enableReview) {
+                $lReviews = ReviewCfg::where('showed_type_id', 2)
+                                    ->where('showed_reference_id', $oCourse->id_course)
+                                    ->where('is_deleted', false)
+                                    ->get();
+            }
+        }
         
         //Inserción o actualización de la tabla toma de curso
         $controller = new TakesController();
@@ -216,6 +236,8 @@ class UniversityController extends Controller
         return view('uni.courses.course')->with('oCourse', $oCourse)
                                         ->with('idAssignment', $oCourse->id_assignment)
                                         ->with('aGrade', $aGrade)
+                                        ->with('enableReview', $enableReview)
+                                        ->with('lReviews', $lReviews)
                                         ->with('takeGrouper', $takeGrouper);
     }
 

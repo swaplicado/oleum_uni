@@ -12,6 +12,8 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
+    @yield('js_scripts_app')
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -21,8 +23,8 @@
 
     <style>
         .card-body {
-            background-color: #1D2F41;
-            color: white;
+            background-color: white;
+            color: #1D2F41;
         }
 
         .login-navbar {

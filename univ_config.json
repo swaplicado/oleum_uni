@@ -13,6 +13,7 @@
         "scale": 100,
         "approved": 80
     },
-    "lastSyncDateTime": "2021-08-16 15:23:51",
-    "automaticSchedule": false
+    "lastSyncDateTime": "2021-10-18 16:07:15",
+    "automaticSchedule": false,
+    "percPointsAfterFail": 90
 }

@@ -12,6 +12,7 @@ use App\Uni\Topic;
 use App\Uni\Course;
 use App\Uni\TakingControl;
 use App\Uni\TakingSubTopicQuestion;
+use App\Utils\TakeUtils;
 
 class ExamsController extends Controller
 {
@@ -226,7 +227,18 @@ class ExamsController extends Controller
 
             if ($oCompleted->course) {
                 $pointsC = new UnivPointsController();
-                $pointsC->registryPoints($oCompleted->points, $oTakeCourse[0]->id_taken_control);
+                
+                $dPoints = 0;
+                $aCourseAttemps = TakeUtils::courseAttempts($request->id_course, $oTakeEval->assignment_id);
+                if (! $aCourseAttemps[1]) {
+                    $dPoints = ($config->percPointsAfterFail / 100) * $oCompleted->points;
+                }
+                else {
+                    $dPoints = $oCompleted->points;
+                }
+
+                $pointsC->registryPoints($dPoints, $oTakeCourse[0]->id_taken_control);
+                $oCompleted->points = $dPoints;
             }
 
             \DB::commit();
