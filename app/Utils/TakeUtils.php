@@ -404,4 +404,53 @@ class TakeUtils {
 
         return "";
     }
+
+    public static function courseAttempts($idCourse, $idAssignment)
+    {
+        $subtopics = \DB::table('uni_topics AS top')
+                    ->join('uni_subtopics AS sub', 'top.id_topic', '=', 'sub.topic_id')
+                    ->join('uni_courses AS cou', 'top.course_id', '=', 'cou.id_course')
+                    ->where('sub.is_deleted', false)
+                    ->where('top.is_deleted', false)
+                    ->where('cou.id_course', $idCourse)
+                    ->select('sub.*')
+                    ->get();
+
+        $attemps = 0;
+        foreach ($subtopics as $oSub) {
+            $response = TakeUtils::subtopicAttempts($oSub->id_subtopic, $idAssignment);
+            if (! $response[0]) {
+                return [false, 0];
+            }
+            $attemps += $response[1];
+        }
+
+        return [true, count($subtopics) == $attemps];
+    }
+
+    public static function subtopicAttempts($idSubtopic, $idAssignment)
+    {
+        $attemps = \DB::table('uni_taken_controls AS tc')
+                        ->where('subtopic_n_id', $idSubtopic)
+                        ->where('assignment_id', $idAssignment)
+                        ->where('is_evaluation', true)
+                        ->where('is_deleted', false)
+                        ->orderBy('id_taken_control', 'ASC');
+        
+        $attempsApproved = clone $attemps;
+        $attempsApproved = $attempsApproved->whereColumn('grade', '>=', 'min_grade')
+                                            ->where('status_id', 7)
+                                            ->get();
+
+        $attempsNoApproved = clone $attemps;
+
+        $attempsNoApproved = $attempsNoApproved->where('status_id', 6)
+                                                ->get();
+        
+        $response = [];
+        $response[] = count($attempsApproved) > 0;
+        $response[] = $response[0] ? (count($attempsNoApproved) + 1) : count($attempsNoApproved);
+
+        return $response;
+    }
 }

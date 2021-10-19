@@ -1,5 +1,11 @@
 @extends('layouts.appuni')
 
+@section('css_section')
+    <link rel="stylesheet" type="text/css" href="{{ asset('myapp/css/reviews.css') }}" />
+@endsection
+
+@include('uni.courses.reviewmodal')
+
 @section('content')
     @section('content_title', $oCourse->course)
     <div class="row">
@@ -65,6 +71,16 @@
                                 </div>
                             </div>
                         </a>
+                        @if ($enableReview)
+                            <br>
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <button type="button" style="width: 100%" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reviewsModal">
+                                        Evalúa el curso<span><i class='bx bxs-message-rounded-dots'></i></span>
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
                     @endif
                 </div>
                 <div class="col-md-9">

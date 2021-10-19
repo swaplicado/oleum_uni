@@ -1,5 +1,18 @@
 @extends('layouts.app')
 
+@section('js_scripts_app')
+    <script>
+        function myFunction() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+    </script>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -40,6 +53,18 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-6 offset-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="showP" id="showP" onclick="myFunction()">
+
+                                    <label class="form-check-label" for="showP">
+                                        {{ "Mostrar contraseña" }}
+                                    </label>
+                                </div>
                             </div>
                         </div>
 

@@ -178,6 +178,11 @@ Route::middleware(['auth', 'menu'])->group(function () {
          */
         Route::post('/takecourse', 'TakesController@takeCourse')->name('take.course');
         Route::post('/takecontent', 'TakesController@takeSubtopicContent')->name('take.content');
+
+        /**
+         * Reviews de curso
+         */
+        Route::post('/reviews/store', 'ReviewsController@storeCourseReviews')->name('reviews.store');
     
         /**
          * Exámenes
