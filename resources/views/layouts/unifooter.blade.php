@@ -10,7 +10,6 @@
             <br>
             <b>Universidad Virtual AETH</b>
             <p>En AETH estamos comprometidos con tu desarrollo</p>
-            <p>Copyright © Software Aplicado. Todos los derechos reservados.</p>
         </div>
         <div class="col-md-4 footer-nav animated fadeInUp">
             <div class="col-md-6">
@@ -41,6 +40,11 @@
                   </span>
                 </div><!-- /input-group -->
              </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 footer-brand">
+            <p>Copyright © Software Aplicado. Todos los derechos reservados 2021.</p>
         </div>
     </div>
 </footer>

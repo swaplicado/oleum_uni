@@ -183,8 +183,11 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-9">
+                            <div class="col-9" style="white-space: nowrap;">
                                 <h2><b style="color: #F7F6F6">@yield('content_title', 'Unknow')</b></h2>
+                                <div>
+                                    @yield('title_comp')
+                                </div>
                             </div>
                             <div class="col-3" style="text-align: right;">
                                 <div style="float: right;">
