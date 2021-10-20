@@ -2,7 +2,7 @@
 
 @section('content')
     @section('content_title', 'Intercambio de premios')
-    @section('right_header')
+    @section('title_comp')
         Puntos disponibles: <span style="font-size: 110%" class="badge bg-primary">{{ $oPoints != null ? $oPoints->points : 0 }}</span>
     @endsection
     <div class="row">
