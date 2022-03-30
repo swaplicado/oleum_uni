@@ -13,6 +13,7 @@ class KnowledgeAreasController extends Controller
 {
     protected $newRoute;
     protected $storeRoute;
+    protected $updateRoute;
 
     /**
      * Create a new controller instance.
@@ -23,6 +24,7 @@ class KnowledgeAreasController extends Controller
     {
         $this->newRoute = "kareas.create";
         $this->storeRoute = "kareas.store";
+        $this->updateRoute = "kareas.update";
     }
 
     /**
@@ -86,6 +88,41 @@ class KnowledgeAreasController extends Controller
             return back()->withError($th->getMessage())->withInput();
         }
 
-        return redirect()->route('kareas.index');
+        return redirect()->route('kareas.index')->with('success', 'El registro se creó correctamente.');
+    }
+
+    public function edit($id)
+    {
+        $oKa = KnowledgeArea::find($id);
+
+        $title = "Crear área de competencia";
+
+        $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
+                        ->get();
+
+        return view('mgr.kareas.edit')->with('title', $title)
+                                    ->with('updateRoute', $this->updateRoute)
+                                    ->with('sequences', $seq)
+                                    ->with('oKa', $oKa);
+    }
+
+    function update(Request $request, $id)
+    {
+        try {
+            $oKa = KnowledgeArea::find($id);
+
+            $oKa->knowledge_area = $request->name;
+            $oKa->description = $request->description;
+            $oKa->objectives = $request->objectives;
+            $oKa->sequence_id = $request->sequence;
+            $oKa->updated_by_id = \Auth::id();
+    
+            $oKa->save();
+        }
+        catch (\Throwable $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+        
+        return redirect()->route('kareas.index')->with('success', 'El registro se actualizó correctamente.');
     }
 }

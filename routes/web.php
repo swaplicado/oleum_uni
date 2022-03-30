@@ -72,6 +72,8 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/modules/{ka?}', 'ModulesController@index')->name('modules.index');
         Route::get('/modules/{ka}/create', 'ModulesController@create')->name('modules.create');
         Route::post('/modules', 'ModulesController@store')->name('modules.store');
+        Route::get('/modules/edit/{id}', 'ModulesController@edit')->name('modules.edit');
+        Route::put('/modules/update/{id}', 'ModulesController@update')->name('modules.update');
     
         /**
          * Rutas de CRUD de Cursos
@@ -198,6 +200,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/kardex/index/head', 'KardexController@indexHead')->name('kardex.head');
         Route::get('/kardex/modules/{area}/{assignment}/{student?}', 'KardexController@kardexModules')->name('kardex.modules');
         Route::get('/kardex/courses/{module}/{assignment}/{student?}', 'KardexController@kardexCourses')->name('kardex.courses');
+        Route::get('/kardexreport', 'KardexController@generateReport')->name('kardex.report');
 
         /**
          * Certificados
