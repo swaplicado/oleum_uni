@@ -341,7 +341,8 @@ class TakesController extends Controller
                 $oCourse = Course::find($oTopic->course_id);
 
                 $oCompleted->course = true;
-                $oCompleted->points = $oCourse->university_points;
+                $oCompleted->has_points = $oCourse->has_points;
+                $oCompleted->points = $oCourse->has_points ? $oCourse->university_points : 0;
 
                 $moduleCompleted = $this->verifyModule($oCourse->module_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
 
@@ -351,7 +352,7 @@ class TakesController extends Controller
                     $oModule = Module::find($oCourse->module_id);
     
                     $areaCompleted = $this->verifyArea($oModule->knowledge_area_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
-                    $oCompleted->course = $areaCompleted;
+                    $oCompleted->area = $areaCompleted;
                 }
             }
         }

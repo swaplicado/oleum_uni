@@ -76,27 +76,27 @@ class CertificatesController extends Controller
         $mpdf->SetTitle(env('APP_NAME', false));
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML('<div style="height: 130px"></div>');
-        $mpdf->WriteHTML('<h4 class="alg-center">Otorga '.$art.' presente:</h4>');
+        $mpdf->WriteHTML('<h4 style="font-size: 20px;" class="alg-center text-blueblack">Otorga '.$art.' presente:</h4>');
         // $mpdf->WriteHTML('<div style="height: 10px"></div>');
-        $mpdf->WriteHTML('<h1 style="font-size: 50px" class="alg-center">'.$sDocText.'</h1>');
-        $mpdf->WriteHTML('<h4 class="alg-center">a</h4>');
+        $mpdf->WriteHTML('<h1 class="alg-center big-with-back">'.$sDocText.'</h1>');
+        $mpdf->WriteHTML('<div style="height: 5px"></div>');
+        $mpdf->WriteHTML('<h4 style="font-size: 20px; margin-bottom: 10px;" class="alg-center text-blueblack">a</h4>');
 
         // $mpdf->WriteHTML('<div align="center"><img src="img/tron2.png" alt="AETH"><div>');
 
+        $mpdf->WriteHTML('<div style="height: 5px"></div>');
         $oStudent = User::find($student);
-        $mpdf->WriteHTML('<div style="height: 15px"></div>');
-        $body = '<h2 class="alg-center">'.$oStudent->full_name.'</h2>';
+        $body = '<h2 style="font-size: 35px;" class="alg-center text-green">'.$oStudent->full_name.'</h2>';
         $mpdf->WriteHTML($body);
         
         $mpdf->WriteHTML('<br>');
-        $mpdf->WriteHTML('<h4 class="alg-center">Por haber cursado el</h4>');
-        $mpdf->WriteHTML('<h4 class="alg-center">'.$sTypeText.'</h4>');
-        $mpdf->WriteHTML('<h3 class="alg-center">'.$title.'</h3>');
+        $mpdf->WriteHTML('<h4 style="font-size: 20px;" class="alg-center text-blueblack">Por haber cursado el '.$sTypeText.'</h4>');
+        $mpdf->WriteHTML('<h3 style="font-size: 40px;" class="alg-center text-blueblack">'.$title.'</h3>');
 
-        $mpdf->WriteHTML('<div style="height: 20px"></div>');
         $oDateIni = Carbon::parse($oAssignment->dt_assignment);
+        $oDateIni->locale();
         $oDateFin = Carbon::parse($oAssignment->dt_end);
-        $mpdf->WriteHTML('<h5 class="alg-center">'.$oDateIni->format('d-m-Y').' al '.$oDateFin->format('d-m-Y').'</h5>');
+        $mpdf->WriteHTML('<h5 style="font-size: 20px; margin-top: 60px" class="alg-center text-blueblack">Morelia Michoacán, '.$oDateIni->monthName.' '.$oDateIni->format('Y').'</h5>');
 
         $date = Carbon::now();
 
@@ -104,7 +104,7 @@ class CertificatesController extends Controller
 
         QrCode::size(50)->generate($key, 'img/j.png');
 
-        $qr = '<div style="position: absolute; left: 900; right: 0; top: 650; bottom: 0;">
+        $qr = '<div style="position: absolute; left: 50; right: 0; top: 600; bottom: 70;">
                     <img src="img/j.png" 
                         style="width: 90%; height: 90%; margin: 0;" />
                 </div>';

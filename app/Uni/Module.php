@@ -30,6 +30,7 @@ class Module extends Model
         'hash_id',
         'description',
         'objectives',
+        'has_document',
         'is_deleted',
         'knowledge_area_id',
         'elem_status_id',

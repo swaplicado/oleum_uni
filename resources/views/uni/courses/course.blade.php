@@ -43,40 +43,43 @@
                     </div>
                     <div class="row" style="background-color: #1173B0; border-radius: 15%">
                         <div class="col-4" style="text-align: center">
-                            <i class='bx bxs-graduation bx-flashing'></i>
+                            <i class='bx bxs-graduation'></i>
                         </div>
                         <div class="col-8">
                             <b>80 Calificación mín.</b>
                         </div>
                     </div>
-                    <div class="row" style="background-color: #1173B0; border-radius: 15%">
-                        <div class="col-4" style="text-align: center">
-                            <i class='bx bxs-coin bx-flashing'></i>
+                    @if ($oCourse->has_points)
+                        <div class="row" style="background-color: #1173B0; border-radius: 15%">
+                            <div class="col-4" style="text-align: center">
+                                <i class='bx bxs-coin'></i>
+                            </div>
+                            <div class="col-8">
+                                <b>Puedes ganar {{ $oCourse->university_points }} puntos universitarios</b>
+                            </div>
                         </div>
-                        <div class="col-8">
-                            <b>Puedes ganar {{ $oCourse->university_points }} puntos universitarios</b>
-                        </div>
-                    </div>
+                    @endif
                     @if ($aGrade[0])
                         <br>
-                        <a href="{{ route('certificate', [config('csys.elem_type.COURSE'), $oCourse->id_course, $oCourse->id_assignment]) }}" target="_blank">
-                            <div class="row" style="background-color: #F3D62D; color: black; border-radius: 15%">
-                                <div class="col-4" style="text-align: center">
-                                    <br>
-                                    <i class='bx bxs-file-doc bx-md bx-flashing'></i>
+                        @if ($oCourse->has_document)
+                            <a href="{{ route('certificate', [config('csys.elem_type.COURSE'), $oCourse->id_course, $oCourse->id_assignment]) }}" target="_blank">
+                                <div class="row" style="background-color: #F3D62D; color: black; border-radius: 15%">
+                                    <div class="col-4" style="text-align: center">
+                                        <i class='bx bxs-file-doc bx-md bx-flashing'></i>
+                                    </div>
+                                    <div class="col-8">
+                                        <b>¡Aprobaste el curso!</b>
+                                        <p>Descarga tu constancia</p>
+                                    </div>
                                 </div>
-                                <div class="col-8">
-                                    <b>¡Aprobaste el curso!</b>
-                                    <p>Descarga tu constancia</p>
-                                </div>
-                            </div>
-                        </a>
+                            </a>
+                        @endif
                         @if ($enableReview)
                             <br>
                             <div class="row align-items-center">
                                 <div class="col-12">
                                     <button type="button" style="width: 100%" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reviewsModal">
-                                        Evalúa el curso<span><i class='bx bxs-message-rounded-dots'></i></span>
+                                        Evalúa el curso<span><i class='bx bxs-message-rounded-dots bx-sm bx-flashing'></i></span>
                                     </button>
                                 </div>
                             </div>

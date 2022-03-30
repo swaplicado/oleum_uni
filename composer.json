@@ -15,8 +15,7 @@
         "laravel/tinker": "^1.0",
         "mpdf/mpdf": "^8.0",
         "simplesoftwareio/simple-qrcode": "^2.0",
-        "spatie/laravel-permission": "^2.0",
-        "vonage/client": "^2.3"
+        "spatie/laravel-permission": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.4",

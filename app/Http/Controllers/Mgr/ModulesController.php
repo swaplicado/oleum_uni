@@ -84,6 +84,7 @@ class ModulesController extends Controller
             $oModule->hash_id = hash('ripemd160', $oModule->module);
             $oModule->description = $request->description;
             $oModule->objectives = $request->objectives;
+            $oModule->has_document = isset($request->has_document);
             $oModule->is_deleted = 0;
             $oModule->knowledge_area_id = $request->ka_id;;
             $oModule->elem_status_id = config('csys.elem_status.NEW');

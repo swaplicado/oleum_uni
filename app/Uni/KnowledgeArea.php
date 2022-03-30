@@ -30,6 +30,7 @@ class KnowledgeArea extends Model
         'hash_id',
         'description',
         'objectives',
+        'has_document',
         'is_deleted',
         'elem_status_id',
         'sequence_id',

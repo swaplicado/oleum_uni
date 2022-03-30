@@ -21,7 +21,7 @@
                         <div style="text-align: center">
                             <span class="badge bg-primary rounded-pill">{{ $area->grade[1] == null || $area->grade[1] == 0 ? "-" : $area->grade[1] }}</span>
                             <br>
-                            @if ($area->elem_status_id == 3 && $area->grade[0])
+                            @if ($area->has_document && $area->elem_status_id == 3 && $area->grade[0])
                                 <a href="{{ route('certificate', [config('csys.elem_type.AREA'), $area->id_knowledge_area, $area->id_assignment]) }}" target="_blank">
                                     <i class='bx bxs-file-doc'></i>
                                 </a>

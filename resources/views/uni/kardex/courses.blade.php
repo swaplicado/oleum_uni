@@ -15,7 +15,7 @@
                             <div>
                                 <span class="badge bg-primary rounded-pill">{{ $course->grade[1] == null || $course->grade[1] == 0 ? "-" : $course->grade[1] }}</span>
                                 <br>
-                                @if ($course->elem_status_id == 3 && $course->grade[0])
+                                @if ($course->has_document && $course->elem_status_id == 3 && $course->grade[0])
                                     <a href="{{ route('certificate', [config('csys.elem_type.COURSE'), $course->id_course, $course->id_assignment]) }}" target="_blank">
                                         <i class='bx bxs-file-doc'></i>
                                     </a>

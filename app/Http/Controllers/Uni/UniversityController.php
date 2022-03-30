@@ -77,6 +77,8 @@ class UniversityController extends Controller
         $oModule = Module::find($module);
 
         foreach ($lCourses as $course) {
+            $course->completed_percent = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->id_assignment);
+
             $oContent = \DB::table('uni_contents_vs_elements AS ce')
                             ->join('uni_edu_contents AS c', 'ce.content_id', '=', 'c.id_content')
                             ->where('element_type_id', config('csys.elem_type.COURSE'))
@@ -94,8 +96,6 @@ class UniversityController extends Controller
             
             $oContent->view_path = $path;
             $course->cover = $oContent;
-
-            $course->completed_percent = TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->id_assignment);
         }
 
         return view('uni.courses.index')->with('lCourses', $lCourses)

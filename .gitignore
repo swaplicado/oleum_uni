@@ -28,3 +28,6 @@ config/debugbar.php
 /.tmp.driveupload/
 
 /univ_config.json
+.vscode/launch.json
+public/img/j.png
+univ_config.json

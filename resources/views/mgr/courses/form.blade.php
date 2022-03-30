@@ -4,7 +4,7 @@
     <input type="text" value="{{ old('course', $oCourse->course ?? '') }}" class="form-control" id="course" name="course">
 </div>
 <div class="row">
-    <div class="col-8">
+    <div class="col-4">
         <div class="mb-3">
             <label for="course_key" class="form-label">Clave del curso</label>
             <input type="text" value="{{ old('course_key', $oCourse->course_key ?? '') }}" class="form-control" id="course_key" name="course_key">
@@ -14,6 +14,24 @@
         <div class="mb-3">
             <label for="completion_days" class="form-label">Duración (días)</label>
             <input type="number" value="{{ old('completion_days', $oCourse->completion_days ?? '') }}" class="form-control" id="completion_days" name="completion_days">
+        </div>
+    </div>
+    <div class="col-2">
+        <br>
+        <div class="mb-3">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="has_document"  {{ (isset($oCourse) && $oCourse->has_document) || !isset($oCourse) ? 'checked' : '' }}>
+                Genera constancia
+            </label>
+        </div>
+    </div>
+    <div class="col-2">
+        <br>
+        <div class="mb-3">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="has_points" {{ (isset($oCourse) && $oCourse->has_points) || !isset($oCourse) ? 'checked' : '' }}>
+              Genera puntos
+            </label>
         </div>
     </div>
     <div class="col-2">

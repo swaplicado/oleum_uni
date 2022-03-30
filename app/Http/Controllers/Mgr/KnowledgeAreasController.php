@@ -72,6 +72,7 @@ class KnowledgeAreasController extends Controller
             $ka->hash_id = hash('ripemd160', $ka->knowledge_area);
             $ka->description = $request->description;
             $ka->objectives = $request->objectives;
+            $ka->has_document = isset($request->has_document);
             $ka->is_deleted = 0;
             $ka->elem_status_id = config('csys.elem_status.NEW');
             $ka->sequence_id = $request->sequence;

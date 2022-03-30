@@ -100,9 +100,11 @@ class CoursesController extends Controller
             $oCourse->course_key = $request->course_key;
             $oCourse->hash_id = hash('ripemd160', $oCourse->course);
             $oCourse->completion_days = $request->completion_days;
+            $oCourse->has_points = isset($request->has_points);
             $oCourse->university_points = $request->university_points;
             $oCourse->description = $request->description;
             $oCourse->objectives = $request->objectives;
+            $oCourse->has_document = isset($request->has_document);
             $oCourse->is_deleted = 0;
             $oCourse->module_id = $request->module_id;
             $oCourse->elem_status_id = config('csys.elem_status.NEW');
@@ -185,6 +187,7 @@ class CoursesController extends Controller
             $oCourse->university_points = $request->university_points;
             $oCourse->description = $request->description;
             $oCourse->objectives = $request->objectives;
+            $oCourse->has_document = isset($request->has_document);
             $oCourse->elem_status_id = config('csys.elem_status.NEW');
             $oCourse->sequence_id = $request->sequence;
             $oCourse->created_by_id = \Auth::id();

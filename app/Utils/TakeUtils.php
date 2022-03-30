@@ -20,12 +20,14 @@ class TakeUtils {
 
         $lCourses =  \DB::table('uni_taken_controls AS tc')
                             ->join('uni_courses AS co', 'tc.course_n_id', '=', 'co.id_course')
+                            ->join('uni_assignments AS a', 'tc.assignment_id', '=', 'a.id_assignment')
                             ->where('tc.student_id', $student)
                             ->where(function ($query) {
                                 $query->where('tc.status_id', config('csys.take_status.CUR'))
                                     ->orWhere('tc.status_id', config('csys.take_status.EVA'));
                             })
                             ->where('tc.element_type_id', config('csys.elem_type.COURSE'))
+                            ->whereRaw('NOW() BETWEEN a.dt_assignment AND a.dt_end')
                             ->where('tc.is_deleted', false)
                             ->where('co.is_deleted', false)
                             ->select('tc.grouper',

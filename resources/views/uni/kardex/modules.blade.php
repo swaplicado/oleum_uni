@@ -19,7 +19,7 @@
                         <div style="text-align: center">
                             <span class="badge bg-secondary rounded-pill">{{ $module->grade[1] == null || $module->grade[1] == 0 ? "-" : $module->grade[1] }}</span>
                             <br>
-                            @if ($module->elem_status_id == 3 && $module->grade[0])
+                            @if ($module->has_document && $module->elem_status_id == 3 && $module->grade[0])
                                 <a href="{{ route('certificate', [config('csys.elem_type.MODULE'), $module->id_module, $module->id_assignment]) }}" target="_blank">
                                     <i class='bx bxs-file-doc'></i>
                                 </a>

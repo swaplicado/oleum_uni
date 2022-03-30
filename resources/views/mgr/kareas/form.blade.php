@@ -21,3 +21,9 @@
     <label for="description" class="form-label">Descripción</label>
     <textarea class="form-control" id="description" name="description" rows="15"></textarea>
 </div>
+<div class="mb-3">
+  <label class="form-check-label">
+    <input type="checkbox" class="form-check-input" name="has_document" checked>
+    Genera certificado
+  </label>
+</div>

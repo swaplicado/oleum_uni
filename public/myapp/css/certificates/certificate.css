@@ -1,5 +1,7 @@
 body {
     background-image: url('img/background.jpg');
+    font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+    font: 12px/1.4em "Century Gothic", "AppleGothic", sans-serif;
     /* height: 50%; */
     /* You must set a specified height */
     /* background-position: center; */
@@ -12,5 +14,21 @@ body {
 
 .alg-center {
     text-align: center;
-    margin-left: 30%;
+    /* margin-left: 5%; */
+}
+
+.big-with-back {
+    font-size: 55px;
+    color: #fff;
+    text-shadow: 0 0 10px #000;
+    margin-top: 42px;
+    margin-bottom: 20px;
+}
+
+.text-blueblack {
+    color: #0465B2;
+}
+
+.text-green {
+    color: #12988B;
 }
