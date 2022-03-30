@@ -239,4 +239,9 @@ class KardexController extends Controller
 
         return view('uni.kardex.head')->with('lStudents', $lStudents);
     }
+
+    public function generateReport(Request $request)
+    {
+        return view('uni.kardex.report');
+    }
 }

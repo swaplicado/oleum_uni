@@ -17,8 +17,8 @@ class Menu {
                     // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
                     (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                     (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis competencias'],
-                    (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
-                    (object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda'],
+                    (object) ['route' => route('kardex.report'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    env('IS_STORE_ENABLED') ? ((object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda']) : null,
                 ];
                 break;
 
@@ -47,8 +47,8 @@ class Menu {
                     (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión competencias'],
                     (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar competencias'],
                     (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Competencias programadas'],
-                    (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
-                    (object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda'],
+                    (object) ['route' => route('kardex.report'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    env('IS_STORE_ENABLED') ? ((object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda']) : null,
                     (object) ['route' => route('gifts.index'), 'icon' => 'bx bxs-cabinet', 'name' => 'Gestión premios'],
                     (object) ['route' => route('points.index'), 'icon' => 'bx bx-money', 'name' => 'Ctrl Puntos'],
                     (object) ['route' => route('carousel.index'), 'icon' => 'bx bx-images', 'name' => 'Carrusel'],
@@ -65,8 +65,8 @@ class Menu {
                     (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión competencias'],
                     (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar competencias'],
                     (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Competencias programadas'],
-                    (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
-                    (object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda'],
+                    (object) ['route' => route('kardex.report'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
+                    env('IS_STORE_ENABLED') ? ((object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda']) : null,
                     (object) ['route' => route('gifts.index'), 'icon' => 'bx bxs-cabinet', 'name' => 'Gestión premios'],
                     (object) ['route' => route('points.index'), 'icon' => 'bx bx-money', 'name' => 'Ctrl Puntos'],
                     (object) ['route' => route('carousel.index'), 'icon' => 'bx bx-images', 'name' => 'Carrusel'],
