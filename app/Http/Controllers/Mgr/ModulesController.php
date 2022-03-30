@@ -47,7 +47,9 @@ class ModulesController extends Controller
                             'es.code AS status_code',
                             'seq.code AS seq_code',
                             'ka.knowledge_area'
-                            ]);
+                            ])
+                    ->where('mo.is_deleted', 0)
+                    ->where('ka.is_deleted', 0);
 
         if (isset($request->ka) && $request->ka > 0) {
             $lModules = $lModules->where('knowledge_area_id', $request->ka);

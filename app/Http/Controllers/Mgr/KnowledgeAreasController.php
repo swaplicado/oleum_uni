@@ -44,6 +44,7 @@ class KnowledgeAreasController extends Controller
                             'es.code AS status_code',
                             'seq.code AS seq_code',
                             ])
+                    ->where('ka.is_deleted', 0)
                             ->get();
 
         return view('mgr.kareas.index')->with('title', $title)
