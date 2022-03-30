@@ -24,7 +24,7 @@
 </div>
 <div class="mb-3">
     <label class="form-check-label">
-      <input type="checkbox" class="form-check-input" name="has_document" checked>
+      <input type="checkbox" class="form-check-input" name="has_document" {{ isset($oModule) && $oModule->has_document ? 'checked' : '' }}>
       Genera reconocimiento
     </label>
 </div>

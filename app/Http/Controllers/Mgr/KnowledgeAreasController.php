@@ -115,6 +115,7 @@ class KnowledgeAreasController extends Controller
             $oKa->description = $request->description;
             $oKa->objectives = $request->objectives;
             $oKa->sequence_id = $request->sequence;
+            $oKa->has_document = isset($request->has_document);
             $oKa->updated_by_id = \Auth::id();
     
             $oKa->save();

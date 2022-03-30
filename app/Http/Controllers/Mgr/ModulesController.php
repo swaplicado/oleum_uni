@@ -128,6 +128,7 @@ class ModulesController extends Controller
             $oModule->description = $request->description;
             $oModule->objectives = $request->objectives;
             $oModule->sequence_id = $request->sequence;
+            $oModule->has_document = isset($request->has_document);
             $oModule->updated_by_id = \Auth::id();
 
             $oModule->save();
