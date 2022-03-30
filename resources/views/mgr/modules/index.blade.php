@@ -84,8 +84,11 @@
                             <td>{{ $module->status_code }}</td>
                             <td>{{ $module->knowledge_area }}</td>
                             <td style="text-align: center">
-                                <a href="{{ route('courses.index', $module->id_module) }}">
+                                <a title="Ver cursos" href="{{ route('courses.index', $module->id_module) }}">
                                     <i class='bx bxs-category'></i>
+                                </a>
+                                <a title="Editar Módulo" href="{{ route('modules.edit', $module->id_module) }}">
+                                    <i class='bx bx-edit'></i>
                                 </a>
                             </td>
                             <td style="text-align: center">

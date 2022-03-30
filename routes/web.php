@@ -72,6 +72,8 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/modules/{ka?}', 'ModulesController@index')->name('modules.index');
         Route::get('/modules/{ka}/create', 'ModulesController@create')->name('modules.create');
         Route::post('/modules', 'ModulesController@store')->name('modules.store');
+        Route::get('/modules/edit/{id}', 'ModulesController@edit')->name('modules.edit');
+        Route::put('/modules/update/{id}', 'ModulesController@update')->name('modules.update');
     
         /**
          * Rutas de CRUD de Cursos

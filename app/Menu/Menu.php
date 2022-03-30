@@ -81,6 +81,9 @@ class Menu {
 
         $sMenu = "";
         foreach ($lMenus as $menu) {
+            if ($menu == null) {
+                continue;
+            }
             $sMenu = $sMenu.Menu::createMenuElement($menu->route, $menu->icon, $menu->name);
         }
 

@@ -82,8 +82,11 @@
                             <td>{{ $area->seq_code }}</td>
                             <td>{{ $area->status_code }}</td>
                             <td style="text-align: center">
-                                <a href="{{ route('modules.index', ['ka' => $area->id_knowledge_area]) }}">
+                                <a title="Ver módulos" href="{{ route('modules.index', ['ka' => $area->id_knowledge_area]) }}">
                                     <i class='bx bxs-category'></i>
+                                </a>
+                                <a title="Editar área de competencia" href="{{ route('kareas.edit', $area->id_knowledge_area) }}">
+                                    <i class='bx bx-edit'></i>
                                 </a>
                             </td>
                             <td style="text-align: center">

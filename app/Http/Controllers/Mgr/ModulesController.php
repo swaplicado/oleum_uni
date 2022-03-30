@@ -13,6 +13,7 @@ class ModulesController extends Controller
 {
     protected $newRoute;
     protected $storeRoute;
+    protected $updateRoute;
 
     /**
      * Create a new controller instance.
@@ -24,6 +25,7 @@ class ModulesController extends Controller
     {
         $this->newRoute = "modules.create";
         $this->storeRoute = "modules.store";
+        $this->updateRoute = "modules.update";
     }
 
     /**
@@ -97,6 +99,40 @@ class ModulesController extends Controller
             return back()->withError($th->getMessage())->withInput();
         }
 
-        return redirect()->route('modules.index', $oModule->knowledge_area_id);
+        return redirect()->route('modules.index', $oModule->knowledge_area_id)->with('success', 'Módulo creado correctamente.');
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $oModule = Module::find($id);
+        $title = "Editar módulo ".$oModule->module;
+
+        $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
+                        ->get();
+
+        return view('mgr.modules.edit')->with('title', $title)
+                                        ->with('updateRoute', $this->updateRoute)
+                                        ->with('sequences', $seq)
+                                        ->with('oModule', $oModule);
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $oModule = Module::find($id);
+
+            $oModule->module = $request->module;
+            $oModule->description = $request->description;
+            $oModule->objectives = $request->objectives;
+            $oModule->sequence_id = $request->sequence;
+            $oModule->updated_by_id = \Auth::id();
+
+            $oModule->save();
+        }
+        catch (\Throwable $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+
+        return redirect()->route('modules.index', $oModule->knowledge_area_id)->with('success', 'Módulo actualizado correctamente.');
     }
 }
