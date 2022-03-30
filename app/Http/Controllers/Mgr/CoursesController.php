@@ -54,7 +54,8 @@ class CoursesController extends Controller
                             'es.code AS status_code',
                             'seq.code AS seq_code',
                             'mo.module'
-                            ]);
+                            ])
+                    ->where('co.is_deleted', 0);
 
         if (isset($moduleId) && $moduleId > 0) {
             $lCourses = $lCourses->where('module_id', $moduleId);
