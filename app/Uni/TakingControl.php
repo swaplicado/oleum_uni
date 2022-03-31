@@ -33,6 +33,7 @@ class TakingControl extends Model
         'grade',
         'university_points',
         'num_questions',
+        'is_evaluation',
         'is_deleted',
         'element_type_id',
         'knowledge_area_n_id',
@@ -41,6 +42,7 @@ class TakingControl extends Model
         'topic_n_id',
         'subtopic_n_id',
         'student_id',
+        'assignment_id',
         'status_id'
     ];
 }

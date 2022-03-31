@@ -38,8 +38,10 @@ class TakesController extends Controller
                                 ->orderBy('dtt_take', 'DESC')
                                 ->get();
 
+        $config = \App\Utils\Configuration::getConfigurations();
+
+        $grouper = "";
         if (count($lTake) == 0) {
-            
             $oTakeArea = new TakingControl();
             
             // Crear toma de área con agrupador
@@ -68,9 +70,9 @@ class TakesController extends Controller
             $oTakeModule->knowledge_area_n_id = null;
             $oTakeModule->module_n_id = $oCourse->module_id;
 
-            // Crear toma de curso
-            $config = \App\Utils\Configuration::getConfigurations();
+            $$oTakeModule = new TakingControl($oTakeModule->toArray());
 
+            // Crear toma de curso
             $oTakeCourse = clone $oTakeModule;
             $oTakeCourse->min_grade = $config->grades->approved;
             $oTakeCourse->university_points = $points;
@@ -78,6 +80,8 @@ class TakesController extends Controller
             $oTakeCourse->knowledge_area_n_id = null;
             $oTakeCourse->module_n_id = null;
             $oTakeCourse->course_n_id = $idCourse;
+
+            $oTakeCourse = new TakingControl($oTakeCourse->toArray());
 
             try {
                 \DB::beginTransaction();
@@ -93,10 +97,125 @@ class TakesController extends Controller
             } catch (\Throwable $th) {
                 \DB::rollBack();
             }
-
         }
         else {
-            return $lTake[0]->grouper;
+            $lTakeModule = TakingControl::where('status_id', '<=', !$bApproved ? config('csys.take_status.CUR') : config('csys.take_status.COM'))
+                                ->where('element_type_id', config('csys.elem_type.AREA'))
+                                ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
+                                ->where('student_id', \Auth::id())
+                                ->where('assignment_id', $idAssignment)
+                                ->where('module_n_id', $oCourse->module_id)
+                                ->orderBy('dtt_take', 'DESC')
+                                ->get();
+
+            if (count($lTakeModule) == 0) {
+                $oTakeArea = TakingControl::where('element_type_id', config('csys.elem_type.AREA'))
+                                ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
+                                ->where('student_id', \Auth::id())
+                                ->where('assignment_id', $idAssignment)
+                                ->orderBy('dtt_take', 'DESC')
+                                ->first();
+
+                if ($oTakeArea == null) {
+                    return null;
+                }
+
+                // Crear toma de modulo con agrupador de área
+                $oTakeModule = clone $oTakeArea;
+                $oTakeModule->dtt_take = Carbon::now()->toDateTimeString();
+                $oTakeModule->dtt_end = null;
+                $oTakeModule->element_type_id = config('csys.elem_type.MODULE');
+                $oTakeModule->knowledge_area_n_id = null;
+                $oTakeModule->module_n_id = $oCourse->module_id;
+                $oTakeModule->assignment_id = $idAssignment;
+
+                $oTakeModule = new TakingControl($oTakeModule->toArray());
+
+                // Crear toma de curso
+                $oTakeCourse = clone $oTakeModule;
+                $oTakeCourse->dtt_take = Carbon::now()->toDateTimeString();
+                $oTakeCourse->dtt_end = null;
+                $oTakeCourse->min_grade = $config->grades->approved;
+                $oTakeCourse->university_points = $points;
+                $oTakeCourse->element_type_id = config('csys.elem_type.COURSE');
+                $oTakeCourse->knowledge_area_n_id = null;
+                $oTakeCourse->module_n_id = null;
+                $oTakeCourse->course_n_id = $idCourse;
+                $oTakeCourse->assignment_id = $idAssignment;
+
+                $oTakeCourse = new TakingControl($oTakeCourse->toArray());
+
+                try {
+                    \DB::beginTransaction();
+        
+                    $oTakeModule->save();
+                    $oTakeCourse->save();
+    
+                    \DB::commit();
+
+                    return $oTakeModule->grouper;
+                }
+                catch (\Throwable $th) {
+                    \DB::rollBack();
+                }
+
+            }
+            else {
+                $lTake = TakingControl::where('status_id', '<=', !$bApproved ? config('csys.take_status.CUR') : config('csys.take_status.COM'))
+                                ->where('element_type_id', config('csys.elem_type.AREA'))
+                                ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
+                                ->where('student_id', \Auth::id())
+                                ->where('assignment_id', $idAssignment)
+                                ->where('module_n_id', $oCourse->module_id)
+                                ->where('course_n_id', $idCourse)
+                                ->orderBy('dtt_take', 'DESC')
+                                ->get();
+
+                if (count($lTake) == 0) {
+                    $oTakeArea = TakingControl::where('element_type_id', config('csys.elem_type.AREA'))
+                                ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
+                                ->where('student_id', \Auth::id())
+                                ->where('assignment_id', $idAssignment)
+                                ->orderBy('dtt_take', 'DESC')
+                                ->first();
+
+                    // Crear toma de curso
+                    $oTakeCourse = clone $oTakeArea;
+                    $oTakeCourse->dtt_take = Carbon::now()->toDateTimeString();
+                    $oTakeCourse->dtt_end = null;
+                    $oTakeCourse->min_grade = $config->grades->approved;
+                    $oTakeCourse->university_points = $points;
+                    $oTakeCourse->element_type_id = config('csys.elem_type.COURSE');
+                    $oTakeCourse->knowledge_area_n_id = null;
+                    $oTakeCourse->module_n_id = null;
+                    $oTakeCourse->course_n_id = $idCourse;
+                    $oTakeCourse->assignment_id = $idAssignment;
+
+                    $oTakeCourse = new TakingControl($oTakeCourse->toArray());
+
+                    try {
+                        \DB::beginTransaction();
+            
+                        $oTakeCourse->save();
+        
+                        \DB::commit();
+
+                        return $oTakeCourse->grouper;
+                    }
+                    catch (\Throwable $th) {
+                        \DB::rollBack();
+                    }
+                }
+                else {
+                    $oTakeArea = $lTake[0];
+                    $grouper = $oTakeArea->grouper;
+                }
+            }
+
+            $oTakeArea = $lTake[0];
+            $grouper = $oTakeArea->grouper;
+
+            return $grouper;
         }
     }
 

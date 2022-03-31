@@ -245,6 +245,7 @@ class ExamsController extends Controller
         }
         catch (\Throwable $th) {
             \DB::rollBack();
+            return response()->json(['error' => $th->getMessage()], 500);
         }
 
         $response = (object) [
