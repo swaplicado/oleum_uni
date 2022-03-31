@@ -19,7 +19,16 @@ class NotificationsController extends Controller
 
         $rec[] = (object) $ua;
 
-        Mail::to($rec)->send(new Questions($request->name_student, $request->question));
+        $cc = [];
+        $ucca = [];
+        $ucca['email'] = env('QUESTIONS_MAIL_DEV');
+        $ucca['name'] = env('QUESTIONS_MAIL_DEV_NAME');
+
+        $cc[] = (object) $ucca;
+
+        Mail::to($rec)
+            ->cc($cc)
+            ->send(new Questions($request->name_student, $request->question));
 
         return redirect()->back()->with('success', 'Pregunta enviada correctamente');
     }
