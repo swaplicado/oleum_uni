@@ -212,6 +212,11 @@ Route::middleware(['auth', 'menu'])->group(function () {
          */
         Route::get('/shop', 'ShopController@index')->name('shop');
         Route::post('/shop', 'ShopController@exchange')->name('shop.exchange');
+
+        /**
+         * Notificaciones
+         */
+        Route::post('/notify_question', 'NotificationsController@sendQuestion')->name('notify.question');
     });
     
     // Controllers Within The "App\Http\Controllers\Sys" Namespace

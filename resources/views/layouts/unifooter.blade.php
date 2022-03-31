@@ -32,14 +32,17 @@
         <div class="col-md-3 footer-ns animated fadeInRight">
             <h4>¿Preguntas?</h4>
             <p>Envia tu pregunta y te contestaremos a la brevedad</p>
-            <form action="" method="post">
+            <form action="{{ route('notify.question') }}" method="post">
+                @csrf
                 <p>
+                    <div class="form-group">
+                      <label for="">Nombre</label>
+                      <input style="font-size: 80%; width: 90%" type="text" class="form-control input-sm" name="name_student" aria-describedby="helpId" placeholder="Matías López" required>
+                    </div>
+                    <br>
                     <div class="input-group">
-                        <textarea style="font-size: 80%;" class="form-control" name="mail_review" rows="4" cols="50">Si tienes alguna duda, sugerencia o comentario, escríbenos.</textarea>
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button"></button>
-                    </span>
-                    </div><!-- /input-group -->
+                        <textarea style="font-size: 80%;" class="form-control input-sm" name="question" rows="4" cols="50" required>Si tienes alguna duda, sugerencia o comentario, escríbenos.</textarea>
+                    </div>
                 </p>
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </form>
