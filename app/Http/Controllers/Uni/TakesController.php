@@ -100,8 +100,7 @@ class TakesController extends Controller
         }
         else {
             $lTakeModule = TakingControl::where('status_id', '<=', !$bApproved ? config('csys.take_status.CUR') : config('csys.take_status.COM'))
-                                ->where('element_type_id', config('csys.elem_type.AREA'))
-                                ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
+                                ->where('element_type_id', config('csys.elem_type.MODULE'))
                                 ->where('student_id', \Auth::id())
                                 ->where('assignment_id', $idAssignment)
                                 ->where('module_n_id', $oCourse->module_id)
@@ -162,11 +161,9 @@ class TakesController extends Controller
             }
             else {
                 $lTake = TakingControl::where('status_id', '<=', !$bApproved ? config('csys.take_status.CUR') : config('csys.take_status.COM'))
-                                ->where('element_type_id', config('csys.elem_type.AREA'))
-                                ->where('knowledge_area_n_id', $oModule->knowledge_area_id)
+                                ->where('element_type_id', config('csys.elem_type.COURSE'))
                                 ->where('student_id', \Auth::id())
                                 ->where('assignment_id', $idAssignment)
-                                ->where('module_n_id', $oCourse->module_id)
                                 ->where('course_n_id', $idCourse)
                                 ->orderBy('dtt_take', 'DESC')
                                 ->get();
@@ -209,6 +206,8 @@ class TakesController extends Controller
                 else {
                     $oTakeArea = $lTake[0];
                     $grouper = $oTakeArea->grouper;
+
+                    return $grouper;
                 }
             }
 
