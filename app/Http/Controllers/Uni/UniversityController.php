@@ -30,6 +30,11 @@ class UniversityController extends Controller
                             ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                             ->get();
 
+        foreach($lAssignments as $assignment){            
+            $result = TakeUtils::getlAssignmentPercentCompleted($assignment->id_assignment, $assignment->id_knowledge_area);
+            $assignment->completed_percent = $result[0];
+        }
+
         return view('uni.areas.index')->with('lAssignments', $lAssignments)
                                         ->with('lContents', []);
     }
@@ -52,6 +57,11 @@ class UniversityController extends Controller
 
         $oKa = KnowledgeArea::find($area);
 
+        foreach($lModules as $module){
+            $result = TakeUtils::getModulePercentCompleted($module->id_module, $assignment);
+            $module->completed_percent = $result[0];
+        }
+        
         return view('uni.modules.index')->with('lModules', $lModules)
                                         ->with('knowledgeArea', $oKa->knowledge_area);
     }

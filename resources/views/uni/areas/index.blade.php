@@ -36,6 +36,9 @@
                 {{ "Termina ".(\Carbon\Carbon::parse($assign->dt_end)->diffForHumans()) }}
               </div>
           </div>
+          <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar" style="width:{{$assign->completed_percent}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
         </div>
       @endforeach
     </div>

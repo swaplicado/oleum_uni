@@ -29,6 +29,9 @@
                 </div>
               </div>
             </a>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width:{{$module->completed_percent}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
           </div>
         @endforeach
     </div>

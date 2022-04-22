@@ -33,6 +33,23 @@ class KardexController extends Controller
 
         foreach ($areas as $area) {
             $area->grade = TakeUtils::isAreaApproved($area->id_knowledge_area, $iStudent, $area->id_assignment, true);
+            $result = TakeUtils::getlAssignmentPercentCompleted($area->id_assignment, $area->id_knowledge_area, $iStudent);
+            $area->completed_percent = number_format($result[0]);
+            $area->modules = $result[1];
+            $end_modules = 0;
+            $promedio = 0;
+            foreach($area->modules as $module){
+                if($module->completed_percent == 100){
+                    $end_modules = $end_modules + 1;
+                }
+                is_null($module->grade[1]) ? $module->grade[1] = 0 : '';
+                $promedio = $promedio + $module->grade[1];
+            }
+            $area->promedio = number_format($promedio / count($area->modules), 2);
+            $area->end_modules = $end_modules;
+            $dt_in = new \DateTime($area->dt_assignment);
+            $dt_end = new \DateTime($area->dt_end);
+            $area->duracion = ($dt_in->diff($dt_end))->format('%d días');
         }
 
         return view('uni.kardex.index')->with('areas', $areas)->with('student', $iStudent);

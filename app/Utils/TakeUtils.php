@@ -281,6 +281,101 @@ class TakeUtils {
         return $approved;
     }
 
+    public static function getlAssignmentPercentCompleted($idAsigment, $idArea, $iStudent = 0)
+    {
+        $assig_percent = 0;
+        $tot_mod = 0;
+
+        $lModules = \DB::table('uni_assignments AS a')
+                        ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
+                        ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
+                        ->select('m.*', 'a.id_assignment', 'a.dt_end')
+                        ->where('a.id_assignment', $idAsigment)
+                        ->where('a.is_deleted', false)
+                        ->where('a.student_id', \Auth::id())
+                        ->where('m.is_deleted', false)
+                        ->where('m.knowledge_area_id', $idArea)
+                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
+                        ->get();
+        
+        foreach($lModules as $module){
+            $result = TakeUtils::getModulePercentCompleted($module->id_module, $idAsigment);
+            $module->completed_percent = number_format($result[0]);
+            $module->grade = TakeUtils::isCourseApproved($module->id_module, $iStudent, $module->id_assignment, true);
+            $module->courses = $result[1];
+            $assig_percent = $assig_percent + $module->completed_percent;
+            $tot_mod = $tot_mod + 1;
+            $end_courses = 0;
+            $promedio = 0;
+            foreach($module->courses as $course){
+                if($course->completed_percent == 100){
+                    $end_courses = $end_courses + 1;
+                }
+                is_null($course->grade[1]) ? $course->grade[1] = 0 : '';
+                $promedio = $promedio + $course->grade[1];
+            }
+            $module->promedio = number_format($promedio / count($module->courses), 2);
+            $module->end_courses = $end_courses;
+        }
+
+        $completed_percent = $assig_percent/$tot_mod;
+
+        return [$completed_percent, $lModules];
+    }
+
+    public static function getModulePercentCompleted($idModule, $idAssigment)
+    {
+        $module_percent = 0;
+        $tot_cour = 0;
+
+        $lCourses = \DB::table('uni_assignments AS a')
+                        ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
+                        ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
+                        ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
+                        ->select('c.*', 'a.id_assignment')
+                        ->where('a.id_assignment', $idAssigment)
+                        ->where('a.is_deleted', false)
+                        ->where('a.student_id', \Auth::id())
+                        ->where('m.is_deleted', false)
+                        ->where('c.is_deleted', false)
+                        ->where('c.module_id', $idModule)
+                        ->where('c.elem_status_id', '>=', config('csys.elem_status.EDIT'))
+                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
+                        ->get();
+
+        foreach ($lCourses as $course) {
+            $course->grade = TakeUtils::isCourseApproved($course->id_course, \Auth::id(), $course->id_assignment, true);
+            $course->completed_percent = number_format(TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->id_assignment));
+            
+            $course->lTopics = \DB::table('uni_topics AS t')
+                                    ->where('t.is_deleted', false)
+                                    ->where('t.course_id', $course->id_course)
+                                    ->get();
+
+            foreach ($course->lTopics as $topic) {
+                $topic->grade = TakeUtils::isTopicApproved($topic->id_topic, \Auth::id(), $course->id_assignment, true);
+
+                $topic->lSubTopics = \DB::table('uni_subtopics AS s')
+                                        ->where('s.is_deleted', false)
+                                        ->where('s.topic_id', $topic->id_topic)
+                                        ->get();
+
+                foreach ($topic->lSubTopics as $subtopic) {
+                    $subtopic->grade = TakeUtils::isSubtopicApproved($subtopic->id_subtopic, \Auth::id(), $course->id_assignment, true);
+                }
+            }
+
+            $tot_cour = $tot_cour + 1;
+            $module_percent = $module_percent + $course->completed_percent;
+        }
+
+        $completed_percent = $module_percent/$tot_cour;
+
+        return [$completed_percent, $lCourses];
+    }
+
     public static function getCoursePercentCompleted($iCourse, $student, $idAssignment)
     {
         $subtopics = \DB::table('uni_topics AS top')
