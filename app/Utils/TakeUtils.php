@@ -286,13 +286,15 @@ class TakeUtils {
         $assig_percent = 0;
         $tot_mod = 0;
 
+        $student = $iStudent == 0 ? \Auth::id() : $iStudent;
+
         $lModules = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->select('m.*', 'a.id_assignment', 'a.dt_end')
                         ->where('a.id_assignment', $idAsigment)
                         ->where('a.is_deleted', false)
-                        ->where('a.student_id', \Auth::id())
+                        ->where('a.student_id', $student)
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $idArea)
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
@@ -315,10 +317,11 @@ class TakeUtils {
                 is_null($course->grade[1]) ? $course->grade[1] = 0 : '';
                 $promedio = $promedio + $course->grade[1];
             }
-            $module->promedio = number_format($promedio / count($module->courses), 2);
+            $tot_courses = count($module->courses) == 0 ? 1 : count($module->courses);
+            $module->promedio = number_format($promedio / $tot_courses, 2);
             $module->end_courses = $end_courses;
         }
-
+        $tot_mod == 0 ? $tot_mod = 1 : '';
         $completed_percent = $assig_percent/$tot_mod;
 
         return [$completed_percent, $lModules];
@@ -370,6 +373,8 @@ class TakeUtils {
             $tot_cour = $tot_cour + 1;
             $module_percent = $module_percent + $course->completed_percent;
         }
+
+        $tot_cour == 0 ? $tot_cour = 1 : '';
 
         $completed_percent = $module_percent/$tot_cour;
 

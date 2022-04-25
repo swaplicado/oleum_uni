@@ -42,8 +42,8 @@ class KardexController extends Controller
                 if($module->completed_percent == 100){
                     $end_modules = $end_modules + 1;
                 }
-                is_null($module->grade[1]) ? $module->grade[1] = 0 : '';
-                $promedio = $promedio + $module->grade[1];
+                is_null($module->promedio) ? $module->promedio = 0 : '';
+                $promedio = $promedio + $module->promedio;
             }
             $area->promedio = number_format($promedio / count($area->modules), 2);
             $area->end_modules = $end_modules;
