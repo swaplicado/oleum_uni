@@ -200,7 +200,10 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/kardex/index/head', 'KardexController@indexHead')->name('kardex.head');
         Route::get('/kardex/modules/{area}/{assignment}/{student?}', 'KardexController@kardexModules')->name('kardex.modules');
         Route::get('/kardex/courses/{module}/{assignment}/{student?}', 'KardexController@kardexCourses')->name('kardex.courses');
-        Route::get('/kardexreport', 'KardexController@generateReport')->name('kardex.report');
+        // Route::get('/kardexreport', 'KardexController@generateReport')->name('kardex.report');
+        Route::get('/Reports', 'KardexController@Reports')->name('Reports');
+        Route::get('/kardexreport', 'KardexController@indexReport')->name('kardex.indexReport');
+        Route::post('/kardexGenReport', 'KardexController@generateReport')->name('kardex.generateReport');
 
         /**
          * Certificados
