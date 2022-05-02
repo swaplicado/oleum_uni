@@ -15,7 +15,15 @@
                         <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#curse{{$area->id_assignment}}" aria-expanded="false" aria-controls="curse{{$area->id_assignment}}">
                             <div class="" style="width: 27%; border-right: solid 0.03cm black">
-                                <div class="fw-bold">{{ $area->knowledge_area }}</div>
+                                <div class="fw-bold">
+                                    @if (!$area->is_active)
+                                        {{ $area->knowledge_area }}
+                                    @else
+                                        <a href="#" class="btn btn-primary" onclick="redirectFunction('{{ route('uni.modules.index', [$area->id_assignment, $area->knowledge_area_id]) }}');">
+                                            {{ $area->knowledge_area }}
+                                        </a>
+                                    @endif
+                                </div>
                                 Cursada: <i>{{ $area->dt_assignment.' - '.$area->dt_end }}</i>
                                 <br>                    
                                 <div>
@@ -48,7 +56,15 @@
                                     <h2 class="accordion-header" id="flush-headingTwo">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#module{{$module->id_module}}" aria-expanded="false" aria-controls="module{{$module->id_module}}">
                                             <div class="" style="width: 27%; border-right: solid 0.03cm black">
-                                                <div class="fw-bold" style="color: brown">{{ $module->module }}</div>
+                                                @if (!$area->is_active)
+                                                    <div class="fw-bold" style="color: brown">{{ $module->module }}</div>
+                                                @else
+                                                    <div class="fw-bold">
+                                                        <a href="#" class="btn btn-primary" onclick="redirectFunction('{{ route('uni.courses.index', [$area->id_assignment, $module->id_module]) }}');">
+                                                            {{ $module->module }}
+                                                        </a>
+                                                    </div>
+                                                @endif
                                                 Cursado: <i>{{ $area->dt_assignment.' - '.$area->dt_end }}</i>
                                                 <br>
                                                 <span>Avance: </span>
@@ -135,4 +151,12 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts_section')
+    <script>
+        function redirectFunction(ruta){
+            location.assign(ruta);
+        }
+    </script>
 @endsection

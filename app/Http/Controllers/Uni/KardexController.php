@@ -51,6 +51,11 @@ class KardexController extends Controller
             $dt_in = new \DateTime($area->dt_assignment);
             $dt_end = new \DateTime($area->dt_end);
             $area->duracion = ($dt_in->diff($dt_end))->format('%d días');
+            if(($area->dt_assignment <= Carbon::now()->toDateString()) && ($area->dt_end >= Carbon::now()->toDateString())){
+                $area->is_active = true;
+            }else{
+                $area->is_active = false;
+            }
         }
         
         return view('uni.kardex.index')->with('areas', $areas)->with('student', $iStudent);
