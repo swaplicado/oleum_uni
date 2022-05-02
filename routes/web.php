@@ -65,7 +65,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
          * Rutas de CRUD de Áreas de Competencia
          */
         Route::resource('kareas','KnowledgeAreasController');
-    
+        Route::post('/kares/status', 'KnowledgeAreasController@updateStatus')->name('kareas.status');
         /**
          * Rutas de CRUD de Módulos
          */
@@ -74,6 +74,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::post('/modules', 'ModulesController@store')->name('modules.store');
         Route::get('/modules/edit/{id}', 'ModulesController@edit')->name('modules.edit');
         Route::put('/modules/update/{id}', 'ModulesController@update')->name('modules.update');
+        Route::post('/modules/status', 'ModulesController@updateStatus')->name('modules.status');
     
         /**
          * Rutas de CRUD de Cursos
@@ -83,6 +84,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::post('/courses', 'CoursesController@store')->name('courses.store');
         Route::get('/courses/edit/{id}', 'CoursesController@edit')->name('courses.edit');
         Route::put('/courses/{id}', 'CoursesController@update')->name('courses.update');
+        Route::post('/courses/status', 'CoursesController@updateStatus')->name('courses.status');
     
         /**
          * Rutas de CRUD de Temas (Topics)

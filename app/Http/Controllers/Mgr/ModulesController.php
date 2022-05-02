@@ -139,4 +139,20 @@ class ModulesController extends Controller
 
         return redirect()->route('modules.index', $oModule->knowledge_area_id)->with('success', 'Módulo actualizado correctamente.');
     }
+
+    public function updateStatus(Request $request)
+    {
+        try {
+            $oModule = Module::find($request->row_id);
+            $oModule->elem_status_id = $request->estatus;
+            $oModule->updated_by_id = \Auth::id();
+
+            $oModule->save();
+        }
+        catch (\Throwable $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+
+        return redirect()->route('modules.index', $oModule->knowledge_area_id)->with('success', 'Módulo actualizado correctamente.');
+    }
 }

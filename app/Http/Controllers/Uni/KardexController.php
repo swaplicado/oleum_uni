@@ -46,13 +46,13 @@ class KardexController extends Controller
                 is_null($module->promedio) ? $module->promedio = 0 : '';
                 $promedio = $promedio + $module->promedio;
             }
-            $area->promedio = number_format($promedio / count($area->modules), 2);
+            $area->promedio = number_format($promedio / (count($area->modules) > 0 ? count($area->modules) : 1), 2);
             $area->end_modules = $end_modules;
             $dt_in = new \DateTime($area->dt_assignment);
             $dt_end = new \DateTime($area->dt_end);
             $area->duracion = ($dt_in->diff($dt_end))->format('%d días');
         }
-
+        
         return view('uni.kardex.index')->with('areas', $areas)->with('student', $iStudent);
     }
 
@@ -378,9 +378,6 @@ class KardexController extends Controller
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
                         ->leftJoin('users as u', 'u.id', '=', 'a.student_id')
-                        // ->where('a.is_deleted', false)
-                        // ->where('m.is_deleted', false)
-                        // ->where('c.is_deleted', false)
                         ->where('c.elem_status_id', '>=', config('csys.elem_status.EDIT'))
                         ->where('a.dt_assignment', '>=', $request->calendarStart)
                         ->where('a.dt_end', '<=', $request->calendarEnd);
@@ -389,15 +386,12 @@ class KardexController extends Controller
             case 'competencia':
                 $lResult = $lResult->select('c.*', 'a.*', 'u.username as student', 'ka.knowledge_area')
                         ->where('a.knowledge_area_id', $request->elemento)
-                        // ->where('a.is_deleted', false)
                         ->where('m.is_deleted', false)
                         ->where('c.is_deleted', false);
                 break;
             case 'modulo':
                 $lResult = $lResult->select('c.*', 'a.*', 'u.username as student', 'ka.knowledge_area')
                         ->where('c.module_id', $request->elemento)
-                        // ->where('a.is_deleted', false)
-                        // ->where('m.is_deleted', false)
                         ->where('c.is_deleted', false);
                 break;
             case 'curso':
@@ -458,7 +452,6 @@ class KardexController extends Controller
         $max_questions = 0;
         foreach ($lResult as $course) {
             $course->lTopics = \DB::table('uni_topics AS t')
-                                    // ->where('t.is_deleted', false)
                                     ->where('t.course_id', $course->id_course);
                                     
             switch ($request->tipo_elemento) {
@@ -485,9 +478,7 @@ class KardexController extends Controller
             $lQuestions = new Collection();
             foreach ($course->lTopics as $topic) {
                 $topic->lSubTopics = \DB::table('uni_subtopics AS s')
-                                        // ->where('s.is_deleted', false)
                                         ->where('s.topic_id', $topic->id_topic);
-                                        // ->get();
                 
                 switch ($request->tipo_elemento) {
                     case 'subtema':

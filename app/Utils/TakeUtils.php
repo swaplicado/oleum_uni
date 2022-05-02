@@ -297,10 +297,7 @@ class TakeUtils {
                         ->where('a.student_id', $student)
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $idArea)
-                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
-                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
-        
         foreach($lModules as $module){
             $result = TakeUtils::getModulePercentCompleted($module->id_module, $idAsigment);
             $module->completed_percent = number_format($result[0]);
@@ -327,10 +324,11 @@ class TakeUtils {
         return [$completed_percent, $lModules];
     }
 
-    public static function getModulePercentCompleted($idModule, $idAssigment)
+    public static function getModulePercentCompleted($idModule, $idAssigment, $iStudent = 0)
     {
         $module_percent = 0;
         $tot_cour = 0;
+        $student = $iStudent == 0 ? \Auth::id() : $iStudent;
 
         $lCourses = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
@@ -339,18 +337,16 @@ class TakeUtils {
                         ->select('c.*', 'a.id_assignment')
                         ->where('a.id_assignment', $idAssigment)
                         ->where('a.is_deleted', false)
-                        ->where('a.student_id', \Auth::id())
+                        ->where('a.student_id', $student)
                         ->where('m.is_deleted', false)
                         ->where('c.is_deleted', false)
                         ->where('c.module_id', $idModule)
                         ->where('c.elem_status_id', '>=', config('csys.elem_status.EDIT'))
-                        ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
-                        ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
 
         foreach ($lCourses as $course) {
-            $course->grade = TakeUtils::isCourseApproved($course->id_course, \Auth::id(), $course->id_assignment, true);
-            $course->completed_percent = number_format(TakeUtils::getCoursePercentCompleted($course->id_course, \Auth::id(), $course->id_assignment));
+            $course->grade = TakeUtils::isCourseApproved($course->id_course, $student, $course->id_assignment, true);
+            $course->completed_percent = number_format(TakeUtils::getCoursePercentCompleted($course->id_course, $student, $course->id_assignment));
             
             $course->lTopics = \DB::table('uni_topics AS t')
                                     ->where('t.is_deleted', false)
@@ -358,7 +354,7 @@ class TakeUtils {
                                     ->get();
 
             foreach ($course->lTopics as $topic) {
-                $topic->grade = TakeUtils::isTopicApproved($topic->id_topic, \Auth::id(), $course->id_assignment, true);
+                $topic->grade = TakeUtils::isTopicApproved($topic->id_topic, $student, $course->id_assignment, true);
 
                 $topic->lSubTopics = \DB::table('uni_subtopics AS s')
                                         ->where('s.is_deleted', false)
@@ -366,7 +362,7 @@ class TakeUtils {
                                         ->get();
 
                 foreach ($topic->lSubTopics as $subtopic) {
-                    $subtopic->grade = TakeUtils::isSubtopicApproved($subtopic->id_subtopic, \Auth::id(), $course->id_assignment, true);
+                    $subtopic->grade = TakeUtils::isSubtopicApproved($subtopic->id_subtopic, $student, $course->id_assignment, true);
                 }
             }
 

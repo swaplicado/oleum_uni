@@ -222,4 +222,18 @@ class CoursesController extends Controller
 
         return redirect()->route('courses.index', $oCourse->module_id);
     }
+
+    public function updateStatus(Request $request){
+        try {
+            $oCourse = Course::find($request->row_id);
+            $oCourse->elem_status_id = (Integer)$request->estatus;
+            $oCourse->updated_by_id = \Auth::id();
+            $oCourse->update();
+        }
+        catch (\Throwable $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+        
+        return redirect()->route('courses.index', $oCourse->module_id)->with('success', 'El registro se actualizó correctamente.');
+    }
 }

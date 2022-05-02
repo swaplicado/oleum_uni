@@ -126,4 +126,18 @@ class KnowledgeAreasController extends Controller
         
         return redirect()->route('kareas.index')->with('success', 'El registro se actualizó correctamente.');
     }
+
+    public function updateStatus(Request $request){
+        try {
+            $oKa = KnowledgeArea::find($request->row_id);
+            $oKa->elem_status_id = (Integer)$request->estatus;
+            $oKa->updated_by_id = \Auth::id();
+            $oKa->update();
+        }
+        catch (\Throwable $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+        
+        return redirect()->route('kareas.index')->with('success', 'El registro se actualizó correctamente.');
+    }
 }
