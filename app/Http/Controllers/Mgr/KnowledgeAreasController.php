@@ -129,10 +129,22 @@ class KnowledgeAreasController extends Controller
 
     public function updateStatus(Request $request){
         try {
-            $oKa = KnowledgeArea::find($request->row_id);
-            $oKa->elem_status_id = (Integer)$request->estatus;
-            $oKa->updated_by_id = \Auth::id();
-            $oKa->update();
+            $oka = \DB::table('uni_knowledge_areas as ar')
+                        ->join('uni_modules as mo', function ($join) {
+                            $join->on('mo.knowledge_area_id','=','ar.id_knowledge_area')
+                                ->where('mo.is_deleted', 0)
+                                ->select('mo.elem_status_id');
+                        })
+                        ->join('uni_courses as co', function ($join) {
+                            $join->on('co.module_id','=','mo.id_module')
+                                ->where('co.is_deleted', 0)
+                                ->select('co.elem_status_id');
+                        })
+                        ->where('ar.id_knowledge_area',$request->row_id)
+                        ->where('ar.is_deleted',0)
+                        ->update(['ar.elem_status_id' => (Integer)$request->estatus,
+                                'mo.elem_status_id' => (Integer)$request->estatus,
+                                'co.elem_status_id' => (Integer)$request->estatus]);
         }
         catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();

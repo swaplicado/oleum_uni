@@ -266,6 +266,10 @@ class UniversityController extends Controller
                             ->orderBy('order', 'ASC')
                             ->get();
 
+        if(is_null($lContents) || count($lContents) < 1){
+            return redirect()->back()->withError('No se ha asignado contenido al subtema.');
+        }
+        
         $oSubtopic = SubTopic::find($subtopic);
 
         foreach ($lContents as $oContent) {

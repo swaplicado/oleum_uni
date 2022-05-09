@@ -462,6 +462,27 @@ class TakesController extends Controller
                 $oCompleted->has_points = $oCourse->has_points;
                 $oCompleted->points = $oCourse->has_points ? $oCourse->university_points : 0;
 
+                $lTopics = \DB::table('uni_topics AS top')
+                            ->where('course_id', $oTopic->course_id)
+                            ->where('is_deleted', false)
+                            ->get();
+
+                $sum = 0;
+                foreach ($lTopics as $oTopic) {
+                    $grade = TakeUtils::isTopicApproved($oTopic->id_topic, \Auth::id(), $oTakeSubtopic->assignment_id, true);
+
+                    if ($grade[0]) {
+                        $sum += $grade[1];
+                    }
+                    else {
+                        return false;
+                    }
+                }
+
+                $courseGrade = count($lTopics) == 0 ? 0 : ($sum / count($lTopics));
+
+                $oCompleted->grade = $courseGrade;
+
                 $moduleCompleted = $this->verifyModule($oCourse->module_id, \Auth::id(), $oTakeSubtopic->grouper, $oTakeSubtopic->assignment_id, $oTakeSubtopic->min_grade);
 
                 if ($moduleCompleted) {
