@@ -201,16 +201,18 @@ class CoursesController extends Controller
                             ->where('course_n_id', $oCourse->id_course)
                             ->delete();
 
-            $elem = new ElementContent();
-
-            $elem->order = 1;
-            $elem->content_id = $request->course_cover;
-            $elem->element_type_id = config('csys.elem_type.COURSE');
-            $elem->course_n_id = $oCourse->id_course;
-            $elem->created_by_id = \Auth::id();
-            $elem->updated_by_id = \Auth::id();
-
-            $elem->save();
+            if($request->course_cover != 0){
+                $elem = new ElementContent();
+    
+                $elem->order = 1;
+                $elem->content_id = $request->course_cover;
+                $elem->element_type_id = config('csys.elem_type.COURSE');
+                $elem->course_n_id = $oCourse->id_course;
+                $elem->created_by_id = \Auth::id();
+                $elem->updated_by_id = \Auth::id();
+    
+                $elem->save();
+            }                            
 
             \DB::commit();
         }

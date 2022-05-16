@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 use App\Uni\EduContent;
 use \Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class ContentsController extends Controller
 {
@@ -37,7 +38,8 @@ class ContentsController extends Controller
     {
         $title = 'Carga de Contenidos';
 
-        $lContents = EduContent::select('id_content',
+        $lContents = EduContent::where('is_deleted', 0)
+                                ->select('id_content',
                                         'file_name',
                                         'file_path',
                                         'file_type',
@@ -201,5 +203,32 @@ class ContentsController extends Controller
         
         // $contents = asset("storage/".$oContent->file_sys_name);
         // return $contents;
+    }
+
+    public function destroyContent($id){
+        $isAssigned = DB::table('uni_contents_vs_elements')->where('content_id', $id)->first();
+        if(is_null($isAssigned)){
+            try {
+                DB::transaction(function () use ($id) {
+                    $oContent = EduContent::findOrFail($id);
+                    $name = $oContent->file_sys_name;
+                    $isDeleted = Storage::delete($name);
+                    if($isDeleted){
+                        $oContent->is_deleted = 1;
+                        $oContent->delete();
+                    }else{
+                        throw new \Exception();
+                    }
+                });
+            } catch (\QueryException $qe) {
+                return redirect()->route('contents.index')->with('error','Error al eliminar el registro');
+            } catch (\Exception $e) {
+                return redirect()->route('contents.index')->with('error','Error al eliminar el registro');
+            }
+            
+            return redirect()->route('contents.index')->with('success','Registro eliminado correctamente');
+        }else{
+            return redirect()->route('contents.index')->with('error','No se puede eliminar el registro porque ha sido asignado a un elemento');
+        }
     }
 }

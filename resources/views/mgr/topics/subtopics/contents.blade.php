@@ -70,6 +70,11 @@
 
 @section('content')
     @section('content_title', $title.' ['.($oSubtopic->subtopic).']')
+
+<form id="form_delete" class="d-inline" method="POST" style="display: none;">
+    @csrf @method("delete")
+</form>
+
 <div id="contentsApp">
     <button id="rightnew" v-on:click="createElementContent()" class="btn btn-success">
         Nuevo<i class='bx bx-plus'></i>
@@ -83,6 +88,7 @@
                         <th>Tipo de archivo</th>
                         <th>Orden</th>
                         <th>Vista previa</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>                    
@@ -99,6 +105,11 @@
                                     Ver <i class='bx bxs-show'></i>
                                 </a>
                             </td>
+                            <td>
+                                <button class="btn btn-danger" v-on:click="deleteFileSubtopic(elemContent.id, elemContent.file_name, '{{route('subtopics.destroy', ':id')}}')">
+                                    <span class="bx bxs-trash"></span>
+                                </button>
+                            </td>
                         </tr>
                 </tbody>
                 <tfoot>
@@ -107,6 +118,7 @@
                         <th>Tipo de archivo</th>
                         <th>Orden</th>
                         <th>Vista previa</th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>

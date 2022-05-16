@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mgr;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 use App\Uni\ElementContent;
 use App\Uni\EduContent;
@@ -70,5 +71,18 @@ class ElementsContentsController extends Controller
                     ->get();
 
         return json_encode($lElementContents[0]);
+    }
+
+    public function destroyContent($id){
+        try {
+            DB::transaction(function () use ($id) {
+                $element = ElementContent::findOrFail($id);
+                $element->delete();
+            });
+        } catch (\QueryException $qe) {
+            return redirect()->back()->with('error','Error al eliminar el registro');
+        }
+        
+        return redirect()->back()->with('success','Registro eliminado correctamente');
     }
 }

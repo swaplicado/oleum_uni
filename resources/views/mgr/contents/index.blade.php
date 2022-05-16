@@ -54,6 +54,27 @@
             });
         } );
     </script>
+    <script>
+        function  deleteFile(id, name){
+                Swal.fire({
+                    title: 'Desea eliminar?',
+                    text: name,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var url = '{{route( "contents.destroy", ":id")}}';
+                        url = url.replace(':id',id);
+                        var fm = document.getElementById('form_delete');
+                        fm.setAttribute('action', url);
+                        fm.submit();
+                    }
+                });
+            }
+    </script>
     <script type="text/javascript">
         function GlobalData () {
             this.sGetRoute = <?php echo json_encode( route($sGetRoute) ) ?>;
@@ -65,6 +86,11 @@
 
 @section('content')
     @section('content_title', $title)
+
+<form id="form_delete" class="d-inline" method="POST" style="display: none;">
+    @csrf @method("delete")
+</form>
+
 <div id="contentsApp">
     <a id="rightnew" href="{{ route($newRoute) }}" class="btn btn-success">
         Nuevo<i class='bx bx-plus'></i>
@@ -77,6 +103,7 @@
                         <th>Nombre de archivo</th>
                         <th>Tipo de archivo</th>
                         <th>Vista previa</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,6 +122,11 @@
                                     </a>
                                 @endif
                             </td>
+                            <td>
+                                <button class="btn btn-danger" onclick="deleteFile({{ $content->id_content  }},'{{ $content->file_name }}')">
+                                    <span class="bx bxs-trash"></span>
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -103,6 +135,7 @@
                         <th>Nombre de archivo</th>
                         <th>Tipo de archivo</th>
                         <th>Vista previa</th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>

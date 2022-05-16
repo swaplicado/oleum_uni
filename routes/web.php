@@ -100,6 +100,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         // Contenidos vs subtemas
         Route::get('/topics/{course?}/subtopics/{id?}/contents', 'ElementsContentsController@subtopics')->name('subtopics.contents.index');
         Route::post('/topics/{course?}/subtopics/contents', 'ElementsContentsController@store')->name('subtopics.contents.store');
+        Route::delete('/subtopics/contents/{id}', 'ElementsContentsController@destroyContent')->name('subtopics.destroy');
         // Preguntas de subtemas
         Route::get('/topics/{course?}/subtopics/{id?}/questions', 'QuestionsController@index')->name('subtopics.questions.index');
         Route::post('/question', 'QuestionsController@store')->name('questions.store');
@@ -115,6 +116,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/contents/create', 'ContentsController@create')->name('contents.create');
         Route::post('/contents', 'ContentsController@store')->name('contents.store');
         Route::get('/contents/preview', 'ContentsController@getPreview')->name('contents.preview');
+        Route::delete('/contents/{id}', 'ContentsController@destroyContent')->name('contents.destroy');
     
         /**
          * Rutas de asignaciones de áreas de competencia

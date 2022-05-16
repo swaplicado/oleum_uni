@@ -92,6 +92,25 @@ var app = new Vue({
                     console.log(error);
                     SGui.showError(error);
                 });
+        },
+        deleteFileSubtopic(id, name, ruta){
+            Swal.fire({
+                title: 'Desea eliminar?',
+                text: name,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = ruta;
+                    url = url.replace(':id',id);
+                    var fm = document.getElementById('form_delete');
+                    fm.setAttribute('action', url);
+                    fm.submit();
+                }
+            });
         }
     },
 })
