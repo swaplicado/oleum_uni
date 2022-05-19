@@ -66,6 +66,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
          */
         Route::resource('kareas','KnowledgeAreasController');
         Route::post('/kares/status', 'KnowledgeAreasController@updateStatus')->name('kareas.status');
+        Route::delete('/kares/delete/{id}', 'KnowledgeAreasController@delete')->name('kareas.delete');
         /**
          * Rutas de CRUD de Módulos
          */
@@ -75,6 +76,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/modules/edit/{id}', 'ModulesController@edit')->name('modules.edit');
         Route::put('/modules/update/{id}', 'ModulesController@update')->name('modules.update');
         Route::post('/modules/status', 'ModulesController@updateStatus')->name('modules.status');
+        Route::delete('/modules/delete/{id}', 'ModulesController@delete')->name('modules.delete');
     
         /**
          * Rutas de CRUD de Cursos
@@ -85,6 +87,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/courses/edit/{id}', 'CoursesController@edit')->name('courses.edit');
         Route::put('/courses/{id}', 'CoursesController@update')->name('courses.update');
         Route::post('/courses/status', 'CoursesController@updateStatus')->name('courses.status');
+        Route::delete('/courses/delete/{id}', 'CoursesController@delete')->name('courses.delete');
     
         /**
          * Rutas de CRUD de Temas (Topics)
@@ -92,15 +95,19 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/topics/{course?}', 'TopicsController@index')->name('topics.index');
         Route::get('/topics/create', 'TopicsController@create')->name('topics.create');
         Route::post('/topics', 'TopicsController@store')->name('topics.store');
+        Route::delete('/topics/delete/{id}', 'TopicsController@delete')->name('topics.delete');
+        Route::post('/topics/edit/{id}', 'TopicsController@edit')->name('topics.edit');
     
         /**
          * Rutas de CRUD de Subtemas (SubTopics)
          */
         Route::post('/subtopics', 'SubTopicsController@store')->name('subtopics.store');
+        Route::delete('/subtopics/{id}', 'SubTopicsController@delete')->name('subtopics.delete');
+        Route::post('/subtopics/edit/{id}', 'SubTopicsController@edit')->name('subtopics.edit');
         // Contenidos vs subtemas
         Route::get('/topics/{course?}/subtopics/{id?}/contents', 'ElementsContentsController@subtopics')->name('subtopics.contents.index');
         Route::post('/topics/{course?}/subtopics/contents', 'ElementsContentsController@store')->name('subtopics.contents.store');
-        Route::delete('/subtopics/contents/{id}', 'ElementsContentsController@destroyContent')->name('subtopics.destroy');
+        Route::delete('/subtopics/contents/{id}', 'ElementsContentsController@destroyContent')->name('subtopics.contents.destroy');
         // Preguntas de subtemas
         Route::get('/topics/{course?}/subtopics/{id?}/questions', 'QuestionsController@index')->name('subtopics.questions.index');
         Route::post('/question', 'QuestionsController@store')->name('questions.store');

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Mgr;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
+use Illuminate\Database\QueryException;
 
 use App\Sys\Sequence;
 use App\Uni\KnowledgeArea;
@@ -160,5 +162,59 @@ class ModulesController extends Controller
         }
 
         return redirect()->route('modules.index', $oModule->knowledge_area_id)->with('success', 'Módulo actualizado correctamente.');
+    }
+
+    public function delete($id){
+        $success = true;
+
+        try {
+            DB::transaction(function () use ($id) {
+                $build = DB::table('uni_modules as mo')
+                            ->leftJoin('uni_courses as co', 'co.module_id', '=', 'mo.id_module')
+                            ->leftJoin('uni_topics as top', 'top.course_id', '=', 'co.id_course')
+                            ->leftJoin('uni_subtopics as sub', 'sub.topic_id', '=', 'top.id_topic')
+                            ->leftJoin('uni_questions as q', 'q.subtopic_id', '=', 'sub.id_subtopic')
+                            ->where('mo.id_module',$id);
+
+
+                $isIncurse = DB::table('uni_modules as mo')
+                            ->leftJoin('uni_knowledge_areas as ka', 'ka.id_knowledge_area', '=', 'mo.knowledge_area_id')
+                            ->leftJoin('uni_assignments as ag', 'ag.knowledge_area_id', '=', 'ka.id_knowledge_area')
+                            ->select('ag.id_assignment','ag.is_over')
+                            ->where('mo.id_module',$id)->where('ag.is_over',0)
+                            ->get();
+                
+                if($isIncurse->isEmpty()){
+                    $result = $build->select('co.id_course','sub.id_subtopic')->get();
+
+                    DB::table('uni_contents_vs_elements')
+                        ->where(function($query) use ($result) {
+                            $query->whereIn('subtopic_n_id',$result->pluck('id_subtopic')->toArray());
+                        })->orWhere(function($query) use ($result) {
+                                $query->whereIn('course_n_id',$result->pluck('id_course')->toArray());
+                        })
+                        ->delete();
+                        
+                    $build->update(['mo.is_deleted' => 1, 'co.is_deleted' => 1, 'top.is_deleted' => 1, 'sub.is_deleted' => 1, 'q.is_deleted' => 1]);
+                }else{
+                    throw new \Exception('area en curso');
+                }
+            });
+        } catch (QueryException $e) {
+            $success = false;
+            $msg = "Error al eliminar el registro";
+            $icon = "error";
+        } catch (\Exception $e) {
+            $success = false;
+            $msg = "El módulo está siendo cursado";
+            $icon = "error";
+        }
+
+        if ($success) {
+            $msg = "Se eliminó el registro con éxito";
+            $icon = "success";
+        }
+
+        return redirect()->back()->with(['message' => $msg, 'icon' => $icon]);
     }
 }

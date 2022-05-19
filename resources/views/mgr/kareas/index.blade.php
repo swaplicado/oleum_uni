@@ -72,9 +72,33 @@
         });
     })
 </script>
+<script>
+    function areaDelete(area_id, name, ruta) {
+            Swal.fire({
+                title: 'Desea eliminar?',
+                text: name,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = ruta;
+                    url = url.replace(':id',area_id);
+                    var fm = document.getElementById('form_delete');
+                    fm.setAttribute('action', url);
+                    fm.submit();
+                }
+            });
+        }
+</script>
 @endsection
 
 @section('content')
+<form id="form_delete" class="d-inline" method="POST" style="display: none;">
+    @csrf @method("delete")
+</form>
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -122,6 +146,7 @@
                         <th>Estatus</th>
                         <th>Módulos</th>
                         <th>Pre</th>
+                        <th>-</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -150,6 +175,11 @@
                                     <i class='bx bxs-brightness'></i>
                                 </a>
                             </td>
+                            <td style="text-align: center">
+                                <a href="#" onclick="areaDelete({{$area->id_knowledge_area}}, '{{$area->knowledge_area}}', '{{route('kareas.delete', ':id')}}')">
+                                    <i class='bx bx-trash' style="color: red;"></i>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -161,6 +191,7 @@
                         <th>Estatus</th>
                         <th>Módulos</th>
                         <th>Pre</th>
+                        <th>-</th>
                     </tr>
                 </tfoot>
             </table>

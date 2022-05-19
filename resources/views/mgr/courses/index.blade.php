@@ -72,9 +72,33 @@
         });
     })
 </script>
+<script>
+    function courseDelete(course_id, name, ruta) {
+            Swal.fire({
+                title: 'Desea eliminar?',
+                text: name,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = ruta;
+                    url = url.replace(':id',course_id);
+                    var fm = document.getElementById('form_delete');
+                    fm.setAttribute('action', url);
+                    fm.submit();
+                }
+            });
+        }
+</script>
 @endsection
 
 @section('content')
+<form id="form_delete" class="d-inline" method="POST" style="display: none;">
+    @csrf @method("delete")
+</form>
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -124,6 +148,7 @@
                         <th>Estatus</th>
                         <th>Módulo</th>
                         <th>-</th>
+                        <th>-</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -154,6 +179,11 @@
                                     <i class='bx bx-edit'></i>
                                 </a>
                             </td>
+                            <td>
+                                <a href="#" onclick="courseDelete({{$course->id_course}}, '{{$course->course}}', '{{route('courses.delete', ':id')}}')">
+                                    <i class='bx bx-trash' style="color: red;"></i>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -167,6 +197,7 @@
                         <th>Secuencia</th>
                         <th>Estatus</th>
                         <th>Módulo</th>
+                        <th>-</th>
                         <th>-</th>
                     </tr>
                 </tfoot>

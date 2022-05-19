@@ -106,7 +106,7 @@
                                 </a>
                             </td>
                             <td>
-                                <button class="btn btn-danger" v-on:click="deleteFileSubtopic(elemContent.id, elemContent.file_name, '{{route('subtopics.destroy', ':id')}}')">
+                                <button class="btn btn-danger" v-on:click="deleteFileSubtopic(elemContent.id, elemContent.file_name, '{{route('subtopics.contents.destroy', ':id')}}')">
                                     <span class="bx bxs-trash"></span>
                                 </button>
                             </td>

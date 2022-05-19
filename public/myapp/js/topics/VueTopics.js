@@ -7,7 +7,9 @@ var appTopics = new Vue({
         message: 'Hello Vue!',
         oData: oServerData,
         oTopic: new Topic(),
-        oSubTopic: new SubTopic()
+        oSubTopic: new SubTopic(),
+        oEdit: {id: '', name: ''},
+        editType: null
     },
     methods: {
         /**
@@ -140,6 +142,66 @@ var appTopics = new Vue({
             }
 
             return true;
+        },
+
+        topicDelete(topic_id, name, ruta) {
+            Swal.fire({
+                title: 'Desea eliminar?',
+                text: name,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = ruta;
+                    url = url.replace(':id',topic_id);
+                    var fm = document.getElementById('form_delete');
+                    fm.setAttribute('action', url);
+                    fm.submit();
+                }
+            });
+        },
+
+        subtopicDelete(subtopic_id, name, ruta) {
+            Swal.fire({
+                title: 'Desea eliminar?',
+                text: name,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = ruta;
+                    url = url.replace(':id',subtopic_id);
+                    var fm = document.getElementById('form_delete');
+                    fm.setAttribute('action', url);
+                    fm.submit();
+                }
+            });
+        },
+
+        editTopic(topic_id, name, ruta){
+            this.oEdit.id = topic_id;
+            this.oEdit.name = name;
+            this.editType = 'Tema';
+            var url = ruta;
+            url = url.replace(':id',topic_id);
+            var fm = document.getElementById('mform');
+            fm.setAttribute('action', url);
+        },
+
+        editSubtopic(subtopic_id, name, ruta){
+            this.oEdit.id = subtopic_id;
+            this.oEdit.name = name;
+            this.editType = 'Subtema';
+            var url = ruta;
+            url = url.replace(':id',subtopic_id);
+            var fm = document.getElementById('mform');
+            fm.setAttribute('action', url);
         }
     },
 })

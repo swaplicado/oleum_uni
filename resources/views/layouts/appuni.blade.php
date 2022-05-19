@@ -127,6 +127,17 @@
 </head>
 
 <body class="snippet-body" id="body-pd">
+    @if(session('message'))
+        <script>
+            msg = "<?php echo session('message'); ?>";
+            myIcon = "<?php echo session('icon'); ?>"
+
+            Swal.fire({
+                icon: myIcon,
+                title: msg
+            })
+        </script>
+    @endif
     <header class="header" id="header">
         <div class="header_toggle">
             <div class="row">
