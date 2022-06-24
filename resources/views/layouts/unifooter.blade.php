@@ -35,11 +35,6 @@
             <form action="{{ route('notify.question') }}" method="post">
                 @csrf
                 <p>
-                    <div class="form-group">
-                      <label for="">Nombre</label>
-                      <input style="font-size: 80%; width: 90%" type="text" class="form-control input-sm" name="name_student" aria-describedby="helpId" placeholder="Matías López" required>
-                    </div>
-                    <br>
                     <div class="input-group">
                         <textarea style="font-size: 80%;" class="form-control input-sm" name="question" rows="4" cols="50" required>Si tienes alguna duda, sugerencia o comentario, escríbenos.</textarea>
                     </div>

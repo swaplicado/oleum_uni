@@ -28,7 +28,7 @@ class NotificationsController extends Controller
 
         Mail::to($rec)
             ->cc($cc)
-            ->send(new Questions($request->name_student, $request->question));
+            ->send(new Questions(\Auth::user()->full_name, $request->question));
 
         return redirect()->back()->with('success', 'Pregunta enviada correctamente');
     }
