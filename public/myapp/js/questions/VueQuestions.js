@@ -52,6 +52,8 @@ var app = new Vue({
         },
         discardAnswer(answer) {
             if (!answer.id_answer > 0) {
+                var removeIndex = this.oQuestion.lAnswers.map(function(item) { return item.id_aux; }).indexOf(answer.id_aux);
+                this.oQuestion.lAnswers.splice(removeIndex, 1);
                 return;
             }
 
