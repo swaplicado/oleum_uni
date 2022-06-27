@@ -18,7 +18,7 @@
                                     <p style="color: {{ $lCarousel[$i]->text_color }}">{{ $lCarousel[$i]->text }}</p>
                                 </div>
                             @else
-                                <video controls="" autoplay name="media" class="carousel-video">
+                                <video controls="" autoplay="" name="media" class="carousel-video">
                                     <source id="idSource" src="{{ $lCarousel[$i]->path }}" type="video/mp4">
                                 </video>
                             @endif
