@@ -156,6 +156,20 @@ a {
     border: thin;
 }
 
+.text-header-blue {
+    background-color: #0d6efd;
+    color: white;
+    border: thin;
+}
+
+.carousel-video {
+    height: 60%;
+    width: 60%;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+}
+
 @media screen and (min-width: 768px) {
     body {
         margin: calc(var(--header-height) + 1rem) 0 0 0;

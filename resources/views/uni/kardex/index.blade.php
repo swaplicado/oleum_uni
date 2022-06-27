@@ -19,11 +19,14 @@
                                     @if (!$area->is_active)
                                         {{ $area->knowledge_area }}
                                     @else
-                                        <a href="#" class="btn btn-primary" onclick="redirectFunction('{{ route('uni.modules.index', [$area->id_assignment, $area->knowledge_area_id]) }}');">
+                                        <a href="#" class="btn btn-primary" 
+                                            style="width: 90%; height: 5rem;"
+                                            onclick="redirectFunction('{{ route('uni.modules.index', [$area->id_assignment, $area->knowledge_area_id]) }}');">
                                             {{ $area->knowledge_area }}
                                         </a>
                                     @endif
                                 </div>
+                                <br>
                                 Cursada: <i>{{ $area->dt_assignment.' - '.$area->dt_end }}</i>
                                 <br>                    
                                 <div>
@@ -60,11 +63,14 @@
                                                     <div class="fw-bold" style="color: brown">{{ $module->module }}</div>
                                                 @else
                                                     <div class="fw-bold">
-                                                        <a href="#" class="btn btn-primary" onclick="redirectFunction('{{ route('uni.courses.index', [$area->id_assignment, $module->id_module]) }}');">
+                                                        <a href="#" class="btn btn-info" 
+                                                            style="width: 90%; height: 4.5rem;"
+                                                            onclick="redirectFunction('{{ route('uni.courses.index', [$area->id_assignment, $module->id_module]) }}');">
                                                             {{ $module->module }}
                                                         </a>
                                                     </div>
                                                 @endif
+                                                <br>
                                                 Cursado: <i>{{ $area->dt_assignment.' - '.$area->dt_end }}</i>
                                                 <br>
                                                 <span>Avance: </span>

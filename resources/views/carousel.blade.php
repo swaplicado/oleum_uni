@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12">
-        <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel" data-interval="false">
             <div class="carousel-indicators">
                 @for ($i = 0; $i < count($lCarousel); $i++) <button type="button" data-bs-target="#homeCarousel"
                     data-bs-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}"
@@ -18,13 +18,14 @@
                                     <p style="color: {{ $lCarousel[$i]->text_color }}">{{ $lCarousel[$i]->text }}</p>
                                 </div>
                             @else
-                                <video controls="" autoplay="" name="media" width="100%" height="100%">
+                                <video controls="" name="media" class="carousel-video">
                                     <source id="idSource" src="{{ $lCarousel[$i]->path }}" type="video/mp4">
                                 </video>
                             @endif
                         </a>
                     </div>
                 @endfor
+            </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
