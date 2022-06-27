@@ -9,7 +9,7 @@
             <hr>
             <div class="row">
               <div class="col-12">
-                <a href="{{ route('areas.index') }}"><h2 style="color: #05887F">Áreas de competencia...</h2></a>
+                <a href="{{ route('areas.index') }}"><h2 style="color: #05887F">Áreas de competencias...</h2></a>
               </div>
             </div>
             <div class="row">
