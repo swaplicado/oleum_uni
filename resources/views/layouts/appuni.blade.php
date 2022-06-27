@@ -273,10 +273,6 @@
     
     // Your code to run since DOM is loaded and ready
     });
-
-    $('.carousel').carousel({
-        interval: false,
-    });
     </script>
     @yield('bottom_scripts')
 </body>
