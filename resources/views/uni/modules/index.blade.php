@@ -14,21 +14,18 @@
       {{-- v-for="module in oData.lModules" --}}
         @foreach($lModules as $module)
           <div class="col-lg-3 col-md-6 col-12">
-            <a href="{{ route('uni.courses.index', [$module->id_assignment, $module->id_module]) }}">
               <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
-                <div class="card-header">
+                <div class="card-header text-header-blue" style="height: 5rem">
                     {{ $module->module }}
                 </div>
-                <div class="card-body">
-                  <h5 class="card-title">{{ $module->module }}</h5>
+                <div class="card-body" style="height: 19rem">
                   <p class="card-text">{{ $module->description }}</p>
                   <p class="card-text">{{ $module->objectives }}</p>
                 </div>
                 <div class="card-footer text-muted">
-                  <b>{{ "Termina ".(\Carbon\Carbon::parse($module->dt_end)->diffForHumans()) }}</b>
+                  <a style="width: 95%" href="{{ route('uni.courses.index', [$module->id_assignment, $module->id_module]) }}" class="btn btn-info">Tomar cursos</a>
                 </div>
               </div>
-            </a>
             <div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width:{{$module->completed_percent}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
