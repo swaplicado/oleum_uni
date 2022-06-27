@@ -27,9 +27,8 @@
                         <p class="card-text">{{ $ka->description }}</p>
                       </div>
                       <div class="card-footer text-muted">
-                        <a style="width: 95%" href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}" class="btn btn-info" type="button">Tomar módulos</a>
+                        <a style="width: 95%" href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}" class="btn btn-info" type="button">Iniciar cursos</a>
                         <br>
-                        {{ "Termina ".(\Carbon\Carbon::parse($ka->dt_end)->diffForHumans()) }}
                       </div>
                     </div>
                   {{-- </a> --}}

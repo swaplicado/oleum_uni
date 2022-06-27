@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12">
-        <div id="homeCarousel" class="carousel slide" data-interval="500000">
+        <div id="homeCarousel" class="carousel slide" style="height: 60%; width: 60%;" data-interval="500000">
             <div class="carousel-indicators">
                 @for ($i = 0; $i < count($lCarousel); $i++) <button type="button" data-bs-target="#homeCarousel"
                     data-bs-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}"
