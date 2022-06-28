@@ -18,21 +18,21 @@
      {{--   v-for="assign in oData.lAssignments" --}}
         <div class="col-lg-3 col-md-6 col-12">
             <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
-              <div class="card-header">
-                <a href="{{ route('uni.modules.index', [$assign->id_assignment, $assign->knowledge_area_id]) }}">
-                  {{ $assign->knowledge_area }}
-                </a>
+              <div class="card-header text-header-blue" style="height: 4rem;">
+                {{-- <a href="{{ route('uni.modules.index', [$assign->id_assignment, $assign->knowledge_area_id]) }}">{{ $assign->knowledge_area }}</a> --}}
+                {{ $assign->knowledge_area }}
               </div>
-              <div class="card-body">
+              <div class="card-body" style="height: 20rem;">
                 <h6>
                   <b>{{ $assign->dt_assignment." al ".$assign->dt_end }}</b>
                 </h6>
                 <br>
-                <h5 class="card-title"><b>{{ $assign->knowledge_area }}</b></h5>
                 <p class="card-text">{{ $assign->description }}</p>
                 <p class="card-text">{{ $assign->objectives }}</p>
               </div>
               <div class="card-footer text-muted">
+                <a href="{{ route('uni.modules.index', [$assign->id_assignment, $assign->knowledge_area_id]) }}" style="width: 95%;" class="btn btn-info">Ver módulos</a>
+                <hr>
                 {{ "Termina ".(\Carbon\Carbon::parse($assign->dt_end)->diffForHumans()) }}
               </div>
           </div>

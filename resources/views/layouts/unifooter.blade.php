@@ -36,7 +36,7 @@
                 @csrf
                 <p>
                     <div class="input-group">
-                        <textarea style="font-size: 80%;" class="form-control input-sm" name="question" rows="4" cols="50" required>Si tienes alguna duda, sugerencia o comentario, escríbenos.</textarea>
+                        <textarea onclick="onComments()" id="commentsAreaId" style="font-size: 80%;" class="form-control input-sm" name="question" rows="4" cols="50" required>Si tienes alguna duda, sugerencia o comentario, escríbenos.</textarea>
                     </div>
                 </p>
                 <button type="submit" class="btn btn-primary">Enviar</button>
@@ -45,7 +45,14 @@
     </div>
     <div class="row">
         <div class="col-12 footer-brand">
-            <p>Copyright © Software Aplicado. Todos los derechos reservados 2021.</p>
+            <p>Copyright © Software Aplicado. Todos los derechos reservados {{ \Carbon\Carbon::now()->year }}.</p>
         </div>
     </div>
+    <script>
+        function onComments() {
+            if ($('#commentsAreaId').val() == "Si tienes alguna duda, sugerencia o comentario, escríbenos.") {
+                $('#commentsAreaId').text('');
+            }
+        }
+    </script>
 </footer>

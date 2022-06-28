@@ -36,12 +36,12 @@
             </div>
             <div class="row">                
                 <div class="col-md-3 text-white">
-                    <div class="row" style="background-color: #1173B0; border-radius: 15%">
+                    <div class="row" style="background-color: #1173B0; border-radius: 1%">
                         <div class="col-12">
                             <b>Para este curso vas a necesitar:</b>
                         </div>
                     </div>
-                    <div class="row" style="background-color: #1173B0; border-radius: 15%">
+                    <div class="row" style="background-color: #1173B0; border-radius: 1%">
                         <div class="col-4" style="text-align: center">
                             <i class='bx bxs-graduation'></i>
                         </div>
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     @if ($oCourse->has_points)
-                        <div class="row" style="background-color: #1173B0; border-radius: 15%">
+                        <div class="row" style="background-color: #1173B0; border-radius: 1%">
                             <div class="col-4" style="text-align: center">
                                 <i class='bx bxs-coin'></i>
                             </div>
