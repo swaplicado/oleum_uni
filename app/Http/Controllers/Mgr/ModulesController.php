@@ -147,7 +147,7 @@ class ModulesController extends Controller
         try {
             $oModule = Module::find($request->row_id);
             $oMo = \DB::table('uni_modules as mo')
-                        ->join('uni_courses as co', function ($join) {
+                        ->leftJoin('uni_courses as co', function ($join) {
                             $join->on('co.module_id','=','mo.id_module')
                                 ->where('co.is_deleted', 0)
                                 ->select('co.elem_status_id');
