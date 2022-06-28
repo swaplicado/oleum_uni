@@ -45,7 +45,7 @@
                                 <br>
                                 @if ($area->has_document && $area->elem_status_id == 3 && $area->grade[0])
                                     <a href="{{ route('certificate', [config('csys.elem_type.AREA'), $area->id_knowledge_area, $area->id_assignment]) }}" target="_blank">
-                                        <i class='bx bxs-file-doc'></i>
+                                        Descargar documento <i class='bx bxs-file-doc'></i>
                                     </a>
                                 @endif
                             </div>
@@ -86,7 +86,7 @@
                                                 <br>
                                                 @if ($module->has_document && $module->elem_status_id == 3 && $module->grade[0])
                                                     <a href="{{ route('certificate', [config('csys.elem_type.MODULE'), $module->id_module, $module->id_assignment]) }}" target="_blank">
-                                                        <i class='bx bxs-file-doc'></i>
+                                                        Descargar documento <i class='bx bxs-file-doc'></i>
                                                     </a>
                                                 @endif
                                             </div>
@@ -114,7 +114,7 @@
                                                                 <br>
                                                                 @if ($course->has_document && $course->elem_status_id == 3 && $course->grade[0])
                                                                     <a href="{{ route('certificate', [config('csys.elem_type.COURSE'), $course->id_course, $course->id_assignment]) }}" target="_blank">
-                                                                        <i class='bx bxs-file-doc'></i>
+                                                                        Descargar documento <i class='bx bxs-file-doc'></i>
                                                                     </a>
                                                                 @endif
                                                             </div>

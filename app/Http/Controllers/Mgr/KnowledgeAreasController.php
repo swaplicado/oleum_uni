@@ -132,12 +132,12 @@ class KnowledgeAreasController extends Controller
     public function updateStatus(Request $request){
         try {
             $oka = \DB::table('uni_knowledge_areas as ar')
-                        ->join('uni_modules as mo', function ($join) {
+                        ->leftJoin('uni_modules as mo', function ($join) {
                             $join->on('mo.knowledge_area_id','=','ar.id_knowledge_area')
                                 ->where('mo.is_deleted', 0)
                                 ->select('mo.elem_status_id');
                         })
-                        ->join('uni_courses as co', function ($join) {
+                        ->leftJoin('uni_courses as co', function ($join) {
                             $join->on('co.module_id','=','mo.id_module')
                                 ->where('co.is_deleted', 0)
                                 ->select('co.elem_status_id');

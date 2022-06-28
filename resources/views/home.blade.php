@@ -18,7 +18,7 @@
               @endif
               @foreach($lAssignments as $ka)
                 <div class="col-lg-3 col-md-6 col-12">
-                  {{-- <a href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}"> --}}
+                  <a href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}">
                     <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
                       <div class="card-header text-header-blue" style="height: 5rem;">
                         {{ $ka->knowledge_area }}
@@ -27,12 +27,11 @@
                         <p class="card-text">{{ $ka->description }}</p>
                       </div>
                       <div class="card-footer text-muted">
-                        <a style="width: 95%" href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}" class="btn btn-info" type="button">Tomar módulos</a>
+                        <a style="width: 95%" href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}" class="btn btn-info" type="button">Iniciar cursos</a>
                         <br>
-                        {{ "Termina ".(\Carbon\Carbon::parse($ka->dt_end)->diffForHumans()) }}
                       </div>
                     </div>
-                  {{-- </a> --}}
+                  </a>
                 </div>
               @endforeach
             </div>

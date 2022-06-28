@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12">
-        <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel" data-interval="false">
+        <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel" data-interval="500000">
             <div class="carousel-indicators">
                 @for ($i = 0; $i < count($lCarousel); $i++) <button type="button" data-bs-target="#homeCarousel"
                     data-bs-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}"
@@ -18,7 +18,7 @@
                                     <p style="color: {{ $lCarousel[$i]->text_color }}">{{ $lCarousel[$i]->text }}</p>
                                 </div>
                             @else
-                                <video controls="" name="media" class="carousel-video">
+                                <video controls="" autoplay="" name="media" class="carousel-video">
                                     <source id="idSource" src="{{ $lCarousel[$i]->path }}" type="video/mp4">
                                 </video>
                             @endif
@@ -26,14 +26,14 @@
                     </div>
                 @endfor
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Anterior</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Siguiente</span>
-        </button>
     </div>
 </div>

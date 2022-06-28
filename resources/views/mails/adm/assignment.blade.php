@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Univ AETH Notificación</title>
+    <title>UVAETH Notificación</title>
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
 </head>
 
@@ -14,7 +14,7 @@
             <div class="col-12">
                 <div class="card text-center">
                     <div class="card-header">
-                        Notificación UNIVAETH
+                        Notificación UVAETH
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">Te asignamos un cuadrante nuevo</h5>
