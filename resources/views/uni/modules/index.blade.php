@@ -26,9 +26,9 @@
                   <a style="width: 95%" href="{{ route('uni.courses.index', [$module->id_assignment, $module->id_module]) }}" class="btn btn-info">Tomar cursos</a>
                 </div>
               </div>
-            <div class="progress">
+              <div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width:{{$module->completed_percent}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
+              </div>
           </div>
         @endforeach
     </div>
