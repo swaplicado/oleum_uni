@@ -83,12 +83,7 @@
                             </p>
                         </div>
                         <div class="card-footer text-muted">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar"
-                                    style="{{ 'width: ' . $course->completed_percent . '%' }}"
-                                    aria-valuenow="{{ $course->completed_percent }}" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
+                          <progress class="progress" value="{{ $course->completed_percent }}" max="100" style="margin-left: 25%;"></progress>
                         </div>
                     </div>
                 </a>
