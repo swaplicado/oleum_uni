@@ -9,7 +9,7 @@
                 <div class="form-group">
                   <label for="">Tipo de elemento:</label>
                   <select class="form-control" name="" id="">
-                    <option value="competencia">Área de competencia</option>
+                    <option value="competencia">Cuadrante</option>
                     <option value="modulo">Módulo</option>
                     <option value="curso">Curso</option>
                     <option value="tema">Tema</option>

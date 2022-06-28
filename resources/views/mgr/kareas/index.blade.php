@@ -140,7 +140,7 @@
             <table id="example" class="display stripe hover row-border order-column" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Área de competencia</th>
+                        <th>Cuadrante</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>
@@ -166,7 +166,7 @@
                                 <a title="Ver módulos" href="{{ route('modules.index', ['ka' => $area->id_knowledge_area]) }}">
                                     <i class='bx bxs-category'></i>
                                 </a>
-                                <a title="Editar área de competencia" href="{{ route('kareas.edit', $area->id_knowledge_area) }}">
+                                <a title="Editar cuadrante" href="{{ route('kareas.edit', $area->id_knowledge_area) }}">
                                     <i class='bx bx-edit'></i>
                                 </a>
                             </td>
@@ -185,7 +185,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Área de competencia</th>
+                        <th>Cuadrante</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>

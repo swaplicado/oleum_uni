@@ -135,7 +135,7 @@ class AssignmentsController extends Controller
                                         ->orderBy('full_name', 'ASC')
                                         ->get();
 
-        return view("mgr.assignments.create")->with('title', "Asignación de área")
+        return view("mgr.assignments.create")->with('title', "Asignación de cuadrante")
                                             ->with('lKAreas', $lKAreas)
                                             ->with('lAssignBy', $lAssignBy)
                                             ->with('lOrganizations', $lOrganizations)

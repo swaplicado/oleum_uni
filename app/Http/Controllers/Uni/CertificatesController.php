@@ -36,7 +36,7 @@ class CertificatesController extends Controller
                 $lTake = $lTake->where('knowledge_area_n_id', $id);
                 $art = "el";
                 $sDocText = "CERTIFICADO";
-                $sTypeText = "ÁREA DE COMPETENCIA";
+                $sTypeText = "CUADRANTE";
                 $oObj = KnowledgeArea::find($id);
                 $title = $oObj->knowledge_area;
                 break;
@@ -86,11 +86,11 @@ class CertificatesController extends Controller
 
         $mpdf->WriteHTML('<div style="height: 5px"></div>');
         $oStudent = User::find($student);
-        $body = '<h2 style="font-size: 35px;" class="alg-center text-green">'.$oStudent->full_name.'</h2>';
+        $body = '<h2 style="font-size: 35px;" class="alg-center text-green">'.str_replace(",", "", $oStudent->full_name).'</h2>';
         $mpdf->WriteHTML($body);
         
         $mpdf->WriteHTML('<br>');
-        $mpdf->WriteHTML('<h4 style="font-size: 20px;" class="alg-center text-blueblack">Por haber cursado el '.$sTypeText.'</h4>');
+        $mpdf->WriteHTML('<h4 style="font-size: 20px;" class="alg-center text-blueblack">Por haber completado el '.$sTypeText.'</h4>');
         $mpdf->WriteHTML('<h3 style="font-size: 40px;" class="alg-center text-blueblack">'.$title.'</h3>');
 
         $oDateIni = Carbon::parse($oAssignment->dt_assignment);

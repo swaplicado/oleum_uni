@@ -43,7 +43,7 @@ class KnowledgeAreaAssignment extends Mailable
         $oStudent = User::find($oAssignment->student_id);
 
         return $this->from(env('MAIL_FROM_ADDRESS'))
-                        ->subject('Competencia nueva por cursar')
+                        ->subject('Cuadrante nuevo por cursar')
                         ->view('mails.adm.assignment')
                         ->with('oAssignment', $oAssignment)
                         ->with('oStudent', $oStudent);

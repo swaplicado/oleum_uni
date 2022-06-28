@@ -49,7 +49,7 @@ class ScheduledAssignmentsController extends Controller
                             ->where('sa.is_deleted', false)
                             ->get();
 
-        $title = 'Asignaciones de competencias programadas';
+        $title = 'Asignaciones de cuadrantes programadas';
 
         return view('mgr.assignments.scheduled.index')->with('title', $title)
                                                         ->with('lScheduled', $lScheduled)
@@ -241,7 +241,7 @@ class ScheduledAssignmentsController extends Controller
                 continue;
             }
 
-            //asignar área de competencia
+            //asignar cuadrante
             $oAControl = new AssignmentControl();
 
             $oAControl->is_deleted = false;

@@ -9,12 +9,12 @@
             <hr>
             <div class="row">
               <div class="col-12">
-                <a href="{{ route('areas.index') }}"><h2 style="color: #05887F">Áreas de competencia...</h2></a>
+                <a href="{{ route('areas.index') }}"><h2 style="color: #05887F">Cuadrantes...</h2></a>
               </div>
             </div>
             <div class="row">
               @if (count($lAssignments) == 0)
-                  <h5>No tienes competencias asignadas</h5>
+                  <h5>No tienes cuadrantes asignados</h5>
               @endif
               @foreach($lAssignments as $ka)
                 <div class="col-lg-3 col-md-6 col-12">

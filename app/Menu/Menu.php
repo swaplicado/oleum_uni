@@ -16,7 +16,7 @@ class Menu {
                 $lMenus = [
                     // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
                     (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
-                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis competencias'],
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-library', 'name' => 'Mis cuadrantes'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                     env('IS_STORE_ENABLED') ? ((object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda']) : null,
                 ];
@@ -26,11 +26,11 @@ class Menu {
             case '2':
                 $lMenus = [
                     // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
-                    // (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis áreas de competencia'],
+                    // (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis cuadrantes'],
                     // (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                     // (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
-                    // (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión de áreas'],
-                    // (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar áreas'],
+                    // (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión de cuadrante'],
+                    // (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar cuadrante'],
                     // (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Programadas'],
                     // (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                     // (object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Premios'],
@@ -41,12 +41,12 @@ class Menu {
             case '3':
                 $lMenus = [
                     // (object) ['route' => route('home'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
-                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis competencias'],
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis cuadrantes'],
                     (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                     (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
-                    (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión competencias'],
-                    (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar competencias'],
-                    (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Competencias programadas'],
+                    (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión cuadrantes'],
+                    (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar cuadrantes'],
+                    (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Cuadrantes programados'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                     env('IS_STORE_ENABLED') ? ((object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda']) : null,
                     (object) ['route' => route('gifts.index'), 'icon' => 'bx bxs-cabinet', 'name' => 'Gestión premios'],
@@ -60,12 +60,12 @@ class Menu {
             case '4':
                 $lMenus = [
                     // (object) ['route' => route('profile'), 'icon' => 'bx bx-user', 'name' => 'Mi perfil'],
-                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis competencias'],
+                    (object) ['route' => route('areas.index'), 'icon' => 'bx bx-grid-alt', 'name' => 'Mis cuadrantes'],
                     (object) ['route' => route('kardex.index'), 'icon' => 'bx bxs-graduation', 'name' => 'Mi avance'],
                     (object) ['route' => route('contents.index'), 'icon' => 'bx bx-movie-play', 'name' => 'Contenidos'],
-                    (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión competencias'],
-                    (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar competencias'],
-                    (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Competencias programadas'],
+                    (object) ['route' => route('kareas.index'), 'icon' => 'bx bx-area', 'name' => 'Gestión cuadrantes'],
+                    (object) ['route' => route('assignments.index'), 'icon' => 'bx bxs-user-detail', 'name' => 'Asignar cuadrantes'],
+                    (object) ['route' => route('assignments.scheduled.index'), 'icon' => 'bx bxs-calendar-event', 'name' => 'Cuadrantes programados'],
                     (object) ['route' => route('kardex.head'), 'icon' => 'bx bxs-school', 'name' => 'Avance general'],
                     env('IS_STORE_ENABLED') ? ((object) ['route' => route('shop'), 'icon' => 'bx bxs-store', 'name' => 'Tienda']) : null,
                     (object) ['route' => route('gifts.index'), 'icon' => 'bx bxs-cabinet', 'name' => 'Gestión premios'],

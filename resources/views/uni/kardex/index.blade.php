@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-12">
-            <h5>Competencias:</h5>
+            <h5>Cuadrantes:</h5>
             <br>
             <div class="accordion accordion-flush" id="accordionFlushExample">
                 @foreach ($areas as $area)

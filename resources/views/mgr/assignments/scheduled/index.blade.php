@@ -22,7 +22,7 @@
             <table id="assignments_table" class="display stripe hover row-border order-column" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Competencia</th>
+                        <th>Cuadrante</th>
                         <th>Programado desde</th>
                         <th>Programado hasta</th>
                         <th>Organización</th>
@@ -57,7 +57,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Competencia</th>
+                        <th>Cuadrante</th>
                         <th>Programado desde</th>
                         <th>Programado hasta</th>
                         <th>Organización</th>

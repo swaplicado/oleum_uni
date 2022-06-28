@@ -11,7 +11,7 @@
 </div>
 <br>
 <div class="mb-3">
-    <label for="ka_id" class="form-label">Área de competencia*:</label>
+    <label for="ka_id" class="form-label">Cuadrante*:</label>
     <div>
         <select class="select2class form-control" v-model="kaId" name="ka_id" style="width: 85%" required v-select2>
             @foreach ($lKAreas as $oKa)

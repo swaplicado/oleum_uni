@@ -36,7 +36,7 @@ class KnowledgeAreasController extends Controller
      */
     public function index()
     {
-        $title = 'Áreas de competencia';
+        $title = 'Cuadrantes';
 
         $lAreas = \DB::table('uni_knowledge_areas AS ka')
                     ->join('sys_element_status AS es', 'ka.elem_status_id', '=', 'es.id_element_status')
@@ -58,7 +58,7 @@ class KnowledgeAreasController extends Controller
 
     public function create(Request $request)
     {
-        $title = "Crear área de competencia";
+        $title = "Crear un Cuadrante";
 
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();
@@ -97,7 +97,7 @@ class KnowledgeAreasController extends Controller
     {
         $oKa = KnowledgeArea::find($id);
 
-        $title = "Crear área de competencia";
+        $title = "Crear un Cuadrante";
 
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();

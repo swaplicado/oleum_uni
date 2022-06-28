@@ -21,13 +21,13 @@
             <div class="col-12 col-md-6">
               <label for="">Por:</label>
               <select class="form-control" v-model="iRowType">
-                <option value="1">Competencia</option>
+                <option value="1">Cuadrante</option>
                 <option value="2">Módulo</option>
                 <option value="3">Curso</option>
               </select>
             </div>
             <div class="col-12 col-md-6" v-if="iRowType == 1">
-              <label for="">Seleccione competencia:</label>
+              <label for="">Seleccione cuadrante:</label>
               <select class="form-control" v-model="iReferenceId">
                 <option v-for="oArea in lAreas" :value="oArea.id_knowledge_area">@{{ oArea.knowledge_area }}</option>
               </select>

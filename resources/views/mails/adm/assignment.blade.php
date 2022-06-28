@@ -17,12 +17,13 @@
                         Notificación UNIVAETH
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Te asignaron una competencia</h5>
+                        <h5 class="card-title">Te asignamos un cuadrante nuevo</h5>
                         <p class="card-text">
-                            Competencia: <b>{{ $oAssignment->knowledge_area }}</b>
+                            Cuadrante: <b>{{ $oAssignment->knowledge_area }}</b>
                             <br>
                             Número: <b>{{ $oStudent->num_employee }}</b>
                             Alumno: <b>{{ $oStudent->full_name }}</b>
+                            Te recordamos tu usuario: <b>{{ $oStudent->username }}</b>
                             <br> Fecha inicio: <b>{{ \Carbon\Carbon::parse($oAssignment->dt_assignment)->format('d-m-Y') }}</b>
                             <br> Fecha límite: <b>{{ \Carbon\Carbon::parse($oAssignment->dt_end)->format('d-m-Y') }}</b>
                         </p>

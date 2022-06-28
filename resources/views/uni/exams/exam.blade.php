@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-1"></div>
                 <div class="col-11">
-                    <p style="font-size: large">@{{ oQuestion.question }}</p>
+                    <p style="font-size: large">@{{ (indexQuestion + 1) + ". " + oQuestion.question }}</p>
                 </div>
             </div>
             <div v-if="bAnswered" :class="sClassName" role="alert">

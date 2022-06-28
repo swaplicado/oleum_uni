@@ -11,7 +11,7 @@
                 <div class="form-group">
                     <label for="tipo_elemento" class="form-label">Tipo de elemento:</label>
                     <select class="form-select" name="tipo_elemento" v-model="SelElement" v-on:change="element_type()" required>
-                        <option value="competencia">Área de competencia</option>
+                        <option value="competencia">Cuadrante</option>
                         <option value="modulo">Módulo</option>
                         <option value="curso">Curso</option>
                         <option value="tema">Tema</option>

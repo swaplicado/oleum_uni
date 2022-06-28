@@ -44,7 +44,7 @@ class TakesController extends Controller
         if (count($lTake) == 0) {
             $oTakeArea = new TakingControl();
             
-            // Crear toma de área con agrupador
+            // Crear toma de cuadrante con agrupador
             $oTakeArea->grouper = hash('ripemd160', Carbon::now()->toDateTimeString());
             $oTakeArea->dtt_take = Carbon::now()->toDateTimeString();
             $oTakeArea->dtt_end = null;
@@ -64,7 +64,7 @@ class TakesController extends Controller
             $oTakeArea->status_id = config('csys.take_status.CUR');
             $oTakeArea->assignment_id = $idAssignment;
 
-            // Crear toma de modulo con agrupador de área
+            // Crear toma de modulo con agrupador de cuadrante
             $oTakeModule = clone $oTakeArea;
             $oTakeModule->element_type_id = config('csys.elem_type.MODULE');
             $oTakeModule->knowledge_area_n_id = null;
@@ -119,7 +119,7 @@ class TakesController extends Controller
                     return null;
                 }
 
-                // Crear toma de modulo con agrupador de área
+                // Crear toma de modulo con agrupador de cuadrante
                 $oTakeModule = clone $oTakeArea;
                 $oTakeModule->dtt_take = Carbon::now()->toDateTimeString();
                 $oTakeModule->dtt_end = null;

@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-    @section('content_title', 'Mis áreas de competencia')
+    @section('content_title', 'Mis cuadrantes')
     <div class="row" id="indexAreasApp">
       @foreach($lAssignments as $assign)
      {{--   v-for="assign in oData.lAssignments" --}}

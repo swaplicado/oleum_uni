@@ -99,7 +99,7 @@
                             <tr>
                                 <th>Estudiante</th>
                                 <th>Departamento</th>
-                                <th>Área de competencia</th>
+                                <th>Cuadrante</th>
                                 <th>Fecha de asignación</th>
                                 <th>Fecha límite</th>
                                 <th>Terminada</th>
@@ -132,7 +132,7 @@
                             <tr>
                                 <th>Estudiante</th>
                                 <th>Departamento</th>
-                                <th>Área de competencia</th>
+                                <th>Cuadrante</th>
                                 <th>Fecha de asignación</th>
                                 <th>Fecha límite</th>
                                 <th>Terminada</th>

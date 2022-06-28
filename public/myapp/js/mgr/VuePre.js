@@ -32,7 +32,7 @@ var app = new Vue({
 
             switch (idType) {
                 case 1:
-                    this.texTypeElement = "Área de competencia"
+                    this.texTypeElement = "Cuadrante"
                     break;
                 case 2:
                     this.texTypeElement = "Módulo"

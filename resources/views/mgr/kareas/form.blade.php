@@ -1,6 +1,6 @@
 @csrf
 <div class="mb-3">
-    <label for="name" class="form-label">Nombre del área de competencia</label>
+    <label for="name" class="form-label">Nombre del cuadrante</label>
     <input type="text" class="form-control" id="name" name="name" value="{{ isset($oKa) ? $oKa->knowledge_area : '' }}">
 </div>
 <div class="mb-3">

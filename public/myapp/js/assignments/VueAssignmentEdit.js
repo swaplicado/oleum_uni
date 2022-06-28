@@ -42,7 +42,7 @@ var app = new Vue({
         deleteAssignment(id, route) {
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: "Se eliminará la asignación de competencia.",
+                text: "Se eliminará la asignación de cuadrante.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

@@ -478,7 +478,7 @@ class TakeUtils {
                 case config('csys.elem_type.AREA'):
                     $approved = TakeUtils::isSomeAreaApproved($pre->id_knowledge_area, \Auth::id());
                     if (! $approved) {
-                        return "Debes aprobar antes la competencia: ".$pre->knowledge_area.".";
+                        return "Debes aprobar antes el cuadrante: ".$pre->knowledge_area.".";
                     }
                     break;
                 case config('csys.elem_type.MODULE'):

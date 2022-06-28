@@ -31,7 +31,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" v-on:click="assignArea()" class="btn btn-primary">Asignar área</button>
+          <button type="button" v-on:click="assignArea()" class="btn btn-primary">Asignar cuadrante</button>
         </div>
       </div>
     </div>

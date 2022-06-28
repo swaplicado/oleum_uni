@@ -143,7 +143,7 @@
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>
-                        <th>Área de competencia</th>
+                        <th>Cuadrante</th>
                         <th>Cursos</th>
                         <th>Pre</th>
                         <th>-</th>
@@ -190,7 +190,7 @@
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>
-                        <th>Área de competencia</th>
+                        <th>Cuadrante</th>
                         <th>Cursos</th>
                         <th>Pre</th>
                         <th>-</th>
