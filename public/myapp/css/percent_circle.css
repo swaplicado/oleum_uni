@@ -57,7 +57,6 @@ progress {
     padding-top: 28%;
     background: white;
     position:absolute;
-    z-index:100;
     /* parenthesis are required */
     width: calc((var(--size) - (var(--width) * 2)) * 1px);
     height: calc((var(--size) - (var(--width) * 2)) * 1px);
