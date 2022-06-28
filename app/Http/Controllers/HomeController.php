@@ -57,7 +57,10 @@ class HomeController extends Controller
                             ->where('a.is_deleted', false)
                             ->whereRaw('NOW() BETWEEN a.dt_assignment AND a.dt_end')
                             ->get();
-
+        foreach($lAssignments as $area){
+            $result = TakeUtils::getlAssignmentPercentCompleted($area->id_assignment, $area->id_knowledge_area, \Auth::id());
+            $area->completed_percent = number_format($result[0]);
+        }
         $lCourses = TakeUtils::getTakingCourses(\Auth::id());
 
         foreach ($lCourses as $course) {
