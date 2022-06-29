@@ -44,8 +44,7 @@
                       </div>
                       <div class="mb-3 row">
                         <div class="col-sm-11">
-                          <textarea class="form-control" name="{{ "textArea".$oReviewCfg->id_configuration }}" rows="3" placeholder="Escribe tu respuesta..." required>
-                          </textarea>
+                          <textarea class="form-control" name="{{ "textArea".$oReviewCfg->id_configuration }}" rows="3" placeholder="Escribe tu respuesta..." required></textarea>
                         </div>
                       </div>
                     </div>
