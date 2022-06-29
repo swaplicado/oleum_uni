@@ -389,33 +389,33 @@ class KardexController extends Controller
         
         switch ($request->tipo_elemento) {
             case 'competencia':
-                $lResult = $lResult->select('c.*', 'a.*', 'u.username as student', 'ka.knowledge_area')
+                $lResult = $lResult->select('c.*', 'a.*', 'u.full_name as student', 'ka.knowledge_area')
                         ->where('a.knowledge_area_id', $request->elemento)
                         ->where('m.is_deleted', false)
                         ->where('c.is_deleted', false);
                 break;
             case 'modulo':
-                $lResult = $lResult->select('c.*', 'a.*', 'u.username as student', 'ka.knowledge_area')
+                $lResult = $lResult->select('c.*', 'a.*', 'u.full_name as student', 'ka.knowledge_area')
                         ->where('c.module_id', $request->elemento)
                         ->where('c.is_deleted', false);
                 break;
             case 'curso':
-                $lResult = $lResult->select('c.*', 'a.*', 'u.username as student', 'ka.knowledge_area')
+                $lResult = $lResult->select('c.*', 'a.*', 'u.full_name as student', 'ka.knowledge_area')
                         ->where('c.id_course', $request->elemento);
                 break;
             case 'tema':
                 $lResult = $lResult->join('uni_topics AS t', 't.course_id', '=', 'c.id_course')
-                        ->select('c.*', 'a.*', 'u.username as student', 'ka.knowledge_area')
+                        ->select('c.*', 'a.*', 'u.full_name as student', 'ka.knowledge_area')
                         ->where('t.id_topic', $request->elemento);
                 break;
             case 'subtema':
                 $lResult = $lResult->join('uni_topics AS t', 't.course_id', '=', 'c.id_course')
                         ->join('uni_subtopics AS st', 'st.topic_id', '=', 't.id_topic')
-                        ->select('c.*', 'a.*', 'u.username as student', 'ka.knowledge_area')
+                        ->select('c.*', 'a.*', 'u.full_name as student', 'ka.knowledge_area')
                         ->where('st.id_subtopic', $request->elemento);
                 break;
             case 'todo':
-                $lResult = $lResult->select('c.*', 'a.*', 'u.username as student', 'u.job_id', 'ka.knowledge_area')
+                $lResult = $lResult->select('c.*', 'a.*', 'u.full_name as student', 'u.job_id', 'ka.knowledge_area')
                             ->where('a.is_deleted', false)
                             ->where('m.is_deleted', false)
                             ->where('c.is_deleted', false);
