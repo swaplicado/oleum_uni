@@ -11,7 +11,7 @@
                         <th>Curso</th>
                         <th>Estudiante</th>
                         <th style="min-width: 70px;">Fecha-hora</th>
-                        <th>Veces cursadó</th>
+                        <th>Veces cursado</th>
                         @for ($i = 0; $i < $max_questions; $i++)
                             <th style="min-width: 70px;">Pregunta {{$i + 1}}</th>
                             <th style="min-width: 80px;">Resultado {{$i + 1}}</th>

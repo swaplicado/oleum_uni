@@ -5,6 +5,10 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Contracts\Auth\CanResetPassword;
+// use App\Notifications\VerifyEmail;
+use App\Notifications\PasswordReset;
 
 use Spatie\Permission\Traits\HasRoles;
 
@@ -12,6 +16,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
+    use HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -75,5 +80,10 @@ class User extends Authenticatable
     public function branch()
     {
         return $this->belongsTo('App\Adm\Branch', 'branch_id', 'id_branch');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordReset($token));
     }
 }
