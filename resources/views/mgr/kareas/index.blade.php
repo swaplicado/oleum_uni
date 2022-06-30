@@ -141,6 +141,7 @@
                 <thead>
                     <tr>
                         <th>Cuadrante</th>
+                        <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>
@@ -152,6 +153,7 @@
                 <tbody>
                     @foreach ($lAreas as $area)
                         <tr>
+                            <td>{{ $area->knowledge_area_title }}</td>
                             <td>{{ $area->knowledge_area }}</td>
                             <td>{{ $area->description }}</td>
                             <td>{{ $area->seq_code }}</td>
@@ -186,6 +188,7 @@
                 <tfoot>
                     <tr>
                         <th>Cuadrante</th>
+                        <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>

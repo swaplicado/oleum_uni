@@ -26,6 +26,7 @@ class KnowledgeArea extends Model
      * @var array
      */
     protected $fillable = [
+        'knowledge_area_title',
         'knowledge_area',
         'hash_id',
         'description',

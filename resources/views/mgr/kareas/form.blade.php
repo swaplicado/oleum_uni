@@ -1,5 +1,9 @@
 @csrf
 <div class="mb-3">
+    <label for="area_title" class="form-label">Tituló del cuadrante</label>
+    <input type="text" class="form-control" id="area_title" name="area_title" value="{{ isset($oKa) ? $oKa->knowledge_area_title : 'Cuadrante '.($max + 1) }}">
+</div>
+<div class="mb-3">
     <label for="name" class="form-label">Nombre del cuadrante</label>
     <input type="text" class="form-control" id="name" name="name" value="{{ isset($oKa) ? $oKa->knowledge_area : '' }}">
 </div>

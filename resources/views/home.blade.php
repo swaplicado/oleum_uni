@@ -56,6 +56,7 @@
                                 style="margin-left: 30%; margin-top: 3%;"></progress>
                         </div>
                         <div class="card-body">
+                            <h5 class="card-title text-primary">{{ $ka->knowledge_area_title }}</h5>
                             <h5 class="card-title text-primary">{{ $ka->knowledge_area }}</h5>
                             <p class="card-text">{{ $ka->description }}</p>
                         </div>

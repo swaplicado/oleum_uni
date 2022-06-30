@@ -44,6 +44,7 @@ class KnowledgeAreasController extends Controller
                     ->join('sys_element_status AS es', 'ka.elem_status_id', '=', 'es.id_element_status')
                     ->join('sys_sequences AS seq', 'ka.sequence_id', '=', 'seq.id_sequence')
                     ->select(['ka.id_knowledge_area',
+                            'ka.knowledge_area_title',
                             'ka.knowledge_area',
                             'ka.description',
                             'ka.is_deleted',
@@ -69,6 +70,8 @@ class KnowledgeAreasController extends Controller
                         ->whereIn('file_type', ['image'])
                         ->get();
         
+        $maxId = \DB::table('uni_knowledge_areas')->max('id_knowledge_area');
+
         foreach ($lContents as $content) {
             $content->f_type = $content->file_type == 'image' ? 'Imagen' : '';
         }
@@ -76,7 +79,8 @@ class KnowledgeAreasController extends Controller
         return view('mgr.kareas.create')->with('title', $title)
                                         ->with('storeRoute', $this->storeRoute)
                                         ->with('sequences', $seq)
-                                        ->with('lContents', $lContents);
+                                        ->with('lContents', $lContents)
+                                        ->with('max', $maxId);
     }
 
     public function store(Request $request)
@@ -84,6 +88,7 @@ class KnowledgeAreasController extends Controller
         try {
             $ka = new KnowledgeArea();
 
+            $ka->knowledge_area_title = $request->area_title;
             $ka->knowledge_area = $request->name;
             $ka->hash_id = hash('ripemd160', $ka->knowledge_area);
             $ka->description = $request->description;
@@ -159,6 +164,7 @@ class KnowledgeAreasController extends Controller
         try {
             $oKa = KnowledgeArea::find($id);
 
+            $oKa->knowledge_area_title = $request->area_title;
             $oKa->knowledge_area = $request->name;
             $oKa->description = $request->description;
             $oKa->objectives = $request->objectives;
