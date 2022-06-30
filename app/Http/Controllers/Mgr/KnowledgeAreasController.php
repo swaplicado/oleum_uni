@@ -10,6 +10,8 @@ use Illuminate\Database\QueryException;
 
 use App\Sys\Sequence;
 use App\Uni\KnowledgeArea;
+use App\Uni\EduContent;
+use App\Uni\ElementContent;
 
 class KnowledgeAreasController extends Controller
 {
@@ -62,10 +64,19 @@ class KnowledgeAreasController extends Controller
 
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();
+                
+        $lContents = EduContent::where('is_deleted', false)
+                        ->whereIn('file_type', ['image'])
+                        ->get();
+        
+        foreach ($lContents as $content) {
+            $content->f_type = $content->file_type == 'image' ? 'Imagen' : '';
+        }
 
         return view('mgr.kareas.create')->with('title', $title)
                                         ->with('storeRoute', $this->storeRoute)
-                                        ->with('sequences', $seq);
+                                        ->with('sequences', $seq)
+                                        ->with('lContents', $lContents);
     }
 
     public function store(Request $request)
@@ -85,6 +96,19 @@ class KnowledgeAreasController extends Controller
             $ka->updated_by_id = \Auth::id();
 
             $ka->save();
+
+            if($request->cuadrante_cover != 0){
+                $elem = new ElementContent();
+
+                $elem->order = 1;
+                $elem->content_id = $request->cuadrante_cover;
+                $elem->element_type_id = config('csys.elem_type.AREA');
+                $elem->knowledge_area_n_id = $ka->id_knowledge_area;
+                $elem->created_by_id = \Auth::id();
+                $elem->updated_by_id = \Auth::id();
+
+                $elem->save();
+            }
         }
         catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
@@ -102,10 +126,32 @@ class KnowledgeAreasController extends Controller
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();
 
+        $lContents = EduContent::where('is_deleted', false)
+                        ->whereIn('file_type', ['image'])
+                        ->get();
+        
+        foreach ($lContents as $content) {
+            $content->f_type = $content->file_type == 'image' ? 'Imagen' : '';
+        }
+
+        $oCovert = ElementContent::where('knowledge_area_n_id', $oKa->id_knowledge_area)
+                                    ->where('element_type_id', config('csys.elem_type.AREA'))
+                                    ->orderBy('created_at', 'DESC')
+                                    ->first();
+
+        if ($oCovert != null) {
+            $oCover = EduContent::find($oCovert->content_id);
+        }
+        else {
+            $oCover = null;
+        }
+
         return view('mgr.kareas.edit')->with('title', $title)
                                     ->with('updateRoute', $this->updateRoute)
                                     ->with('sequences', $seq)
-                                    ->with('oKa', $oKa);
+                                    ->with('oKa', $oKa)
+                                    ->with('lContents', $lContents)
+                                    ->with('oCover', $oCover);
     }
 
     function update(Request $request, $id)
@@ -121,6 +167,23 @@ class KnowledgeAreasController extends Controller
             $oKa->updated_by_id = \Auth::id();
     
             $oKa->save();
+
+            ElementContent::where('element_type_id', config('csys.elem_type.AREA'))
+                            ->where('knowledge_area_n_id', $oKa->id_knowledge_area)
+                            ->delete();
+
+            if($request->cuadrante_cover != 0){
+                $elem = new ElementContent();
+    
+                $elem->order = 1;
+                $elem->content_id = $request->cuadrante_cover;
+                $elem->element_type_id = config('csys.elem_type.AREA');
+                $elem->knowledge_area_n_id = $oKa->id_knowledge_area;
+                $elem->created_by_id = \Auth::id();
+                $elem->updated_by_id = \Auth::id();
+    
+                $elem->save();
+            }
         }
         catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();

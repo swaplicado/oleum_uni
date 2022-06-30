@@ -45,9 +45,9 @@
         @foreach ($lAssignments as $ka)
             <div class="col-lg-3 col-md-6 col-12 ">
                 <a href="{{ route('uni.modules.index', [$ka->id_assignment, $ka->id_knowledge_area]) }}">
-                    <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem; height: 25rem;">
+                    <div class="card h-100 border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
                         <div class="card-header"
-                            style="height: 8rem; background-image: url('{{ asset('img/job.jpg') }}'); background-size: 18rem 8rem;">
+                            style="height: 8rem; background-image: url('{{ asset($ka->content_path) }}'); background-size: 18rem 8rem;">
                             <progress class="progress" value="{{ $ka->completed_percent }}" max="100"
                                 style="margin-left: 30%; margin-top: 3%;"></progress>
                         </div>
@@ -84,17 +84,22 @@
         @foreach ($lCourses as $course)
             <div class="col-lg-3 col-md-6 col-12">
                 <a href="{{ route('uni.courses.course', [$course->id_course, $course->assignment_id]) }}">
-                    <div class="card border-success">
+                    <div class="card h-100 border-success" style="max-width: 18rem;">
                         <div class="card-header"
-                            style="height: 8rem; background-image: url('{{ asset('img/curso-capacitacion-snb.png') }}'); background-size: 18rem 8rem;">
+                            style="height: 8rem; background-image: url('{{ asset($course->content_path) }}'); background-size: 18rem 8rem;">
                             <progress class="progress" value="{{ $course->completed_percent }}" max="100"
                                 style="margin-left: 25%;"></progress>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ $course->course }}</h5>
                             <p class="card-text">{{ $course->description }}</p>
-                            <p class="card-text"><small
-                                    class="text-muted">{{ 'Comenzado ' . \Carbon\Carbon::parse($course->dtt_take)->diffForHumans() }}</small>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {{ 'Comenzado ' . \Carbon\Carbon::parse($course->dtt_take)->diffForHumans() }}
+                                </small>
+                                <button style="width: 95%"
+                                    href="{{ route('uni.courses.course', [$course->id_course, $course->assignment_id]) }}"
+                                    class="btn btn-info" type="button">Continuar curso</button>
                             </p>
                         </div>
                     </div>
