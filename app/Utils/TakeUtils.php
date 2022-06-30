@@ -115,7 +115,7 @@ class TakeUtils {
         $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
 
         if ($withGrade) {
-            return [$approved, $takes[0]->grade];
+            return [$approved, $takes[0]->grade, $takes[0]->dtt_end];
         }
 
         return $approved;
@@ -140,7 +140,7 @@ class TakeUtils {
         $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
 
         if ($withGrade) {
-            return [$approved, $takes[0]->grade];
+            return [$approved, $takes[0]->grade, $takes[0]->dtt_end];
         }
 
         return $approved;
@@ -165,7 +165,7 @@ class TakeUtils {
         $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
 
         if ($withGrade) {
-            return [$approved, $takes[0]->grade];
+            return [$approved, $takes[0]->grade, $takes[0]->dtt_end];
         }
 
         return $approved;
@@ -190,7 +190,7 @@ class TakeUtils {
         $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
 
         if ($withGrade) {
-            return [$approved, $takes[0]->grade];
+            return [$approved, $takes[0]->grade, $takes[0]->dtt_end];
         }
 
         return $approved;
@@ -215,7 +215,7 @@ class TakeUtils {
         $approved = $takes[0]->status_id == config('csys.take_status.COM') && $takes[0]->grade >= $takes[0]->min_grade;
 
         if ($withGrade) {
-            return [$approved, $takes[0]->grade];
+            return [$approved, $takes[0]->grade, $takes[0]->dtt_end];
         }
 
         return $approved;

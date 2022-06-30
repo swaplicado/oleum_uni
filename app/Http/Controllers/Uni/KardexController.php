@@ -6,9 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-
 use App\Utils\TakeUtils;
-
 use App\Uni\TakingControl;
 use App\Uni\TakingContent;
 use App\Uni\TakingSubTopicQuestion;
@@ -26,11 +24,11 @@ class KardexController extends Controller
         $iStudent = $student == 0 ? \Auth::id() : $student;
 
         $areas = \DB::table('uni_assignments AS a')
-                    ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
-                    ->where('a.student_id', $iStudent)
-                    ->where('a.is_deleted', false)
-                    ->orderBy('a.dt_assignment', 'DESC')
-                    ->get();
+                        ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
+                        ->where('a.student_id', $iStudent)
+                        ->where('a.is_deleted', false)
+                        ->orderBy('a.dt_assignment', 'DESC')
+                        ->get();
 
         foreach ($areas as $area) {
             $area->grade = TakeUtils::isAreaApproved($area->id_knowledge_area, $iStudent, $area->id_assignment, true);
@@ -39,25 +37,30 @@ class KardexController extends Controller
             $area->modules = $result[1];
             $end_modules = 0;
             $promedio = 0;
-            foreach($area->modules as $module){
-                if($module->completed_percent == 100){
+
+            foreach ($area->modules as $module) {
+                if ($module->completed_percent == 100) {
                     $end_modules = $end_modules + 1;
                 }
-                is_null($module->promedio) ? $module->promedio = 0 : '';
+
+                $module->promedio = is_null($module->promedio) ? 0 : $module->promedio;
                 $promedio = $promedio + $module->promedio;
             }
+
             $area->promedio = number_format($promedio / (count($area->modules) > 0 ? count($area->modules) : 1), 2);
             $area->end_modules = $end_modules;
             $dt_in = new \DateTime($area->dt_assignment);
             $dt_end = new \DateTime($area->dt_end);
             $area->duracion = ($dt_in->diff($dt_end))->format('%d días');
-            if(($area->dt_assignment <= Carbon::now()->toDateString()) && ($area->dt_end >= Carbon::now()->toDateString())){
+
+            if (($area->dt_assignment <= Carbon::now()->toDateString()) && ($area->dt_end >= Carbon::now()->toDateString())) {
                 $area->is_active = true;
-            }else{
+            }
+            else {
                 $area->is_active = false;
             }
         }
-        
+
         return view('uni.kardex.index')->with('areas', $areas)->with('student', $iStudent);
     }
 

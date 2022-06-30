@@ -73,7 +73,7 @@ class CertificatesController extends Controller
 
         $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'Letter', 'orientation' => 'L']);
 
-        $mpdf->SetTitle(env('APP_NAME', false));
+        $mpdf->SetTitle(ucwords(strtolower($sDocText." ".$title)));
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML('<div style="height: 130px"></div>');
         $mpdf->WriteHTML('<h4 style="font-size: 20px;" class="alg-center text-blueblack">Otorga '.$art.' presente:</h4>');
@@ -88,15 +88,25 @@ class CertificatesController extends Controller
         $oStudent = User::find($student);
         $body = '<h2 style="font-size: 35px;" class="alg-center text-green">'.str_replace(",", "", $oStudent->full_name).'</h2>';
         $mpdf->WriteHTML($body);
-        
-        $mpdf->WriteHTML('<br>');
+        $mpdf->WriteHTML('<div style="height: 1px"></div>');
         $mpdf->WriteHTML('<h4 style="font-size: 20px;" class="alg-center text-blueblack">Por haber completado el '.$sTypeText.'</h4>');
-        $mpdf->WriteHTML('<h3 style="font-size: 40px;" class="alg-center text-blueblack">'.$title.'</h3>');
+        $titleDiv = '<div style="position: absolute; left: 0; right: 0; top: 500; bottom: 70;">
+                        <h3 style="font-size: 40px; line-height: 30px;" class="alg-center text-blueblack">'.$title.'</h3>
+                    </div>';
+
+        $mpdf->WriteHTML($titleDiv);
 
         $oDateIni = Carbon::parse($oAssignment->dt_assignment);
         $oDateIni->locale();
         $oDateFin = Carbon::parse($oAssignment->dt_end);
-        $mpdf->WriteHTML('<h5 style="font-size: 20px; margin-top: 60px" class="alg-center text-blueblack">Morelia Michoacán, '.$oDateIni->monthName.' '.$oDateIni->format('Y').'</h5>');
+        // $mpdf->WriteHTML('<div style="height: 2px"></div>');
+        $place = '<div style="position: absolute; left: 10; right: 0; top: 595; bottom: 70;">
+                    <h5 style="font-size: 20px;" class="alg-center text-blueblack">
+                        Morelia Michoacán, '.$oDateIni->monthName.' '.$oDateIni->format('Y').
+                    '</h5>
+                </div>';
+
+        $mpdf->WriteHTML($place);
 
         $date = Carbon::now();
 
@@ -111,7 +121,7 @@ class CertificatesController extends Controller
 
         $mpdf->WriteHTML($qr);
 
-        return $mpdf->Output($date->format('Y_m_d_H_i_s')."_document_univ.pdf", "I");
+        return $mpdf->Output($date->format('Y_m_d_H_i_s')."_".strtolower($sDocText)."_uvaeth.pdf", "I");
     }
 
 }

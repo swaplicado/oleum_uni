@@ -23,7 +23,7 @@
                     </video>
                     <img v-else :src="course.cover.view_path" alt="" class="card-img-top" width="100%" height="100%">
                     <div class="card-body">
-                        <h4 class="card-title">@{{ course.course }}</h4>
+                        <h4 class="card-title"><b>@{{ course.course }}</b></h4>
                         <p class="card-text">@{{ course.description }}</p>
                         <div class="row">
                             <div class="col-9"></div>

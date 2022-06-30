@@ -162,6 +162,24 @@ a {
     border: thin;
 }
 
+.text-header-cuadrante {
+    background-color: #0055C3;
+    color: white;
+    border: thin;
+}
+
+.text-header-module {
+    background-color: #028BE9;
+    color: white;
+    border: thin;
+}
+
+.text-header-course {
+    background-color: #17B2F4;
+    color: white;
+    border: thin;
+}
+
 .carousel-video {
     height: 75%;
     width: 75%;

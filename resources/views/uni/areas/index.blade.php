@@ -18,13 +18,13 @@
      {{--   v-for="assign in oData.lAssignments" --}}
         <div class="col-lg-3 col-md-6 col-12">
             <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
-              <div class="card-header text-header-blue" style="height: 4rem;">
+              <div class="card-header text-header-cuadrante" style="height: 6rem;">
                 {{-- <a href="{{ route('uni.modules.index', [$assign->id_assignment, $assign->knowledge_area_id]) }}">{{ $assign->knowledge_area }}</a> --}}
                 {{ $assign->knowledge_area }}
               </div>
               <div class="card-body" style="height: 20rem;">
                 <h6>
-                  <b>{{ $assign->dt_assignment." al ".$assign->dt_end }}</b>
+                  <b>{{ \Carbon\Carbon::parse($assign->dt_assignment)->format('d-M-Y')." al ".\Carbon\Carbon::parse($assign->dt_end)->format('d-M-Y') }}</b>
                 </h6>
                 <br>
                 <p class="card-text">{{ $assign->description }}</p>

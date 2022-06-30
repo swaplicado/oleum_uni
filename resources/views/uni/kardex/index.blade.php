@@ -11,7 +11,7 @@
     @foreach ($areas as $area)
         <div class="accordion-item accordion-item-cuadrante">
             <h2 class="accordion-header" id="flush-headingOne">
-                <button class="accordion-button  accordion-button-cuadrante collapsed" type="button" data-bs-toggle="collapse"
+                <button class="accordion-button accordion-button-cuadrante collapsed" type="button" data-bs-toggle="collapse"
                     data-bs-target="#curse{{ $area->id_assignment }}" aria-expanded="false"
                     aria-controls="curse{{ $area->id_assignment }}">
                     <div class="row" style="width: 100%;">
@@ -49,6 +49,10 @@
                                 <span>Calificación promedio: </span>
                                 <span class="badge bg-secondary rounded-pill">{{ $area->promedio }}</span>
                                 @if ($area->has_document && $area->elem_status_id == 3 && $area->grade[0])
+                                    <br>
+                                    <span>Terminado: </span>
+                                    <span style="color: black" class="badge bg-info rounded-pill">
+                                        {{ \Carbon\Carbon::parse($area->grade[2])->diffForHumans() }}</span>
                                     <br>
                                     <br>
                                     <a type="button" class="btn btn-warning"
@@ -110,6 +114,11 @@
                                                     class="badge bg-secondary rounded-pill">{{ $module->promedio }}</span>
                                                 @if ($module->has_document && $module->elem_status_id == 3 && $module->grade[0])
                                                     <br>
+                                                    <span>Terminado: </span>
+                                                    <span style="color: black" class="badge bg-info rounded-pill">
+                                                        {{ \Carbon\Carbon::parse($module->grade[2])->diffForHumans() }}
+                                                    </span>
+                                                    <br>
                                                     <br>
                                                     <a type="button" class="btn btn-warning"
                                                         href="{{ route('certificate', [config('csys.elem_type.MODULE'), $module->id_module, $module->id_assignment]) }}"
@@ -162,6 +171,11 @@
                                                                     class="badge bg-secondary rounded-pill">{{ $course->grade[1] == null || $course->grade[1] == 0 ? '-' : $course->grade[1] }}</span>
                                                                 @if ($course->has_document && $course->elem_status_id == 3 && $course->grade[0])
                                                                     <br>
+                                                                    <span>Terminado: </span>
+                                                                    <span style="color: black" class="badge bg-info rounded-pill">
+                                                                        {{ \Carbon\Carbon::parse($course->grade[2])->diffForHumans() }}
+                                                                    </span>
+                                                                    <br>
                                                                     <br>
                                                                     <a type="button" class="btn btn-warning"
                                                                         href="{{ route('certificate', [config('csys.elem_type.COURSE'), $course->id_course, $course->id_assignment]) }}"
@@ -186,14 +200,14 @@
                                                     @foreach ($course->lTopics as $topic)
                                                         <li class="list-group-item d-flex justify-content-between align-items-start">
                                                             <div class="row" style="width: 100%;">
-                                                                <div class="col-md-11">
+                                                                <div class="col-md-10">
                                                                     <div class="fw-bold">
                                                                         {{ 'Tema: ' . $topic->topic }}
                                                                         <br>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1">
-                                                                    <span class="badge bg-primary rounded-pill">{{ $topic->grade[1] == null || $topic->grade[1] == 0 ? '-' : $topic->grade[1] }}</span>
+                                                                <div class="col-md-2">
+                                                                    <span class="badge bg-primary rounded-pill">{{ $topic->grade[1] == null || $topic->grade[1] == 0 ? '-' : "Calificación: ".$topic->grade[1] }}</span>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -202,12 +216,12 @@
                                                                 @foreach ($topic->lSubTopics as $subtopic)
                                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                                                         <div class="row" style="width: 100%;">
-                                                                            <div class="col-md-11">
+                                                                            <div class="col-md-10">
                                                                                 {{ 'Subtema: ' . $subtopic->subtopic }}
                                                                                 <br>
                                                                             </div>
-                                                                            <div class="col-md-1">
-                                                                                <span class="badge bg-primary rounded-pill">{{ $subtopic->grade[1] == null || $subtopic->grade[1] == 0 ? '-' : $subtopic->grade[1] }}</span>
+                                                                            <div class="col-md-2">
+                                                                                <span class="badge bg-primary rounded-pill">{{ $subtopic->grade[1] == null || $subtopic->grade[1] == 0 ? '-' : "Calificación: ".$subtopic->grade[1] }}</span>
                                                                             </div>
                                                                     </div>
                                                                     </li>

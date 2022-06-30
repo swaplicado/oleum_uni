@@ -15,7 +15,7 @@
         @foreach($lModules as $module)
           <div class="col-lg-3 col-md-6 col-12">
               <div class="card border-primary text-dark bg-light mb-3" style="max-width: 18rem;">
-                <div class="card-header text-header-blue" style="height: 5rem">
+                <div class="card-header text-header-module" style="height: 5rem">
                     {{ $module->module }}
                 </div>
                 <div class="card-body" style="height: 19rem">
