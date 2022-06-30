@@ -13,15 +13,19 @@
                     <img src="{{ asset(\Auth::user()->profile_picture) }}" class="card-img-top" alt="..."
                         style="height: 10rem; width: 10rem;">
                 </div>
-                <div class="card-body">
-                    <div style="text-align: center;">
+                <div class="card-body" style="text-align: center;">
+                    <div>
                         <a href="{{ route('profile') }}">
-                            <h5 class="card-title">{{ \Auth::user()->username }}</h5>
+                            <h6 class="card-title">{{ \Auth::user()->full_name }}</h6>
                         </a>
                     </div>
-                    <p><b>Num. empleado: </b>{{ \Auth::user()->num_employee }}</p>
-                    <p><b>Puesto: </b>{{ \Auth::user()->job->job }}</p>
-                    <a class="btn btn-primary" href="{{ route('kardex.index') }}" target="_blank">Mi avance</a>
+                    <p style="margin: 0;"><b>Num. empleado:</b></p>
+                    <p>{{ \Auth::user()->num_employee }}</p>
+                    <p style="margin: 0;"><b>Puesto:</b></p>
+                    <p>{{ \Auth::user()->job->job }}</p>
+                </div>
+                <div class="card-footer" style="text-align: center;">
+                    <a class="btn btn-primary" style="width: 90%;" href="{{ route('kardex.index') }}" target="_blank">Mi avance</a>
                 </div>
               </div>
               <br>
@@ -51,12 +55,8 @@
                             <progress class="progress" value="{{ $ka->completed_percent }}" max="100"
                                 style="margin-left: 30%; margin-top: 3%;"></progress>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <h5 class="card-title text-primary">{{ $ka->knowledge_area }}</h5>
-                            </li>
-                        </ul>
                         <div class="card-body">
+                            <h5 class="card-title text-primary">{{ $ka->knowledge_area }}</h5>
                             <p class="card-text">{{ $ka->description }}</p>
                         </div>
                         <div class="card-footer">
@@ -71,6 +71,7 @@
             </div>
         @endforeach
     </div>
+    <p></p>
     <hr>
     <div class="row">
         <div class="col-12">

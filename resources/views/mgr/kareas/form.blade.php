@@ -15,7 +15,7 @@
 </div>
 
 <div class="mb-3">
-    <label for="course_cover" class="form-label">Portada del cuadrante</label>
+    <label for="course_cover" class="form-label">Portada del cuadrante (se recomienda una imagen con relación de aspecto 16:9)</label>
     <div>
         <select id="sel_portada" value="{{ isset($oCover) ? $oCover->id_content : 0 }}" class="select2class form-control" name="cuadrante_cover" style="width: 75%" required>
                 <option value="0">Sin portada</option>
