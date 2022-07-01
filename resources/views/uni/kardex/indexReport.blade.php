@@ -10,22 +10,15 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="tipo_elemento" class="form-label">Tipo de elemento:</label>
-                    <select class="form-select" name="tipo_elemento" v-model="SelElement" v-on:change="element_type()" required>
-                        <option value="competencia">Cuadrante</option>
-                        <option value="modulo">Módulo</option>
-                        <option value="curso">Curso</option>
-                        <option value="tema">Tema</option>
-                        <option value="subtema">Subtema</option>
-                        <option value="todo">Todo</option>
-                    </select>
+                    <select class="form-control" id="tipo_elemento" style="width: 85%"></select>
+                    <input type="hidden" name="tipo_elemento" :value="SelElement">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="elemento" class="form-label">@{{SelElement}}:</label>
-                    <select class="form-select" id="elemento" name="elemento" required>
-                        <option v-for="element in lElement" :value="element.id">@{{ element.name }}</option>
-                    </select>
+                    <label for="elemento" class="form-label">@{{element}}:</label>
+                    <select class="form-select" id="elemento" required></select>
+                    <input type="hidden" name="elemento" :value="element_value">
                 </div>
             </div>
         </div>
@@ -34,22 +27,15 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="type_level" class="form-label">Por nivel:</label>
-                    <select class="form-select" name="type_level" v-model="SelNivel" v-on:change="level_type()" required>
-                        <option value="organizacion">Organización</option>
-                        <option value="empresa">Empresa</option>
-                        <option value="sucursal">Sucursal</option>
-                        <option value="departamento">Departamento</option>
-                        <option value="puesto">Puesto</option>
-                        <option value="estudiante">Estudiante</option>
-                    </select>
+                    <select class="form-select" id="type_level" required></select>
+                    <input type="hidden" name="type_level" :value="SelNivel">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="level" class="form-label">@{{SelNivel}}:</label>
-                    <select class="form-select" id="level" name="level" required>
-                        <option v-for="level in lNivel" :value="level.id">@{{ level.name }}</option>
-                    </select>
+                    <label for="level" class="form-label">@{{level_name}}:</label>
+                    <select class="form-select" id="level" name="level" required></select>
+                    <input type="hidden" name="level" :value="level_value">
                 </div>
             </div>
         </div>
@@ -120,10 +106,28 @@
         this.lDepartments = <?php echo json_encode($lDepartments) ?>;
         this.lJobs = <?php echo json_encode($lJobs) ?>;
         this.lStudent = <?php echo json_encode($lStudent) ?>;
+        this.lElements = [
+                            {id: '', text: ''},
+                            {id: 'cuadrante', text: 'Cuadrante'},
+                            {id: 'modulo', text: 'Módulo'},
+                            {id: 'curso', text: 'Curso'},
+                            {id: 'tema', text: 'Tema'},
+                            {id: 'subtema', text: 'Subtema'},
+                            {id: 'todo', text: 'Todo'},
+                        ];
+        
+        this.lNivel = [
+                        {id: '', text: ''},
+                        {id: 'estudiante', text: 'Estudiante'},
+                        {id: 'puesto', text: 'Puesto'},
+                        {id: 'departamento', text: 'Departamento'},
+                        {id: 'sucursal', text: 'Sucursal'},
+                        {id: 'empresa', text: 'Empresa'},
+                        {id: 'organizacion', text: 'Organización'},
+                    ];  
     }
     
     var oServerData = new GlobalData();
-    console.log(oServerData);
 </script>
 <script src="{{ asset('myapp/js/kardexReport/report.js') }}"></script>
 @endsection

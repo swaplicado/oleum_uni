@@ -51,6 +51,13 @@
             });
 
             $('.js-select2-class').select2();
+            $('#content_id').select2({
+                dropdownParent: $('#elemContentModalId')
+            });
+            $('#content_id').on('select2:select', function (e) {
+                var data = e.params.data;
+                app.iContentId = data.id;
+            });
         } );
     </script>
     <script type="text/javascript">

@@ -9,7 +9,7 @@
           <div>
             <div class="mb-3">
                 <label for="content_id" class="form-label">Seleccione contenido</label>
-                <select v-model="iContentId" style="width: 100%" class="form-control" id="content_id" name="content_id" placeholder="Contenido...">
+                <select v-model="iContentId" style="width: 100%" class="js-select2-class form-control" id="content_id" name="content_id" placeholder="Contenido...">
                     <option v-for="content in oData.lContents" :value="content.id_content">@{{ content.file_name }}</option>
                 </select>
             </div>

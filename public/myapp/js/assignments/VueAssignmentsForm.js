@@ -26,7 +26,120 @@ var app = new Vue({
         branch: 0,
         company: 0,
         organization: 0,
-        lAssignments: []
+        lAssignments: [],
+        lKAreas: oServerData.lKAreas,
+        lAssignmentsBy: oServerData.lAssignBy,
+        lStudents: oServerData.lStudents,
+        lJobs: oServerData.lJobs,
+        lDepartments: oServerData.lDepartments,
+        lBranches: oServerData.lBranches,
+        lCompanies: oServerData.lCompanies,
+        lOrganizations: oServerData.lOrganizations,
+        type_sel: "Seleccione estudiante",
+    },
+    mounted() {
+        let self = this;
+        $('#selec_ka')
+            .select2({
+                placeholder: 'selecciona cuadrante',
+                data: self.lKAreas,
+            })
+            .on('select2:select', function (e){
+                self.kaId = e.params.data.id;
+            });
+        $('#selec_iAssignmentBy')
+            .select2({ 
+                placeholder: 'selecciona',
+                data: self.lAssignmentsBy,
+            });
+        $('#type_selec')
+            .select2({ 
+                placeholder: 'selecciona',
+                data: self.lStudents,
+            });
+        $('#type_selec').on('select2:select', function (e) {
+            switch (parseInt(self.iAssignmentBy)) {
+                case 6:
+                    self.student = e.params.data.id;
+                    break;
+                case 5:
+                    self.job = e.params.data.id;
+                    break;
+                case 4:
+                    self.department = e.params.data.id;
+                    break;
+                case 3:
+                    self.branch = e.params.data.id;
+                    break;
+                case 2:
+                    self.company = e.params.data.id;
+                    break;
+                case 1:
+                    self.organization = e.params.data.id;
+                    break;
+            
+                default:
+                    break;
+            }
+        });
+        $('#selec_iAssignmentBy').on('select2:select', function (e) {
+            var data = e.params.data;
+            self.iAssignmentBy = data.id;
+            $('#type_selec').empty();
+            switch (parseInt(self.iAssignmentBy)) {
+                case 6:
+                    self.type_sel = "Seleccione estudiante";
+                    $('#type_selec')
+                        .select2({ 
+                            placeholder: 'Seleccione estudiante',
+                            data: self.lStudents,
+                        })
+                    break;
+                case 5:
+                    self.type_sel = "Seleccione puesto";
+                    $('#type_selec')
+                        .select2({ 
+                            placeholder: 'Seleccione puesto',
+                            data: self.lJobs,
+                        })
+                    break;
+                case 4:
+                    self.type_sel = "Seleccione departamento";
+                    $('#type_selec')
+                        .select2({ 
+                            placeholder: 'selecciona',
+                            data: self.lDepartments,
+                        })
+                    break;
+                case 3:
+                    self.type_sel = "Seleccione sucursal";
+                    $('#type_selec')
+                        .select2({ 
+                            placeholder: 'selecciona',
+                            data: self.lBranches,
+                        })
+                    break;
+                case 2:
+                    self.type_sel = "Seleccione empresa";
+                    $('#type_selec')
+                        .select2({ 
+                            placeholder: 'selecciona',
+                            data: self.lCompanies,
+                        })
+                    break;
+                case 1:
+                    self.type_sel = "Seleccione organización";
+                    $('#type_selec')
+                        .select2({ 
+                            placeholder: 'selecciona',
+                            data: self.lOrganizations,
+                        })
+                    break;
+                default:
+                    break;
+            }
+        });
+
     },
     methods: {
         getStudents() {
@@ -62,7 +175,7 @@ var app = new Vue({
                         oAss.knowledge_area_id = this.kaId;
                         oAss.student_id = student.id;
 
-                        oAss.auxName = student.num_employee + " - " + student.full_name
+                        oAss.auxName = student.num_employee + " - " + student.full_name;
 
                         this.lAssignments.push(oAss);
                     }

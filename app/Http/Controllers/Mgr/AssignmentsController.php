@@ -94,8 +94,10 @@ class AssignmentsController extends Controller
     {
         $lKAreas = KnowledgeArea::where('is_deleted', false)
                                 // ->where('elem_status_id', 2)
-                                ->select('knowledge_area', 'id_knowledge_area')
+                                ->select('knowledge_area as text', 'id_knowledge_area as id')
                                 ->get();
+        $lKAreas->prepend([ 'id' => '', 'text' => '']);
+
         $lAssignBy = [
                         (object) [ 'id' => 6, 'text' => 'Estudiante'],
                         (object) [ 'id' => 5, 'text' => 'Puesto'],
@@ -106,34 +108,41 @@ class AssignmentsController extends Controller
                     ];
 
         $lOrganizations = Organization::where('is_deleted', false)
-                                        ->select('id_organization', 'organization', 'acronym')
+                                        ->select('id_organization as id', \DB::raw("CONCAT(organization,' - ',acronym) AS text"))
                                         ->orderBy('organization', 'ASC')
                                         ->get();
+        $lOrganizations->prepend([ 'id' => '', 'text' => '']);
 
         $lCompanies = Company::where('is_deleted', false)
-                                        ->select('id_company', 'company', 'acronym')
+                                        ->select('id_company as id', \DB::raw("CONCAT(company,' - ',acronym) AS text"))
                                         ->orderBy('company', 'ASC')
                                         ->get();
+        $lCompanies->prepend([ 'id' => '', 'text' => '']);
 
         $lBranches = Branch::where('is_deleted', false)
-                                        ->select('id_branch', 'branch', 'acronym')
+                                        ->select('id_branch as id', \DB::raw("CONCAT(branch,' - ',acronym) AS text"))
                                         ->orderBy('branch', 'ASC')
                                         ->get();
+        $lBranches->prepend([ 'id' => '', 'text' => '']);
 
         $lDepartments = Department::where('is_deleted', false)
-                                        ->select('id_department', 'department', 'acronym')
+                                        ->select('id_department as id', \DB::raw("CONCAT(department,' - ',acronym) AS text"))
                                         ->orderBy('department', 'ASC')
                                         ->get();
+        $lDepartments->prepend([ 'id' => '', 'text' => '']);
 
         $lJobs = Job::where('is_deleted', false)
-                                        ->select('id_job', 'job', 'acronym')
+                                        ->select('id_job as id', \DB::raw("CONCAT(job,' - ',acronym) AS text"))
                                         ->orderBy('job', 'ASC')
                                         ->get();
+        $lJobs->prepend([ 'id' => '', 'text' => '']);
                                         
         $lStudents = User::where('is_deleted', false)
-                                        ->select('id', 'full_name', 'num_employee')
+                                        ->select('id', \DB::raw("CONCAT(full_name,' - ',num_employee) AS text"))
+                                        ->where('id','!=',1)
                                         ->orderBy('full_name', 'ASC')
                                         ->get();
+        $lStudents->prepend([ 'id' => '', 'text' => '']);
 
         return view("mgr.assignments.create")->with('title', "Asignación de cuadrante")
                                             ->with('lKAreas', $lKAreas)

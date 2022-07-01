@@ -1,6 +1,26 @@
 @extends('layouts.appuni')
 
+@section('css_section')
+    <style>
+        .select2-container--open{
+            z-index:9999999;
+        }
+    </style>
+@endsection
+
 @section('scripts_section')
+    <script>
+        $(document).ready(function() {
+            $('.select2class').select2();
+            $('#sel2').select2({
+                dropdownParent: $('#topicsModal')
+            });
+            $('#selTopicSecuence').on('select2:select', function (e) {
+                var data = e.params.data;
+                appTopics.oTopic.secuence_id = data.id;
+            });
+        });
+    </script>
     <script type="text/javascript">
         function GlobalData () {
             this.lTopics = <?php echo json_encode($lTopics) ?>;
