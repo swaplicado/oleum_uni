@@ -15,6 +15,7 @@
         "laravel/passport": "7.5.1",
         "laravel/tinker": "^1.0",
         "mpdf/mpdf": "^8.0",
+        "nesbot/carbon": "^2.59",
         "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-permission": "^2.0"
     },

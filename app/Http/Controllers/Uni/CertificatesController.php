@@ -31,6 +31,8 @@ class CertificatesController extends Controller
         $lTake = TakingControl::where('status_id', '=', config('csys.take_status.COM'))
                                 ->where('element_type_id', $elementType);
         
+        $stylesheet = file_get_contents('myapp/css/certificates/certificate.css');
+
         switch ($elementType) {
             case config('csys.elem_type.AREA'):
                 $lTake = $lTake->where('knowledge_area_n_id', $id);
@@ -39,6 +41,7 @@ class CertificatesController extends Controller
                 $sTypeText = "CUADRANTE";
                 $oObj = KnowledgeArea::find($id);
                 $title = $oObj->knowledge_area;
+                $stylesheetBg = file_get_contents('myapp/css/certificates/certificate-bg.css');
                 break;
             
             case config('csys.elem_type.MODULE'):
@@ -48,6 +51,7 @@ class CertificatesController extends Controller
                 $sTypeText = "MÓDULO";
                 $oObj = Module::find($id);
                 $title = $oObj->module;
+                $stylesheetBg = file_get_contents('myapp/css/certificates/reconocimiento-bg.css');
                 break;
             
             case config('csys.elem_type.COURSE'):
@@ -57,6 +61,7 @@ class CertificatesController extends Controller
                 $sTypeText = "CURSO";
                 $oObj = Course::find($id);
                 $title = $oObj->course;
+                $stylesheetBg = file_get_contents('myapp/css/certificates/constancia-bg.css');
                 break;
             
             default:
@@ -69,12 +74,11 @@ class CertificatesController extends Controller
                         ->orderBy('id_taken_control', 'DESC')
                         ->first();
 
-        $stylesheet = file_get_contents('myapp/css/certificates/certificate.css');
-
         $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'Letter', 'orientation' => 'L']);
 
         $mpdf->SetTitle(ucwords(strtolower($sDocText." ".$title)));
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($stylesheetBg, \Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML('<div style="height: 130px"></div>');
         $mpdf->WriteHTML('<h4 style="font-size: 20px;" class="alg-center text-blueblack">Otorga '.$art.' presente:</h4>');
         // $mpdf->WriteHTML('<div style="height: 10px"></div>');
