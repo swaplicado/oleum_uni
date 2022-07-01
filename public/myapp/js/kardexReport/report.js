@@ -12,63 +12,114 @@ var app = new Vue({
         lDepartments: oServerData.lDepartments,
         lJobs: oServerData.lJobs,
         lStudent: oServerData.lStudent,
+        lElements: oServerData.lElements,
         SelElement: null,
         lElement: null,
         element: null,
+        element_value: null,
         SelNivel: null,
-        lNivel: null,
-        nivel: null
+        lNivel: oServerData.lNivel,
+        nivel: null,
+        level_name: null,
+        level_value: null,
     },
-    methods: {
-       element_type(){
-            switch (this.SelElement) {
-                case 'competencia':
-                    this.lElement = this.lAreas;
+    mounted() {
+        let self = this;
+        $('#tipo_elemento').select2({
+            placeholder: '',
+            data: self.lElements,
+        });
+        $('#type_level').select2({
+            placeholder: '',
+            data: self.lNivel,
+        });
+        $('#tipo_elemento').on('select2:select', function (e){
+            self.SelElement = e.params.data.id;
+            switch (self.SelElement) {
+                case 'cuadrante':
+                    self.element = "Cuadrante";
+                    self.lElement = self.lAreas;
                     break;
                 case 'modulo':
-                    this.lElement = this.lModules;
+                    self.element = "Módulo";
+                    self.lElement = self.lModules;
                     break;
                 case 'curso':
-                    this.lElement = this.lCourses;
+                    self.element = "Curso";
+                    self.lElement = self.lCourses;
                     break;
                 case 'tema':
-                    this.lElement = this.lTopics;
+                    self.element = "Tema";
+                    self.lElement = self.lTopics;
                     break;
                 case 'subtema':
-                    this.lElement = this.lSubtopics;
+                    self.element = "Subtema";
+                    self.lElement = self.lSubtopics;
                     break;
                 case 'todo':
-                    this.lElement = [{id:0, name:"todo"}];
+                    self.element = "Todo";
+                    self.lElement = [{id:0, name:"todo"}];
                     break;
                 default:
                     break;
+                
             }
-            console.log(this.lElement);
-       },
-       level_type(){
-            switch (this.SelNivel) {
-                case 'organizacion':
-                    this.lNivel = this.lOrganizations;
-                    break;
-                case 'empresa':
-                    this.lNivel = this.lCompany;
-                    break;
-                case 'sucursal':
-                    this.lNivel = this.lBranches;
-                    break;
-                case 'departamento':
-                    this.lNivel = this.lDepartments;
+            $('#elemento').empty();
+            $('#elemento')
+                .select2({ 
+                    placeholder: 'selecciona',
+                    data: self.lElement,
+                });
+        });
+
+        $('#type_level').on('select2:select', function (e){
+            self.SelNivel = e.params.data.id;
+            switch (self.SelNivel) {
+                case 'estudiante':
+                    self.level_name = "Estudiante";
+                    self.nivel = self.lStudent;
                     break;
                 case 'puesto':
-                    this.lNivel = this.lJobs;
+                    self.level_name = "Puesto";
+                    self.nivel = self.lJobs;
                     break;
-                case 'estudiante':
-                    this.lNivel = this.lStudent;
+                case 'departamento':
+                    self.level_name = "Departamento";
+                    self.nivel = self.lDepartments;
+                    break;
+                case 'sucursal':
+                    self.level_name = "Sucursal";
+                    self.nivel = self.lBranches;
+                    break;
+                case 'empresa':
+                    self.level_name = "Empresa";
+                    self.nivel = self.lCompany;
+                    break;
+                case 'organizacion':
+                    self.level_name = "Organización";
+                    self.nivel = self.lOrganizations;
                     break;
                 default:
                     break;
+                
             }
-            console.log(this.lElement);
-       }
+            $('#level').empty();
+            $('#level')
+                .select2({ 
+                    placeholder: 'selecciona',
+                    data: self.nivel,
+                });
+        });
+
+        $('#elemento').on('select2:select', function (e){
+            self.element_value = e.params.data.id;
+        });
+
+        $('#level').on('select2:select', function (e){
+            self.level_value = e.params.data.id;
+        })
+    },
+    methods: {
+       
     }
 })

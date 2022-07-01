@@ -275,102 +275,123 @@ class KardexController extends Controller
     {
         $lAreas =  \DB::table('uni_knowledge_areas')
                         // ->where('is_deleted', false)
-                        ->select('id_knowledge_area as id', 'knowledge_area as name', 'is_deleted')
-                        ->orderBy('name')
+                        ->select('id_knowledge_area as id', 'knowledge_area as text', 'is_deleted')
+                        ->orderBy('text')
                         ->get();
 
         foreach($lAreas as $area){
             if($area->is_deleted == 1){
-                $area->name = $area->name.' (Eliminado)';
+                $area->text = $area->text.' (Eliminado)';
             }
         }
 
+        $lAreas->prepend([ 'id' => '', 'text' => '']);
+
         $lModules = \DB::table('uni_modules')
                         // ->where('is_deleted', false)
-                        ->select('id_module as id', 'module as name', 'is_deleted')
-                        ->orderBy('name')
+                        ->select('id_module as id', 'module as text', 'is_deleted')
+                        ->orderBy('text')
                         ->get();
         
         foreach($lModules as $module){
             if($module->is_deleted == 1){
-                $module->name = $module->name.' (Eliminado)';
+                $module->text = $module->text.' (Eliminado)';
             }
         }
+
+        $lModules->prepend([ 'id' => '', 'text' => '']);
         
         $lCourses = \DB::table('uni_courses')
                         // ->where('is_deleted', false)
-                        ->select('id_course as id', 'course as name', 'is_deleted')
-                        ->orderBy('name')
+                        ->select('id_course as id', 'course as text', 'is_deleted')
+                        ->orderBy('text')
                         ->get();
 
         foreach($lCourses as $course){
             if($course->is_deleted == 1){
-                $course->name = $course->name.' (Eliminado)';
+                $course->text = $course->text.' (Eliminado)';
             }
         }
 
+        $lCourses->prepend([ 'id' => '', 'text' => '']);
+
         $lTopics = \DB::table('uni_topics')
                         // ->where('is_deleted', false)
-                        ->select('id_topic as id', 'topic as name', 'is_deleted')
-                        ->orderBy('name')
+                        ->select('id_topic as id', 'topic as text', 'is_deleted')
+                        ->orderBy('text')
                         ->get();
         
         foreach($lTopics as $topic){
             if($topic->is_deleted == 1){
-                $topic->name = $topic->name.' (Eliminado)';
+                $topic->text = $topic->text.' (Eliminado)';
             }
         }
 
+        $lTopics->prepend([ 'id' => '', 'text' => '']);
+
         $lSubtopics = \DB::table('uni_subtopics')
                         // ->where('is_deleted', false)
-                        ->select('id_subtopic as id', 'subtopic as name', 'is_deleted')
-                        ->orderBy('name')
+                        ->select('id_subtopic as id', 'subtopic as text', 'is_deleted')
+                        ->orderBy('text')
                         ->get();
         
         foreach($lSubtopics as $subtopic){
             if($subtopic->is_deleted == 1){
-                $subtopic->name = $subtopic->name.' (Eliminado)';
+                $subtopic->text = $subtopic->text.' (Eliminado)';
             }
         }
 
+        $lSubtopics->prepend([ 'id' => '', 'text' => '']);
+
         $lOrganizations = \DB::table('adm_organizations')
                             ->where('is_deleted', false)
-                            ->select('id_organization as id', 'organization as name')
-                            ->orderBy('name')
+                            ->select('id_organization as id', 'organization as text')
+                            ->orderBy('text')
                             ->get();
+
+        $lOrganizations->prepend([ 'id' => '', 'text' => '']);
 
         $lCompany = \DB::table('adm_companies')
                             ->where('is_deleted', false)
-                            ->select('id_company as id', 'company as name')
-                            ->orderBy('name')
+                            ->select('id_company as id', 'company as text')
+                            ->orderBy('text')
                             ->get();
+
+        $lCompany->prepend([ 'id' => '', 'text' => '']);
         
         $lBranches = \DB::table('adm_branches')
                             ->where('is_deleted', false)
-                            ->select('id_branch as id', 'branch as name')
-                            ->orderBy('name')
+                            ->select('id_branch as id', 'branch as text')
+                            ->orderBy('text')
                             ->get();
+
+        $lBranches->prepend([ 'id' => '', 'text' => '']);
 
         $lDepartments = \DB::table('adm_departments')
                             ->where('is_deleted', false)
-                            ->select('id_department as id', 'department as name')
-                            ->orderBy('name')
+                            ->select('id_department as id', 'department as text')
+                            ->orderBy('text')
                             ->get();
+
+        $lDepartments->prepend([ 'id' => '', 'text' => '']);
 
         $lJobs = \DB::table('adm_jobs')
                             ->where('is_deleted', false)
-                            ->select('id_job as id', 'job as name')
-                            ->orderBy('job')
+                            ->select('id_job as id', 'job as text')
+                            ->orderBy('text')
                             ->get();
+
+        $lJobs->prepend([ 'id' => '', 'text' => '']);
 
         $lStudent = \DB::table('users')
                             ->where('is_deleted', false)
                             ->where('is_active', true)
-                            ->where('user_type_id', 1)
-                            ->select('id', 'full_name as name')
-                            ->orderBy('full_name')
+                            ->where('id','!=',1)
+                            ->select('id', \DB::raw("CONCAT(full_name,' - ',num_employee) AS text"))
+                            ->orderBy('text')
                             ->get();
         
+        $lStudent->prepend([ 'id' => '', 'text' => '']);
 
         return view('uni.kardex.indexReport',  
                     ['lAreas' => $lAreas, 'lModules' => $lModules, 'lCourses' => $lCourses,
@@ -391,7 +412,7 @@ class KardexController extends Controller
                         ->where('a.dt_end', '<=', $request->calendarEnd);
         
         switch ($request->tipo_elemento) {
-            case 'competencia':
+            case 'cuadrante':
                 $lResult = $lResult->select('c.*', 'a.*', 'u.full_name as student', 'ka.knowledge_area')
                         ->where('a.knowledge_area_id', $request->elemento)
                         ->where('m.is_deleted', false)

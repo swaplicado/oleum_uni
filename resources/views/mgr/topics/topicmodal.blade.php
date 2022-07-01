@@ -13,7 +13,7 @@
             <div class="mb-3">
                 <label for="sequence" class="form-label">Secuencia</label>
                 <div>
-                    <select class="select2class form-control" :value="oTopic.secuence_id" name="sequence" style="width: 75%">
+                    <select class="select2class form-control" id="selTopicSecuence" :value="oTopic.secuence_id" name="sequence" style="width: 75%;">
                         <option v-for="seq in oData.sequences" :value="seq.id_sequence">@{{ seq.seq }}</option>
                     </select>
                 </div>

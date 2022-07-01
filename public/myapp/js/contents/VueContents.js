@@ -67,7 +67,7 @@ var app = new Vue({
         createElementContent() {
             this.iContentId = 0;
             this.iOrder = 1;
-
+            $('#content_id').val('').trigger('change');
             $('#elemContentModalId').modal('show');
         },
         storeEC() {

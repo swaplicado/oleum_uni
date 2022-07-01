@@ -2,15 +2,18 @@
 
 @section('scripts_section')
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('.select2class').select2();
-    });
-</script>
-<script type="text/javascript">
     function GlobalData () {
             this.studentsRoute = <?php echo json_encode( route($studentsRoute) ) ?>;
             this.storeRoute = <?php echo json_encode( route($storeRoute) ) ?>;
             this.indexRoute = <?php echo json_encode( route($indexRoute) ) ?>;
+            this.lKAreas = <?php echo $lKAreas ?>;
+            this.lAssignBy = <?php echo json_encode($lAssignBy) ?>;
+            this.lStudents = <?php echo $lStudents ?>;
+            this.lJobs = <?php echo $lJobs ?>;
+            this.lDepartments = <?php echo $lDepartments ?>;
+            this.lBranches = <?php echo $lBranches ?>;
+            this.lCompanies = <?php echo $lCompanies ?>;
+            this.lOrganizations = <?php echo $lOrganizations ?>;
     }
 
     var oServerData = new GlobalData();
@@ -26,6 +29,7 @@
             @include('mgr.assignments.form')
         </form>
         @include('mgr.assignments.studentsmodal')
+        <br>
         <div class="row">
             <div class="col-9"></div>
             <div class="col-3">
