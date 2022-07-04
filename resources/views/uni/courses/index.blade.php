@@ -16,7 +16,7 @@
     <div id="indexCoursesApp">
         <div class="row row-cols-1 row-cols-md-2 g-4">
             <div class="col" v-for="course in oData.lCourses">
-                <div class="card border-warning">
+                <div class="card border-warning h-100">
                     <img v-if="course.cover == undefined" src="{{ asset('img/aceites.jpg') }}" class="card-img-top" alt="">
                     <video id="idVideo" v-else-if="course.cover.file_type == 'video'" controls="" autoplay="" name="media" width="100%" height="100%">
                         <source id="idSource" :src="course.cover.view_path" type="video/mp4">
