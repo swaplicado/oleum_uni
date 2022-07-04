@@ -478,6 +478,7 @@ class KardexController extends Controller
                 break;
         }
         $lResult = $lResult->get();
+
         $max_questions = 0;
         foreach ($lResult as $course) {
             $course->lTopics = \DB::table('uni_topics AS t')
@@ -499,6 +500,7 @@ class KardexController extends Controller
                             ->where('course_n_id', $course->id_course)
                             ->where('student_id', $course->student_id)
                             ->where('is_deleted', false)
+                            ->where('assignment_id', $course->id_assignment)
                             ->latest()
                             ->first();
 
@@ -537,8 +539,9 @@ class KardexController extends Controller
                                         ->where('q.is_deleted', false)
                                         ->where('tq.is_deleted', false)
                                         ->select('q.*', 'tq.is_correct', 'tq.take_control_id')
-                                        ->orderBy('q.id_question')
+                                        ->orderBy('tq.id_question_taken', 'ASC')
                                         ->get();
+
                         $lQuestions = $lQuestions->merge($oQuestions);
                         $questions = $questions + count($oQuestions);
                         $vecesTomado = $vecesTomado + (count($control) > 1 ? count($control) - 1 : count($control));
