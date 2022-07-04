@@ -52,6 +52,22 @@
                     }
                 ]
         });
+
+        $('#sel_cuadrante').select2({
+            dropdownParent: $('#modalEditGeneral')
+        });
+        $('#sel_modules').select2({
+            dropdownParent: $('#modalEditGeneral')
+        });
+        $('#sel_courses').select2({
+            dropdownParent: $('#modalEditGeneral')
+        });
+        $('#sel_topics').select2({
+            dropdownParent: $('#modalEditGeneral')
+        });
+        $('#sel_subtopics').select2({
+            dropdownParent: $('#modalEditGeneral')
+        });
     } );
 </script>
 <script>
@@ -131,10 +147,18 @@
     </div>
 </div>
   
-    @section('content_title', $title)
-    <a id="rightnew" href="{{ route($newRoute) }}" class="btn btn-success">
-        Nuevo<i class='bx bx-plus'></i>
-    </a>
+@section('content_title', $title)
+    <div style="float: right;" id="editGeneral">
+        @include('mgr.kareas.modalEditGeneral')
+        <button class="btn btn-warning" v-on:click="showEditGeneral();">
+            Edición general<i class='bx bx-edit'></i>
+        </button>
+        <a href="{{ route($newRoute) }}" class="btn btn-success">
+            Nuevo<i class='bx bx-plus'></i>
+        </a>
+    </div>
+    <br>
+    <br>
     <div class="row" id="divPrerrequisites">
         <div class="col-md-12">
             <table id="example" class="display stripe hover row-border order-column" style="width:100%">

@@ -67,6 +67,10 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::resource('kareas','KnowledgeAreasController');
         Route::post('/kares/status', 'KnowledgeAreasController@updateStatus')->name('kareas.status');
         Route::delete('/kares/delete/{id}', 'KnowledgeAreasController@delete')->name('kareas.delete');
+        Route::post('kareas/getModule','KnowledgeAreasController@getModules')->name('kareas.getModule');
+        Route::post('kareas/getCourse','KnowledgeAreasController@getCourses')->name('kareas.getCourse');
+        Route::post('kareas/getTopic','KnowledgeAreasController@getTopics')->name('kareas.getTopic');
+        Route::post('kareas/getSubtopic','KnowledgeAreasController@getSubtopics')->name('kareas.getSubtopic');
         /**
          * Rutas de CRUD de Módulos
          */

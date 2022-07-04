@@ -276,4 +276,72 @@ class KnowledgeAreasController extends Controller
 
         return redirect()->back()->with(['message' => $msg, 'icon' => $icon]);
     }
+
+    public function getModules(Request $request){
+        $lModules = \DB::table('uni_modules AS mo')
+                    ->join('uni_knowledge_areas AS ka', 'mo.knowledge_area_id', '=', 'ka.id_knowledge_area')
+                    ->join('sys_element_status AS es', 'mo.elem_status_id', '=', 'es.id_element_status')
+                    ->join('sys_sequences AS seq', 'mo.sequence_id', '=', 'seq.id_sequence')
+                    ->select([
+                            'mo.id_module as id',
+                            'mo.module as text',
+                            ])
+                    ->where('mo.is_deleted', 0)
+                    ->where('ka.is_deleted', 0)
+                    ->where('knowledge_area_id', $request->ka)
+                    ->get();
+        
+        $lModules->prepend([ 'id' => '', 'text' => '']);
+
+        return json_encode($lModules);
+    }
+
+    public function getCourses(Request $request){
+        $lCourses = \DB::table('uni_courses AS co')
+                    ->join('uni_modules AS mo', 'co.module_id', '=', 'mo.id_module')
+                    ->join('sys_element_status AS es', 'co.elem_status_id', '=', 'es.id_element_status')
+                    ->join('sys_sequences AS seq', 'co.sequence_id', '=', 'seq.id_sequence')                    
+                    ->select([
+                            'co.id_course as id',
+                            'co.course as text',
+                            ])
+                    ->where('mo.is_deleted', 0)
+                    ->where('co.is_deleted', 0)
+                    ->where('module_id', $request->mo)
+                    ->get();
+
+        $lCourses->prepend([ 'id' => '', 'text' => '']);
+
+        return json_encode($lCourses);
+    }
+
+    public function getTopics(Request $request){
+        $lTopics = \DB::table('uni_topics AS top')
+                    ->where('top.is_deleted',0)
+                    ->where('top.course_id', $request->course)
+                    ->select([
+                            'top.id_topic as id',
+                            'top.topic as text',
+                            ])
+                    ->get();
+
+        $lTopics->prepend([ 'id' => '', 'text' => '']);
+
+        return json_encode($lTopics);
+    }
+
+    public function getSubtopics(Request $request){
+        $lSubtopics = DB::table('uni_subtopics as sub')
+                            ->where('sub.topic_id',$request->topic)
+                            ->where('sub.is_deleted',0)
+                            ->select([
+                                'sub.id_subtopic as id',
+                                'sub.subtopic as text',
+                            ])
+                            ->get();
+
+        $lSubtopics->prepend([ 'id' => '', 'text' => '']);
+
+        return json_encode($lSubtopics);
+    }
 }

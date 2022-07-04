@@ -76,6 +76,15 @@
     <script type="text/javascript" src="{{ asset('myapp/js/mgr/Prerequisite.js') }}"></script>
     <script>
       function GlobalData () {
+            this.lAreas = <?php echo (isset($lAreas) ? json_encode($lAreas) : json_encode([])); ?>;
+            this.modulesRoute = <?php echo json_encode( route('kareas.getModule') ) ?>;
+            this.coursesRoute = <?php echo json_encode( route('kareas.getCourse') ) ?>;
+            this.topicsRoute = <?php echo json_encode( route('kareas.getTopic') ) ?>;
+            this.subtopicsRoute = <?php echo json_encode( route('kareas.getSubtopic') ) ?>;
+            this.routeTopic = <?php echo json_encode( route('topics.index', ":course") ) ?>;
+            this.routeCourse = <?php echo json_encode( route('courses.edit', ":id") ) ?>;
+            this.routeModule = <?php echo json_encode( route('modules.edit', ":id") ) ?>;
+            this.routeArea = <?php echo json_encode( route('kareas.edit', ":karea") ) ?>;
             this.sGetRoute = <?php echo json_encode( route('get.pre.data') ) ?>;
             this.storeRoute = <?php echo json_encode( route('store.pre.data') ) ?>;
             this.deleteRoute = <?php echo json_encode( route('delete.pre.row') ) ?>;
@@ -84,4 +93,7 @@
         var oGlobalData = new GlobalData();
     </script>
     <script type="text/javascript" src="{{ asset('myapp/js/mgr/VuePre.js') }}"></script>
+    @if (isset($lAreas))
+    <script src="{{ asset('myapp/js/mgr/editGeneral.js') }}"></script>
+    @endif
 @endsection
