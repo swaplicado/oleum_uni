@@ -98,7 +98,9 @@ class ProfilesController extends Controller
         // dd(config('cuni'));
         $images = config('cuni.images');
 
-        for ($i=2; $i <= 31; $i++) { 
+        $config = \App\Utils\Configuration::getConfigurations();
+
+        for ($i=2; $i <= $config->lastAvatar; $i++) {
             $images[] = (object) ['name' => 'avatar_'.$i, 'route' => 'img/profiles/avatar'.$i.'.png'];
         }
 
