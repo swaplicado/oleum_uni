@@ -68,8 +68,8 @@ class CarouselController extends Controller
                 $img->move(public_path('images/carousel'), $imageName);
             }
     
-            $oCarousel->title = $request->title;
-            $oCarousel->text = $request->text;
+            $oCarousel->title = is_null($request->title) ? "" : $request->title;
+            $oCarousel->text = is_null($request->text) ? "" : $request->text;
             $oCarousel->text_color = $request->text_color;
             $oCarousel->image = $imageField;
             $oCarousel->is_active = isset($request->is_active);

@@ -14,11 +14,11 @@
     <div v-if="picked == 'i'">
         <div class="mb-3">
             <label for="title" class="form-label">Título de la imagen</label>
-            <input type="text" value="{{ old('title', $oCarousel->title ?? '') }}" class="form-control" id="title" name="title" placeholder="Título de la imagen" required>
+            <input type="text" value="{{ old('title', $oCarousel->title ?? '') }}" class="form-control" id="title" name="title" placeholder="Título de la imagen">
         </div>
         <div class="mb-3">
             <label for="text" class="form-label">Texto en imagen</label>
-            <input type="text" value="{{ old('text', $oCarousel->text ?? '') }}" class="form-control" id="text" name="text" placeholder="Texto de la imagen" required>
+            <input type="text" value="{{ old('text', $oCarousel->text ?? '') }}" class="form-control" id="text" name="text" placeholder="Texto de la imagen">
         </div>
         <div class="mb-3">
             <label for="text_color" class="form-label">Color del texto</label>
