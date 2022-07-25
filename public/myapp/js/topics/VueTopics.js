@@ -9,7 +9,28 @@ var appTopics = new Vue({
         oTopic: new Topic(),
         oSubTopic: new SubTopic(),
         oEdit: {id: '', name: ''},
-        editType: null
+        editType: null,
+        copyElementClass: new copyElementClass(),
+        lAreas: oServerData.lAreas,
+        cuadrante: null,
+        module: null,
+        course: null,
+        topic: null,
+        origen_id: null,
+        destino_id:  null,
+        type: null,
+        disabledCopy: false,
+    },
+    mounted(){
+        var self = this;
+        var cuadrantes = [];
+        cuadrantes.push({id: '', text: ''});
+        for(var i = 0; i<self.lAreas.length; i++){
+            cuadrantes.push({id: self.lAreas[i].id_knowledge_area, text: self.lAreas[i].knowledge_area});
+        }
+
+        this.copyElementClass.setDefaultSelects(cuadrantes);
+        this.copyElementClass.select2OnChange();
     },
     methods: {
         /**
@@ -202,6 +223,15 @@ var appTopics = new Vue({
             url = url.replace(':id',subtopic_id);
             var fm = document.getElementById('mform');
             fm.setAttribute('action', url);
-        }
+        },
+
+        showCopyElementModal(origen_id, type){
+            this.copyElementClass.showCopyElementModal(origen_id, type);
+        },
+
+        copyElement(){
+            this.disabledCopy = true;
+            this.copyElementClass.copyElement();
+        },
     },
 })

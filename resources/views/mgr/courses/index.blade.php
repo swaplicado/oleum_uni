@@ -178,6 +178,9 @@
                                 <a href="{{ route('courses.edit', $course->id_course) }}">
                                     <i class='bx bx-edit'></i>
                                 </a>
+                                <a href="#" v-on:click="showCopyElementModal({{$course->id_course}}, 'course');">
+                                    <i class='bx bx-export'></i>
+                                </a>
                             </td>
                             <td>
                                 <a href="#" onclick="courseDelete({{$course->id_course}}, '{{$course->course}}', '{{route('courses.delete', ':id')}}')">
@@ -204,5 +207,6 @@
             </table>
         </div>
         @include('mgr.prerequisites_modal')
+        @include('mgr.modalCopyElement')
     </div>
 @endsection

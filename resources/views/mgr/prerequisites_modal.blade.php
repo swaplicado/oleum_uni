@@ -73,10 +73,12 @@
 </div>
 
 @section('bottom_scripts')
+    <script type="text/javascript" src="{{ asset('myapp/js/copyElementClass.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myapp/js/mgr/Prerequisite.js') }}"></script>
     <script>
       function GlobalData () {
             this.lAreas = <?php echo (isset($lAreas) ? json_encode($lAreas) : json_encode([])); ?>;
+            this.lCuadrantes = <?php echo (isset($lCuadrantes) ? json_encode($lCuadrantes) : json_encode([])); ?>; //para la funcionalidad de copiado de elemento
             this.modulesRoute = <?php echo json_encode( route('kareas.getModule') ) ?>;
             this.coursesRoute = <?php echo json_encode( route('kareas.getCourse') ) ?>;
             this.topicsRoute = <?php echo json_encode( route('kareas.getTopic') ) ?>;
@@ -88,12 +90,19 @@
             this.sGetRoute = <?php echo json_encode( route('get.pre.data') ) ?>;
             this.storeRoute = <?php echo json_encode( route('store.pre.data') ) ?>;
             this.deleteRoute = <?php echo json_encode( route('delete.pre.row') ) ?>;
+            this.modulesRoute = <?php echo json_encode( route('kareas.getModule') ) ?>;
+            this.coursesRoute = <?php echo json_encode( route('kareas.getCourse') ) ?>;
+            this.topicsRoute = <?php echo json_encode( route('kareas.getTopic') ) ?>;
+            this.copyRoute = <?php echo json_encode( route('copyElement') ) ?>;
         }
 
         var oGlobalData = new GlobalData();
     </script>
     <script type="text/javascript" src="{{ asset('myapp/js/mgr/VuePre.js') }}"></script>
+    <script>
+        var appVue = app;
+    </script>
     @if (isset($lAreas))
-    <script src="{{ asset('myapp/js/mgr/editGeneral.js') }}"></script>
+      <script src="{{ asset('myapp/js/mgr/editGeneral.js') }}"></script>
     @endif
 @endsection

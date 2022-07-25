@@ -28,17 +28,17 @@ var app = new Vue({
             cuadrantes.push({id: self.lAreas[i].id_knowledge_area, text: self.lAreas[i].knowledge_area});
         }
 
-        $('#sel_modules').select2({
+        $('#sel_modules_edit').select2({
             placeholder: 'selecciona modulo',
             data: [],
         }).prop("disabled", true);;
 
-        $('#sel_courses').select2({
+        $('#sel_courses_edit').select2({
             placeholder: 'selecciona curso',
             data: [],
         }).prop("disabled", true);;
 
-        $('#sel_topics').select2({
+        $('#sel_topics_edit').select2({
             placeholder: 'selecciona tema',
             data: [],
         }).prop("disabled", true);;
@@ -48,7 +48,7 @@ var app = new Vue({
         //     data: [],
         // });
 
-        $('#sel_cuadrante')
+        $('#sel_cuadrante_edit')
             .select2({
                 placeholder: 'selecciona cuadrante',
                 data: cuadrantes,
@@ -58,17 +58,17 @@ var app = new Vue({
                 self.getModules(e.params.data.id, self.modulesRoute);
             });
 
-        $('#sel_modules').on('select2:select', function (e){
+        $('#sel_modules_edit').on('select2:select', function (e){
             self.module = e.params.data.id;
             self.getCourses(e.params.data.id, self.coursesRoute);
         });
 
-        $('#sel_courses').on('select2:select', function (e){
+        $('#sel_courses_edit').on('select2:select', function (e){
             self.course = e.params.data.id;
             self.getTopics(e.params.data.id, self.topicsRoute);
         });
 
-        $('#sel_topics').on('select2:select', function (e){
+        $('#sel_topics_edit').on('select2:select', function (e){
             self.topic = e.params.data.id;
             // self.getSubtopics(e.params.data.id, self.subtopicsRoute);
         });
@@ -84,10 +84,10 @@ var app = new Vue({
             this.course = null,
             this.topic = null,
             // this.subtopic = null,
-            $('#sel_cuadrante').val('').trigger('change');
-            $('#sel_modules').empty().prop("disabled", true);
-            $('#sel_courses').empty().prop("disabled", true);
-            $('#sel_topics').empty().prop("disabled", true);
+            $('#sel_cuadrante_edit').val('').trigger('change');
+            $('#sel_modules_edit').empty().prop("disabled", true);
+            $('#sel_courses_edit').empty().prop("disabled", true);
+            $('#sel_topics_edit').empty().prop("disabled", true);
             // $('#sel_subtopics').empty().prop("disabled", true);
             $('#modalEditGeneral').modal('show');
         },
@@ -97,10 +97,10 @@ var app = new Vue({
             this.course = null,
             this.topic = null,
 
-            $('#sel_courses').empty().prop("disabled", true);
-            $('#sel_topics').empty().prop("disabled", true);
-            $('#sel_modules').empty();
-            $('#sel_modules').select2({
+            $('#sel_courses_edit').empty().prop("disabled", true);
+            $('#sel_topics_edit').empty().prop("disabled", true);
+            $('#sel_modules_edit').empty();
+            $('#sel_modules_edit').select2({
                 dropdownParent: $('#modalEditGeneral'),
                 placeholder: 'selecciona modulo',
                 data: self.lModules,
@@ -111,9 +111,9 @@ var app = new Vue({
             this.course = null,
             this.topic = null,
 
-            $('#sel_topics').empty().prop("disabled", true);
-            $('#sel_courses').empty();
-            $('#sel_courses').select2({
+            $('#sel_topics_edit').empty().prop("disabled", true);
+            $('#sel_courses_edit').empty();
+            $('#sel_courses_edit').select2({
                 dropdownParent: $('#modalEditGeneral'),
                 placeholder: 'selecciona curso',
                 data: self.lCourses,
@@ -121,8 +121,8 @@ var app = new Vue({
         },
 
         setTopics(){
-            $('#sel_topics').empty();
-            $('#sel_topics').select2({
+            $('#sel_topics_edit').empty();
+            $('#sel_topics_edit').select2({
                 dropdownParent: $('#modalEditGeneral'),
                 placeholder: 'selecciona tema',
                 data: self.lTopics,
@@ -196,10 +196,10 @@ var app = new Vue({
             this.course = null,
             this.topic = null,
 
-            $('#sel_cuadrante').val('').trigger('change');
-            $('#sel_modules').empty().prop("disabled", true);
-            $('#sel_courses').empty().prop("disabled", true);
-            $('#sel_topics').empty().prop("disabled", true);
+            $('#sel_cuadrante_edit').val('').trigger('change');
+            $('#sel_modules_edit').empty().prop("disabled", true);
+            $('#sel_courses_edit').empty().prop("disabled", true);
+            $('#sel_topics_edit').empty().prop("disabled", true);
         },
 
         cleanModule(){
@@ -207,21 +207,21 @@ var app = new Vue({
             this.course = null,
             this.topic = null,
 
-            $('#sel_modules').val('').trigger('change');
-            $('#sel_courses').empty().prop("disabled", true);
-            $('#sel_topics').empty().prop("disabled", true);
+            $('#sel_modules_edit').val('').trigger('change');
+            $('#sel_courses_edit').empty().prop("disabled", true);
+            $('#sel_topics_edit').empty().prop("disabled", true);
         },
 
         cleanCourse(){
             this.course = null,
             this.topic = null,
-            $('#sel_courses').val('').trigger('change');
-            $('#sel_topics').empty().prop("disabled", true);
+            $('#sel_courses_edit').val('').trigger('change');
+            $('#sel_topics_edit').empty().prop("disabled", true);
         },
 
         cleanTopic(){
             this.topic = null,
-            $('#sel_topics').val('').trigger('change');
+            $('#sel_topics_edit').val('').trigger('change');
         },
 
         getEdit(){

@@ -53,19 +53,19 @@
                 ]
         });
 
-        $('#sel_cuadrante').select2({
+        $('#sel_cuadrante_edit').select2({
             dropdownParent: $('#modalEditGeneral')
         });
-        $('#sel_modules').select2({
+        $('#sel_modules_edit').select2({
             dropdownParent: $('#modalEditGeneral')
         });
-        $('#sel_courses').select2({
+        $('#sel_courses_edit').select2({
             dropdownParent: $('#modalEditGeneral')
         });
-        $('#sel_topics').select2({
+        $('#sel_topics_edit').select2({
             dropdownParent: $('#modalEditGeneral')
         });
-        $('#sel_subtopics').select2({
+        $('#sel_subtopics_edit').select2({
             dropdownParent: $('#modalEditGeneral')
         });
     } );
@@ -195,6 +195,9 @@
                                 <a title="Editar cuadrante" href="{{ route('kareas.edit', $area->id_knowledge_area) }}">
                                     <i class='bx bx-edit'></i>
                                 </a>
+                                <a href="#" v-on:click="showCopyElementModal({{$area->id_knowledge_area}}, 'area');">
+                                    <i class='bx bx-export'></i>
+                                </a>
                             </td>
                             <td style="text-align: center">
                                 <a href="#" v-on:click="showPreviousModal({{ config('csys.elem_type.AREA') }}, {{ $area->id_knowledge_area }}, '{{ $area->knowledge_area }}')">
@@ -224,5 +227,6 @@
             </table>
         </div>
         @include('mgr.prerequisites_modal')
+        @include('mgr.modalCopyElement')
     </div>
 @endsection

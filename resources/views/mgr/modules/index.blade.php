@@ -170,6 +170,9 @@
                                 <a title="Editar Módulo" href="{{ route('modules.edit', $module->id_module) }}">
                                     <i class='bx bx-edit'></i>
                                 </a>
+                                <a href="#" v-on:click="showCopyElementModal({{$module->id_module}}, 'module');">
+                                    <i class='bx bx-export'></i>
+                                </a>
                             </td>
                             <td style="text-align: center">
                                 <a href="#" v-on:click="showPreviousModal({{ config('csys.elem_type.MODULE') }}, {{ $module->id_module }}, '{{ $module->module }}')">
@@ -199,5 +202,6 @@
             </table>
         </div>
         @include('mgr.prerequisites_modal')
+        @include('mgr.modalCopyElement')
     </div>
 @endsection

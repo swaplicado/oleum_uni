@@ -67,12 +67,27 @@ class TopicsController extends Controller
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();
 
+        $lAreas = \DB::table('uni_knowledge_areas AS ka')
+                        ->join('sys_element_status AS es', 'ka.elem_status_id', '=', 'es.id_element_status')
+                        ->join('sys_sequences AS seq', 'ka.sequence_id', '=', 'seq.id_sequence')
+                        ->select(['ka.id_knowledge_area',
+                                'ka.knowledge_area_title',
+                                'ka.knowledge_area',
+                                'ka.description',
+                                'ka.is_deleted',
+                                'es.code AS status_code',
+                                'seq.code AS seq_code',
+                                ])
+                        ->where('ka.is_deleted', 0)
+                                ->get();
+
         return view('mgr.topics.index')->with('title', $title)
                                         ->with('storeRoute', $this->storeRoute)
                                         ->with('storeSubRoute', $this->storeSubRoute)
                                         ->with('courseId', $courseId)
                                         ->with('sequences', $seq)
-                                        ->with('lTopics', $lTopics);
+                                        ->with('lTopics', $lTopics)
+                                        ->with('lAreas', $lAreas);
     }
 
     public function store(Request $request)

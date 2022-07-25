@@ -13,6 +13,28 @@ var app = new Vue({
         lModules: [],
         lCourses: [],
         iReferenceId: 0,
+
+        copyElementClass: new copyElementClass(),
+        lCuadrantes: oGlobalData.lCuadrantes,
+        area: null,
+        module: null,
+        course: null,
+        topic: null,
+        origen_id: null,
+        destino_id:  null,
+        type: null,
+        disabledCopy: false,
+    },
+    mounted() {
+        var self = this;
+        var cuadrantes = [];
+        cuadrantes.push({id: '', text: ''});
+        for(var i = 0; i<self.lCuadrantes.length; i++){
+            cuadrantes.push({id: self.lCuadrantes[i].id_knowledge_area, text: self.lCuadrantes[i].knowledge_area});
+        }
+
+        this.copyElementClass.setDefaultSelects(cuadrantes);
+        this.copyElementClass.select2OnChange();
     },
     methods: {
         showPreviousModal(idType, idReference, name) {
@@ -174,6 +196,15 @@ var app = new Vue({
             }
 
             return text;
-        }
+        },
+
+        showCopyElementModal(origen_id, type){
+            this.copyElementClass.showCopyElementModal(origen_id, type);
+        },
+
+        copyElement(){
+            this.disabledCopy = true;
+            this.copyElementClass.copyElement();
+        },
     },
 })

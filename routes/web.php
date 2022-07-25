@@ -119,6 +119,11 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::put('/question', 'QuestionsController@update')->name('questions.update');
         Route::put('/questiondel', 'QuestionsController@delete')->name('questions.delete');
         Route::put('/deleteanswer', 'QuestionsController@deleteAnswer')->name('questions.delanswer');
+
+        /**
+         * Rutas de copiado de elementos (subtema, temas, modulos, cuadrantes)
+         */
+        Route::post('/copyElement', 'copyElementsController@copyElement')->name('copyElement');
     
         /**
          * Rutas de Gestión de contenidos
