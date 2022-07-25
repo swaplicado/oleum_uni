@@ -110,7 +110,7 @@
                                     <a href="#" class = "bx bxs-edit-alt" v-on:click="editSubtopic(subtopic.id_subtopic, subtopic.subtopic, '{{route('subtopics.edit', ':id')}}');" data-bs-toggle="modal" data-bs-target="#editModal"></a>
                                 </div>
                                 <div style="width: 5%">
-                                    <a href="#" class = "bx bx-export" v-on:click="showCopyElementModal(subtopic.id_subtopic, 'subtopic');"></a>
+                                    <a href="#" title="Copiar subtema" class = "bx bxs-copy" v-on:click="showCopyElementModal(subtopic.id_subtopic, 'subtopic');"></a>
                                 </div>
                                 <div style="width: 5%">
                                     <a href="#" class = "bx bxs-trash" style="color: red;" v-on:click="subtopicDelete(subtopic.id_subtopic, subtopic.subtopic, '{{route('subtopics.delete', ':id')}}');"></a>

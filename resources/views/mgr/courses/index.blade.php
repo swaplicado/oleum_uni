@@ -178,8 +178,8 @@
                                 <a href="{{ route('courses.edit', $course->id_course) }}">
                                     <i class='bx bx-edit'></i>
                                 </a>
-                                <a href="#" v-on:click="showCopyElementModal({{$course->id_course}}, 'course');">
-                                    <i class='bx bx-export'></i>
+                                <a href="#" title="Copiar curso" v-on:click="showCopyElementModal({{$course->id_course}}, 'course');">
+                                    <i class='bx bxs-copy'></i>
                                 </a>
                             </td>
                             <td>

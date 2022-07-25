@@ -10,7 +10,7 @@
                     @csrf
                     <div class="row" v-show="type == 'area'">
                         <div class="col-12" style="text-align: center;">
-                            <h3>Copiar cuadrante?</h3>
+                            <h3>¿Deseas copiar el cuadrante?</h3>
                         </div>
                     </div>
                     <div class="row" v-show="type == 'module' || type == 'course' || type == 'topic' || type == 'subtopic'">

@@ -195,8 +195,8 @@
                                 <a title="Editar cuadrante" href="{{ route('kareas.edit', $area->id_knowledge_area) }}">
                                     <i class='bx bx-edit'></i>
                                 </a>
-                                <a href="#" v-on:click="showCopyElementModal({{$area->id_knowledge_area}}, 'area');">
-                                    <i class='bx bx-export'></i>
+                                <a href="#" title="Copiar cuadrante" v-on:click="showCopyElementModal({{$area->id_knowledge_area}}, 'area');">
+                                    <i class='bx bxs-copy'></i>
                                 </a>
                             </td>
                             <td style="text-align: center">
