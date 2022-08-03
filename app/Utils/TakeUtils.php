@@ -296,6 +296,7 @@ class TakeUtils {
                         ->where('a.is_deleted', false)
                         ->where('a.student_id', $student)
                         ->where('m.is_deleted', false)
+                        ->where('m.elem_status_id', '>', config('csys.elem_status.EDIT'))
                         ->where('m.knowledge_area_id', $idArea)
                         ->get();
         foreach($lModules as $module){
@@ -341,7 +342,7 @@ class TakeUtils {
                         ->where('m.is_deleted', false)
                         ->where('c.is_deleted', false)
                         ->where('c.module_id', $idModule)
-                        ->where('c.elem_status_id', '>=', config('csys.elem_status.EDIT'))
+                        ->where('c.elem_status_id', '>', config('csys.elem_status.EDIT'))
                         ->get();
 
         foreach ($lCourses as $course) {

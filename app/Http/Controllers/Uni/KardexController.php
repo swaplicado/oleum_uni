@@ -407,7 +407,7 @@ class KardexController extends Controller
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
                         ->leftJoin('users as u', 'u.id', '=', 'a.student_id')
-                        ->where('c.elem_status_id', '>=', config('csys.elem_status.EDIT'))
+                        ->where('c.elem_status_id', '>', config('csys.elem_status.EDIT'))
                         ->where('a.dt_assignment', '>=', $request->calendarStart)
                         ->where('a.dt_end', '<=', $request->calendarEnd);
         

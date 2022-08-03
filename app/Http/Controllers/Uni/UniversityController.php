@@ -51,6 +51,7 @@ class UniversityController extends Controller
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $area)
+                        ->where('m.elem_status_id', '>', config('csys.elem_status.EDIT'))
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
@@ -80,7 +81,7 @@ class UniversityController extends Controller
                         ->where('m.is_deleted', false)
                         ->where('c.is_deleted', false)
                         ->where('c.module_id', $module)
-                        ->where('c.elem_status_id', '>=', config('csys.elem_status.EDIT'))
+                        ->where('c.elem_status_id', '>', config('csys.elem_status.EDIT'))
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->get();
