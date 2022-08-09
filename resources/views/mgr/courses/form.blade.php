@@ -13,9 +13,20 @@
     <div class="col-2">
         <div class="mb-3">
             <label for="completion_days" class="form-label">Duración (días)</label>
-            <input type="number" value="{{ old('completion_days', $oCourse->completion_days ?? '') }}" class="form-control" id="completion_days" name="completion_days">
+            <input type="number" value="{{ isset($moduleDays) ? $moduleDays : old('completion_days', $oCourse->completion_days ?? '') }}" class="form-control" id="completion_days" name="completion_days">
         </div>
     </div>
+    <div class="col-md-6">
+        <label for="pre_course" class="form-label">Curso secuencial:</label>
+        <select class="select2class form-control" name="pre_course">
+            <option value="">Ninguno</option>
+            @foreach ($lCourses as $course)
+                <option value="{{ $course->id_course }}" {{ isset($oCourse) && $oCourse->pre_course_id == $course->id_course ? "selected" : "" }}>{{ $course->course }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+<div class="row">
     <div class="col-2">
         <br>
         <div class="mb-3">

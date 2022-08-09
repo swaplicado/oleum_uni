@@ -16,7 +16,7 @@ use App\Uni\SubTopic;
 use App\Uni\TakingControl;
 use App\Uni\ReviewCfg;
 use App\Uni\Review;
-
+use App\Uni\ModuleControl;
 class UniversityController extends Controller
 {
     public function indexAreas()
@@ -41,10 +41,17 @@ class UniversityController extends Controller
 
     public function indexModules($assignment = 0, $area = 0)
     {
+        $oAssigment = Assignment::find($assignment);
+
+        if(!(Carbon::today()->lte(Carbon::parse($oAssigment->dt_end)))){
+            return redirect(route('home'))->with(['message' => 'El cuadrante está cerrado', 'icon' => 'error']);
+        }
+
         $lModules = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
-                        ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
-                        ->select('m.*', 'a.id_assignment', 'a.dt_end')
+                        ->join('uni_assignments_module_control as mc', 'mc.assignment_id', '=', 'a.id_assignment')
+                        ->join('uni_modules AS m', 'm.id_module', '=', 'mc.module_n_id')
+                        ->select('m.*', 'mc.dt_open', 'mc.dt_close','a.id_assignment', 'a.dt_end')
                         ->where('a.id_assignment', $assignment)
                         ->where('a.is_deleted', false)
                         // ->where('a.is_over', false)
@@ -52,8 +59,11 @@ class UniversityController extends Controller
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $area)
                         ->where('m.elem_status_id', '>', config('csys.elem_status.EDIT'))
+                        ->where([['mc.dt_open', '<=', Carbon::today()->toDateString()],['mc.dt_close',  '>=', Carbon::today()->toDateString()]])
+                        ->where('mc.is_deleted', 0)
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
+                        ->groupBy('m.id_module')
                         ->get();
 
         $oKa = KnowledgeArea::find($area);
@@ -69,11 +79,34 @@ class UniversityController extends Controller
 
     public function indexCourses($assignment, $module)
     {
+        
+        $oAssigment = Assignment::find($assignment);
+        
+        if(!(Carbon::today()->lte(Carbon::parse($oAssigment->dt_end)))){
+            return redirect(route('home'))->with(['message' => 'El cuadrante está cerrado', 'icon' => 'error']);
+        }
+        
+        $oModuleControl = ModuleControl::where([
+                                            ['assignment_id', $assignment],
+                                            ['module_n_id', $module],
+                                            ['is_deleted', 0]
+                                        ])->first();
+
+        if(Carbon::parse($oModuleControl->dt_close)->lt(Carbon::now())){
+            return redirect(route('home'))->with(['message' => 'El módulo está cerrado', 'icon' => 'error']);
+        }
+
         $lCourses = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
-                        ->select('c.*', 'a.id_assignment')
+                        ->join('uni_assignments_courses_control as acc', function($join)
+                        {
+                            $join->on('acc.assignment_id', '=', 'a.id_assignment');
+                            $join->on('acc.module_n_id', '=', 'm.id_module');
+                            $join->on('acc.course_n_id', '=', 'c.id_course');
+                        })
+                        ->select('c.*', 'a.id_assignment', 'acc.dt_open', 'acc.dt_close')
                         ->where('a.id_assignment', $assignment)
                         ->where('a.is_deleted', false)
                         // ->where('a.is_over', false)
@@ -82,8 +115,11 @@ class UniversityController extends Controller
                         ->where('c.is_deleted', false)
                         ->where('c.module_id', $module)
                         ->where('c.elem_status_id', '>', config('csys.elem_status.EDIT'))
+                        ->where([['acc.dt_open', '<=', Carbon::today()->toDateString()],['acc.dt_close',  '>=', Carbon::today()->toDateString()]])
+                        ->where('acc.is_deleted', 0)
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
+                        ->groupBy('id_course')
                         ->get();
 
         $oModule = Module::find($module);
@@ -120,7 +156,13 @@ class UniversityController extends Controller
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
-                        ->select('c.*', 'a.id_assignment')
+                        ->join('uni_assignments_courses_control as acc', function($join)
+                        {
+                            $join->on('acc.assignment_id', '=', 'a.id_assignment');
+                            $join->on('acc.module_n_id', '=', 'm.id_module');
+                            $join->on('acc.course_n_id', '=', 'c.id_course');
+                        })
+                        ->select('c.*', 'a.id_assignment', 'acc.dt_open', 'acc.dt_close')
                         ->where('a.is_deleted', false)
                         // ->where('a.is_over', false)
                         ->where('a.student_id', \Auth::id())
@@ -131,6 +173,26 @@ class UniversityController extends Controller
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->first();
+
+        if(!(Carbon::today()->lte(Carbon::parse($oCourse->dt_close)))){
+            return redirect(route('home'))->with(['message' => 'El curso está cerrado', 'icon' => 'error']);
+        }
+
+        $oAssigment = Assignment::find($assignment);
+        
+        if(!(Carbon::today()->lte(Carbon::parse($oAssigment->dt_end)))){
+            return redirect(route('home'))->with(['message' => 'El cuadrante está cerrado', 'icon' => 'error']);
+        }
+        
+        $oModuleControl = ModuleControl::where([
+                                            ['assignment_id', $assignment],
+                                            ['module_n_id', $oCourse->module_id],
+                                            ['is_deleted', 0]
+                                        ])->first();
+                                        
+        if(Carbon::parse($oModuleControl->dt_close)->lt(Carbon::now())){
+            return redirect(route('home'))->with(['message' => 'El módulo está cerrado', 'icon' => 'error']);
+        }
 
         if ($oCourse != null) {
             $oCourse->lTopics = Topic::where('course_id', $oCourse->id_course)

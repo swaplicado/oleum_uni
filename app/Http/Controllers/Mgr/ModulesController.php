@@ -50,7 +50,8 @@ class ModulesController extends Controller
                             'mo.is_deleted',
                             'es.code AS status_code',
                             'seq.code AS seq_code',
-                            'ka.knowledge_area'
+                            'ka.knowledge_area',
+                            'mo.completion_days'
                             ])
                     ->where('mo.is_deleted', 0)
                     ->where('ka.is_deleted', 0);
@@ -90,10 +91,16 @@ class ModulesController extends Controller
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();
 
+        $lModules = \DB::table('uni_modules')
+                        ->where([['is_deleted', 0],['knowledge_area_id', $oKa->id_knowledge_area]])
+                        ->select('id_module', 'module')
+                        ->get();
+
         return view('mgr.modules.create')->with('title', $title)
                                         ->with('storeRoute', $this->storeRoute)
                                         ->with('kArea', $knowledgeAreaId)
-                                        ->with('sequences', $seq);
+                                        ->with('sequences', $seq)
+                                        ->with('lModules', $lModules);
     }
 
     public function store(Request $request)
@@ -105,6 +112,8 @@ class ModulesController extends Controller
             $oModule->hash_id = hash('ripemd160', $oModule->module);
             $oModule->description = $request->description;
             $oModule->objectives = $request->objectives;
+            $oModule->completion_days = $request->completion_days;
+            $oModule->pre_module_id = $request->pre_module;
             $oModule->has_document = isset($request->has_document);
             $oModule->is_deleted = 0;
             $oModule->knowledge_area_id = $request->ka_id;;
@@ -130,10 +139,16 @@ class ModulesController extends Controller
         $seq = Sequence::selectRaw('CONCAT(code, " - ", sequence) AS seq, id_sequence')
                         ->get();
 
+        $lModules = \DB::table('uni_modules')
+                        ->where([['is_deleted', 0],['knowledge_area_id', $oModule->knowledge_area_id],['id_module', '!=', $id]])
+                        ->select('id_module', 'module')
+                        ->get();
+
         return view('mgr.modules.edit')->with('title', $title)
                                         ->with('updateRoute', $this->updateRoute)
                                         ->with('sequences', $seq)
-                                        ->with('oModule', $oModule);
+                                        ->with('oModule', $oModule)
+                                        ->with('lModules', $lModules);
     }
 
     public function update(Request $request, $id)
@@ -144,6 +159,8 @@ class ModulesController extends Controller
             $oModule->module = $request->module;
             $oModule->description = $request->description;
             $oModule->objectives = $request->objectives;
+            $oModule->completion_days = $request->completion_days;
+            $oModule->pre_module_id = $request->pre_module;
             $oModule->sequence_id = $request->sequence;
             $oModule->has_document = isset($request->has_document);
             $oModule->updated_by_id = \Auth::id();

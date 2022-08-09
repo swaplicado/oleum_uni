@@ -81,7 +81,7 @@
                                     aria-controls="module{{ $module->id_module }}">
                                     <div class="row" style="width: 100%;">
                                         <div class="col-md-4">
-                                            @if (!$area->is_active)
+                                            @if (\Carbon\Carbon::parse($module->dt_close)->lte(\Carbon\Carbon::today()))
                                                 <div class="fw-bold">{{ $module->module }}</div>
                                             @else
                                                 <div class="fw-bold">
@@ -94,7 +94,8 @@
                                             @endif
                                             <br>
                                             Vigencia:
-                                            <i>{{ \Carbon\Carbon::parse($area->dt_assignment)->format('d-M-Y') . ' - ' . \Carbon\Carbon::parse($area->dt_end)->format('d-M-Y') }}</i>
+                                            {{-- <i>{{ \Carbon\Carbon::parse($area->dt_assignment)->format('d-M-Y') . ' - ' . \Carbon\Carbon::parse($area->dt_end)->format('d-M-Y') }}</i> --}}
+                                            <i>{{ \Carbon\Carbon::parse($module->dt_open)->format('d-M-Y') . ' - ' . \Carbon\Carbon::parse($module->dt_close)->format('d-M-Y') }}</i>
                                             <br>
                                             <span>Avance: </span>
                                             <b>{{ $module->completed_percent }}%</b>

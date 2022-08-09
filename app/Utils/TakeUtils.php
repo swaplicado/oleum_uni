@@ -21,6 +21,17 @@ class TakeUtils {
         $lCourses =  \DB::table('uni_taken_controls AS tc')
                             ->join('uni_courses AS co', 'tc.course_n_id', '=', 'co.id_course')
                             ->join('uni_assignments AS a', 'tc.assignment_id', '=', 'a.id_assignment')
+                            ->join('uni_assignments_module_control as amc', function($join)
+                            {
+                                $join->on('amc.assignment_id', '=', 'tc.assignment_id');
+                                $join->on('amc.module_n_id', '=', 'co.module_id');
+                            })
+                            ->join('uni_assignments_courses_control as acc', function($join)
+                            {
+                                $join->on('acc.assignment_id', '=', 'a.id_assignment');
+                                $join->on('acc.module_n_id', '=', 'amc.module_n_id');
+                                $join->on('acc.course_n_id', '=', 'co.id_course');
+                            })
                             ->where('tc.student_id', $student)
                             ->where(function ($query) {
                                 $query->where('tc.status_id', config('csys.take_status.CUR'))
@@ -30,6 +41,8 @@ class TakeUtils {
                             ->whereRaw('NOW() BETWEEN a.dt_assignment AND a.dt_end')
                             ->where('tc.is_deleted', false)
                             ->where('co.is_deleted', false)
+                            ->where('amc.dt_close', '>=', Carbon::today())
+                            ->where('acc.dt_close', '>=', Carbon::today())
                             ->select('tc.grouper',
                                         'tc.dtt_take',
                                         'tc.dtt_end',
@@ -48,7 +61,11 @@ class TakeUtils {
                                         'co.is_deleted',
                                         'co.module_id',
                                         'co.elem_status_id',
-                                        'co.sequence_id'
+                                        'co.sequence_id',
+                                        'amc.dt_open as module_dt_open',
+                                        'amc.dt_close as module_dt_close',
+                                        'acc.dt_open as course_dt_open',
+                                        'acc.dt_close as course_dt_close'
                                     )
                             ->get();
 
@@ -290,15 +307,22 @@ class TakeUtils {
 
         $lModules = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
-                        ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
-                        ->select('m.*', 'a.id_assignment', 'a.dt_end')
+                        ->join('uni_assignments_module_control as mc', 'mc.assignment_id', '=', 'a.id_assignment')
+                        ->join('uni_modules AS m', 'm.id_module', '=', 'mc.module_n_id')
+                        ->select('m.*', 'mc.dt_open', 'mc.dt_close','a.id_assignment', 'a.dt_end')
                         ->where('a.id_assignment', $idAsigment)
                         ->where('a.is_deleted', false)
                         ->where('a.student_id', $student)
                         ->where('m.is_deleted', false)
                         ->where('m.elem_status_id', '>', config('csys.elem_status.EDIT'))
                         ->where('m.knowledge_area_id', $idArea)
+                        // ->where('mc.dt_open', '<=', Carbon::now()->toDateString())
+                        // ->where('mc.is_deleted', 0)
+                        // ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                        // ->where('a.dt_end', '>=', Carbon::now()->toDateString())
+                        ->groupBy('m.id_module')
                         ->get();
+                        
         foreach($lModules as $module){
             $result = TakeUtils::getModulePercentCompleted($module->id_module, $idAsigment);
             $module->completed_percent = number_format($result[0]);

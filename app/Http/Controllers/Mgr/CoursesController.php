@@ -103,11 +103,17 @@ class CoursesController extends Controller
             $content->f_type = $content->file_type == 'image' ? 'Imagen' : 'Video';
         }
 
+        $lCourses = \DB::table('uni_courses')
+                        ->where([['is_deleted', 0],['module_id', $moduleId]])
+                        ->get();
+
         return view('mgr.courses.create')->with('title', $title)
                                         ->with('storeRoute', $this->storeRoute)
                                         ->with('moduleId', $moduleId)
                                         ->with('lContents', $lContents)
-                                        ->with('sequences', $seq);
+                                        ->with('sequences', $seq)
+                                        ->with('lCourses', $lCourses)
+                                        ->with('moduleDays', $oModule->completion_days);
     }
 
     public function store(Request $request)
@@ -119,6 +125,7 @@ class CoursesController extends Controller
             $oCourse->course_key = $request->course_key;
             $oCourse->hash_id = hash('ripemd160', $oCourse->course);
             $oCourse->completion_days = $request->completion_days;
+            $oCourse->pre_course_id = $request->pre_course;
             $oCourse->has_points = isset($request->has_points);
             $oCourse->university_points = $request->university_points;
             $oCourse->description = $request->description;
@@ -187,12 +194,17 @@ class CoursesController extends Controller
             $oCover = null;
         }
 
+        $lCourses = \DB::table('uni_courses')
+                        ->where([['is_deleted', 0],['module_id', $oCourse->module_id], ['id_course', '!=', $id]])
+                        ->get();
+
         return view('mgr.courses.edit')->with('title', $title)
                                         ->with('updateRoute', $this->updateRoute)
                                         ->with('oCourse', $oCourse)
                                         ->with('lContents', $lContents)
                                         ->with('oCover', $oCover)
-                                        ->with('sequences', $seq);
+                                        ->with('sequences', $seq)
+                                        ->with('lCourses', $lCourses);
     }
 
     public function update(Request $request, $id)
@@ -205,6 +217,7 @@ class CoursesController extends Controller
             $oCourse->course = $request->course;
             $oCourse->course_key = $request->course_key;
             $oCourse->completion_days = $request->completion_days;
+            $oCourse->pre_course_id = $request->pre_course;
             $oCourse->university_points = $request->university_points;
             $oCourse->description = $request->description;
             $oCourse->objectives = $request->objectives;

@@ -12,6 +12,8 @@ use App\Utils\TakeUtils;
 use App\Uni\AssignmentControl;
 use App\Uni\Assignment;
 use App\Uni\KnowledgeArea;
+use App\Uni\ModuleControl;
+use App\Uni\CourseControl;
 use App\Adm\Organization;
 use App\Adm\Company;
 use App\Adm\Branch;
@@ -270,6 +272,74 @@ class AssignmentsController extends Controller
 
                 $oAssignment->save();
 
+                $lModules = \DB::table('uni_modules')
+                                ->where([['is_deleted', 0],['knowledge_area_id', $oAssignment->knowledge_area_id]])
+                                ->orderBy('id_module')
+                                ->get();
+                    
+                foreach($lModules as $module){
+                    //crea modulo control
+                    $dates = $this->getDatesModule($lModules, $module, $oAssignment->dt_assignment);
+                    $closeDate = Carbon::parse($dates[0]);
+                    $openDate = Carbon::parse($dates[1]);
+                    $assignDate = Carbon::parse($oAssignment->dt_assignment);
+                    $assignDateEnd = Carbon::parse($oAssignment->dt_end);
+
+                    if($closeDate->gt($assignDateEnd)){
+                        \DB::rollBack();
+                        
+                        return json_encode([
+                            'success' => false,
+                            'message' => 'El rango de fechas de los módulos es superior al rango de fecha del cuadrante',
+                            'icon' => 'error']);
+                    }
+
+                    $oModuleControl = new ModuleControl();
+                    $oModuleControl->assignment_id = $oAssignment->id_assignment;
+                    $oModuleControl->dt_close = $closeDate->format('Y-m-d');
+                    $oModuleControl->dt_open = $openDate->format('Y-m-d');
+                    $oModuleControl->module_n_id = $module->id_module;
+                    $oModuleControl->student_id = $oAssignment->student_id;
+                    $oModuleControl->is_deleted = false;
+                    $oModuleControl->created_by = \Auth::id();
+                    $oModuleControl->updated_by = \Auth::id();
+
+                    $oModuleControl->save();
+
+                    $lCourses = \DB::table('uni_courses')
+                                    ->where([['is_deleted', 0], ['module_id', $module->id_module]])
+                                    ->get();
+
+                    foreach($lCourses as $course){
+                        $courseDates = $this->getDatesCourse($lCourses, $course, $oModuleControl->dt_open);
+                        $courseCloseDate = Carbon::parse($courseDates[0]);
+                        $courseOpenDate = Carbon::parse($courseDates[1]);
+
+                        if($courseCloseDate->gt($closeDate)){
+                            \DB::rollBack();
+                            
+                            return json_encode([
+                                'success' => false,
+                                'message' => 'El rango de fechas de los cursos es superior al rango de fecha del módulo '.$module->module,
+                                'icon' => 'error']);
+                        }
+
+                        $oCourseControl = new CourseControl();
+                        $oCourseControl->assignment_id = $oAssignment->id_assignment;
+                        $oCourseControl->dt_close = $courseCloseDate->format('Y-m-d');
+                        $oCourseControl->dt_open = $courseOpenDate->format('Y-m-d');
+                        $oCourseControl->course_n_id = $course->id_course;
+                        $oCourseControl->module_n_id = $course->module_id;
+                        $oCourseControl->student_id = $oAssignment->student_id;
+                        $oCourseControl->is_deleted = false;
+                        $oCourseControl->created_by = \Auth::id();
+                        $oCourseControl->updated_by = \Auth::id();
+
+                        $oCourseControl->save();
+                    }
+                }
+
+
                 $lAssigns[] = $oAssignment;
             }
 
@@ -312,11 +382,147 @@ class AssignmentsController extends Controller
 
     public function delete($id)
     {
-        Assignment::where('id_assignment', $id)
-            ->update(['is_deleted' => true,
-            'updated_by_id' => \Auth::id()]);
+        try {
+            \DB::beginTransaction();
+
+            Assignment::where('id_assignment', $id)
+                    ->update(['is_deleted' => true, 'updated_by_id' => \Auth::id()]);
+
+            ModuleControl::where('assignment_id', $id)
+                        ->update(['is_deleted' => true, 'updated_by' => \Auth::id()]);
+
+            CourseControl::where('assignment_id', $id)
+                        ->update(['is_deleted' => true, 'updated_by' => \Auth::id()]);
+
+            \DB::commit();
+        }
+        catch (\Throwable $th) {
+            \DB::rollBack();
+        }
 
         return json_encode("OK");
     }
 
+    public function getDatesModule($lModules, $module, $assign_date){
+        $days = $module->completion_days;
+        $oModule = $module;
+        if (!is_null($oModule->pre_module_id)) {
+            foreach($lModules as $m){
+                $oModule = $lModules->where('id_module', $oModule->pre_module_id)->first();
+                $days = $days + $oModule->completion_days;
+                if(is_null($oModule->pre_module_id)){
+                    break;
+                }
+            }
+        }
+
+        $closeDate = Carbon::parse($assign_date);
+        $closeDate->addDays($days);
+        $openDate = clone $closeDate;
+        $closeDate->subDay();
+        $openDate->subDays($module->completion_days);
+
+        return [$closeDate->format('Y-m-d'), $openDate->format('Y-m-d')];
+    }
+
+    public function getDatesCourse($lCourses, $course, $oModuleControl_dt_open){
+        $days = $course->completion_days;
+        $oCourse = $course;
+        if (!is_null($oCourse->pre_course_id)) {
+            foreach($lCourses as $c){
+                $oCourse = $lCourses->where('id_course', $oCourse->pre_course_id)->first();
+                $days = $days + $oCourse->completion_days;
+                if(is_null($oCourse->pre_course_id)){
+                    break;
+                }
+            }
+        }
+
+        $closeDate = Carbon::parse($oModuleControl_dt_open);
+        $closeDate->addDays($days);
+        $openDate = clone $closeDate;
+        $closeDate->subDay();
+        $openDate->subDays($course->completion_days);
+
+        return [$closeDate->format('Y-m-d'), $openDate->format('Y-m-d')];
+    }
+
+    public function indexAssignmentModules($id){
+        $lModules = \DB::table('uni_assignments_module_control as amc')
+                        ->leftJoin('uni_modules as m', 'm.id_module', '=', 'amc.module_n_id')
+                        ->leftJoin('users as u', 'u.id', '=', 'amc.student_id')
+                        ->select('amc.*', 'm.module', 'u.full_name as student')
+                        ->where([['amc.assignment_id', $id], ['amc.is_deleted', 0]])
+                        ->get();
+
+        return view('mgr.assignments.modulesAssignments')->with('lModules', $lModules)
+                                                        ->with('updateModule', route('assignments.modules.update', ['id' => $id]));
+    }
+
+    public function indexAssignmentCourses($id, $idModule){
+        $lCourses = \DB::table('uni_assignments_courses_control as acc')
+                        ->leftJoin('uni_courses as c', 'c.id_course', '=', 'acc.course_n_id')
+                        ->leftJoin('users as u', 'u.id', '=', 'acc.student_id')
+                        ->select('acc.*', 'c.course', 'u.full_name as student')
+                        ->where([['acc.assignment_id', $id], ['acc.is_deleted', 0]])
+                        ->where('acc.module_n_id', $idModule)
+                        ->get();
+
+        return view('mgr.assignments.coursesAssignments')->with('lCourses', $lCourses)
+                                                        ->with('updateCourse', route('assignments.courses.update', ['id' => $id]));
+    }
+
+    public function updateAssignmentModule(Request $request)
+    {
+        $moduleControl = ModuleControl::find($request->id_assignment);
+
+        $oAssigment = Assignment::find($moduleControl->assignment_id);
+
+        $dtOpenModule = Carbon::parse($request->dt_assignment);
+        $dtOpenAssigment = Carbon::parse($oAssigment->dt_assigment);
+        $dtEndModule = Carbon::parse($request->dt_end);
+        $dtEndAssigment = Carbon::parse($oAssigment->dt_end);
+
+        if($dtEndModule->gt($dtEndAssigment) || $dtOpenModule->lt($dtOpenAssigment) || $dtOpenModule->gt($dtEndModule)){
+            return json_encode([
+                'success' => false,
+                'message' => 'El rango de fecha seleccionado no se encuentra entre el rango de fecha del cuadrante',
+                'icon' => 'error']);
+        }
+
+
+        $moduleControl->dt_open =  $request->dt_assignment;
+        $moduleControl->dt_close =  $request->dt_end;
+
+        $moduleControl->update();
+
+        return;
+    }
+
+    public function updateAssignmentCourse(Request $request)
+    {
+        $courseControl = CourseControl::find($request->id_assignment);
+
+        $oAssigment = ModuleControl::where([['assignment_id', $courseControl->assignment_id], ['module_n_id', $courseControl->module_n_id], ['is_deleted', 0]])->first();
+
+        $dtOpenCourse = Carbon::parse($request->dt_assignment);
+        $dtOpenAssigment = Carbon::parse($oAssigment->dt_open);
+        $dtEndCourse = Carbon::parse($request->dt_end);
+        $dtEndAssigment = Carbon::parse($oAssigment->dt_close);
+
+        if($dtEndCourse->gt($dtEndAssigment) || $dtOpenCourse->lt($dtOpenAssigment) || $dtOpenCourse->gt($dtEndCourse)){
+            return json_encode([
+                'success' => false,
+                'message' => 'El rango de fecha seleccionado no se encuentra entre el rango de fecha del módulo',
+                'icon' => 'error']);
+        }
+
+
+        $courseControl->dt_open =  $request->dt_assignment;
+        $courseControl->dt_close =  $request->dt_end;
+
+        $courseControl->update();
+
+        return;
+    }
 }

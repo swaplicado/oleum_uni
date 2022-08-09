@@ -276,8 +276,13 @@ var app = new Vue({
 
                     $('#studentsModal').modal('hide');
 
-                    SGui.showOk();
-                    window.location.replace(this.oData.indexRoute);
+                    if(res.success == undefined){
+                        SGui.showOk();
+                        window.location.replace(this.oData.indexRoute);
+                    } else{
+                        SGui.showMessage('Error',  res.message, res.icon);
+                    }
+
                 })
                 .catch(function(error) {
                     console.log(error);

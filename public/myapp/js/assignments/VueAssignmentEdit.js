@@ -31,8 +31,13 @@ var app = new Vue({
 
                     $('#editAssignmentModal').modal('hide');
 
-                    SGui.showOk();
-                    location.reload();
+                    if(res.success == undefined){
+                        SGui.showOk();
+                        location.reload();
+                    } else{
+                        SGui.showMessage('Error',  res.message, res.icon);
+                    }
+
                 })
                 .catch(function(error) {
                     console.log(error);

@@ -140,6 +140,7 @@
                 <thead>
                     <tr>
                         <th>Módulo</th>
+                        <th>Duración (días)</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>
@@ -153,6 +154,7 @@
                     @foreach ($lModules as $module)
                         <tr>
                             <td>{{ $module->module }}</td>
+                            <td>{{ $module->completion_days }}</td>
                             <td>{{ $module->description }}</td>
                             <td>{{ $module->seq_code }}</td>
                             <td>
@@ -190,6 +192,7 @@
                 <tfoot>
                     <tr>
                         <th>Módulo</th>
+                        <th>Duración (días)</th>
                         <th>Descripción</th>
                         <th>Secuencia</th>
                         <th>Estatus</th>

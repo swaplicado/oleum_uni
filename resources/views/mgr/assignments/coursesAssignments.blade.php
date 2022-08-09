@@ -56,76 +56,40 @@
 </script>
 <script>
     function GlobalData () {
-            this.updateRoute = <?php echo json_encode( route($updateRoute) ) ?>;
+            this.updateRoute = <?php echo json_encode( $updateCourse ) ?>;
             this.deleteRoute = <?php echo json_encode( "" ) ?>;
     }
 
     var oServerData = new GlobalData();
 </script>
-<script>
-    $(function() {
-        $('input[name="daterange"]').daterangepicker({
-        opens: 'left'
-        }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        });
-    });
-</script>
 @endsection
 
 @section('content')
-    @section('content_title', $title)
+    @section('content_title', 'Cursos')
     <div class="row" id="indexAssignmentsApp">
         <div class="col-12">
-            <a id="rightnew" href="{{ route($newRoute) }}" class="btn btn-success">
-                Nuevo<i class='bx bx-plus'></i>
-            </a>
-            <br>
-            <br>
-            <form action="{{ route('assignments.index') }}">
-                <div class="row justify-content-end">
-                    <div class="col-11 col-md-3">
-                        <input size="24" class="form-control" type="text" name="daterange" value="{{ $daterange }}" />
-                    </div>
-                    <div class="col-1">
-                        <button class="btn btn-primary btn-sm" type="submit"><i class='bx bx-search-alt bx-sm'></i></button>
-                    </div>
-                </div>
-            </form>
             <div class="row">
                 <div class="col-md-12">
                     <table id="assignments_table" class="display stripe hover row-border order-column" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Estudiante</th>
-                                <th>Departamento</th>
-                                <th>Cuadrante</th>
-                                <th>Fecha de asignación</th>
+                                <th>Curso</th>
+                                <th>Fecha de apertura</th>
                                 <th>Fecha límite</th>
-                                <th>Terminada</th>
-                                <th>Calif.</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($lAssignments as $oAssign)
+                            @foreach ($lCourses as $course)
                                 <tr>
-                                    <td>{{ $oAssign->student }}</td>
-                                    <td>{{ $oAssign->department }}</td>
-                                    <td>{{ $oAssign->ka }}</td>
-                                    <td>{{ $oAssign->dt_assignment }}</td>
-                                    <td>{{ $oAssign->dt_end }}</td>
-                                    <td>{{ $oAssign->is_over ? 'SÍ' : 'NO' }}</td>
-                                    <td>{{ $oAssign->grade > 0 ? $oAssign->grade : '' }}</td>
+                                    <td>{{ $course->student }}</td>
+                                    <td>{{ $course->course }}</td>
+                                    <td>{{ $course->dt_open }}</td>
+                                    <td>{{ $course->dt_close }}</td>
                                     <td style="text-align: center">
-                                        <button class="btn btn-info" v-on:click="editAssignment('{{ $oAssign->dt_assignment }}', '{{ $oAssign->dt_end }}', '{{ $oAssign->student }}', '{{ $oAssign->id_assignment }}')">
+                                        <button class="btn btn-info" v-on:click="editAssignment('{{ $course->dt_open }}', '{{ $course->dt_close }}', '{{ $course->student }}', '{{ $course->id_course_control }}')">
                                             Editar <i class='bx bxs-edit-alt'></i>
-                                        </button>
-                                        <a class="btn btn-info" href="{{ route('assignments.modules', ['id' => $oAssign->id_assignment]) }}">
-                                            Módulos <i class='bx bxs-category'></i>
-                                        </a>
-                                        <button class="btn btn-danger" v-on:click="deleteAssignment('{{ $oAssign->id_assignment }}', '{{ route($deleteRoute, $oAssign->id_assignment) }}')">
-                                            Borrar <i class='bx bx-x'></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -134,12 +98,9 @@
                         <tfoot>
                             <tr>
                                 <th>Estudiante</th>
-                                <th>Departamento</th>
-                                <th>Cuadrante</th>
-                                <th>Fecha de asignación</th>
+                                <th>Curso</th>
+                                <th>Fecha de apertura</th>
                                 <th>Fecha límite</th>
-                                <th>Terminada</th>
-                                <th>Calif.</th>
                                 <th>Acciones</th>
                             </tr>
                         </tfoot>
