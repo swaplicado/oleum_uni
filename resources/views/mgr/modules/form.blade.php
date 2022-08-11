@@ -19,7 +19,7 @@
         <input type="number" value="{{ old('completion_days', $oModule->completion_days ?? '') }}" class="form-control" id="completion_days" name="completion_days">
     </div>
     <div class="col-md-6">
-        <label for="pre_module" class="form-label">Módulo secuencial:</label>
+        <label for="pre_module" class="form-label">Módulo anterior:</label>
         <select class="select2class form-control" name="pre_module">
             <option value="">Ninguno</option>
             @foreach ($lModules as $module)
