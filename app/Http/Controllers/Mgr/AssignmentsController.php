@@ -184,6 +184,7 @@ class AssignmentsController extends Controller
                 $lStudents = \DB::table('users AS u')
                                 ->join('adm_jobs AS j', 'u.job_id', '=', 'j.id_job')
                                 ->where('j.department_id', $request->department)
+                                ->where('u.is_deleted', false)
                                 ->select('u.id', 'u.num_employee', 'u.full_name')
                                 ->orderBy('full_name', 'ASC')
                                 ->get();
@@ -199,6 +200,7 @@ class AssignmentsController extends Controller
                 $lStudents = \DB::table('users AS u')
                                 ->join('adm_branches AS b', 'u.branch_id', '=', 'b.id_branch')
                                 ->where('b.company_id', $request->company)
+                                ->where('u.is_deleted', false)
                                 ->select('u.id', 'u.num_employee', 'u.full_name')
                                 ->orderBy('full_name', 'ASC')
                                 ->get();
@@ -208,6 +210,7 @@ class AssignmentsController extends Controller
                                 ->join('adm_branches AS b', 'u.branch_id', '=', 'b.id_branch')
                                 ->join('adm_companies AS c', 'b.company_id', '=', 'c.id_company')
                                 ->where('c.organization_id', $request->organization)
+                                ->where('u.is_deleted', false)
                                 ->select('u.id', 'u.num_employee', 'u.full_name')
                                 ->orderBy('full_name', 'ASC')
                                 ->get();
