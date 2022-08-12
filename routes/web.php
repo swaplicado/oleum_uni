@@ -143,7 +143,8 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::post('/assignments', 'AssignmentsController@store')->name('assignments.store');
         Route::delete('/assignments/delete/{id}', 'AssignmentsController@delete')->name('assignments.delete');
         Route::put('/assignments/updateassignment', 'AssignmentsController@updateAssignment')->name('assignments.updateassignment');
-
+        Route::post('/assignments/getDurationDays', 'AssignmentsController@getDurationDays')->name('assignments.getDurationDays');
+        
         Route::get('/assignments/scheduled', 'ScheduledAssignmentsController@index')->name('assignments.scheduled.index');
         Route::get('/assignments/scheduled/create', 'ScheduledAssignmentsController@create')->name('assignments.scheduled.create');
         Route::post('/assignments/scheduled', 'ScheduledAssignmentsController@store')->name('assignments.scheduled.store');

@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <label for="pre_course" class="form-label">Curso secuencial:</label>
+        <label for="pre_course" class="form-label">Curso anterior:</label>
         <select class="select2class form-control" name="pre_course">
             <option value="">Ninguno</option>
             @foreach ($lCourses as $course)

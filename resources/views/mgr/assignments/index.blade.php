@@ -119,13 +119,13 @@
                                     <td>{{ $oAssign->grade > 0 ? $oAssign->grade : '' }}</td>
                                     <td style="text-align: center">
                                         <button class="btn btn-info" v-on:click="editAssignment('{{ $oAssign->dt_assignment }}', '{{ $oAssign->dt_end }}', '{{ $oAssign->student }}', '{{ $oAssign->id_assignment }}')">
-                                            Editar <i class='bx bxs-edit-alt'></i>
+                                            <i class='bx bxs-edit-alt'></i>
                                         </button>
                                         <a class="btn btn-info" href="{{ route('assignments.modules', ['id' => $oAssign->id_assignment]) }}">
-                                            Módulos <i class='bx bxs-category'></i>
+                                            <i class='bx bxs-category'></i>
                                         </a>
                                         <button class="btn btn-danger" v-on:click="deleteAssignment('{{ $oAssign->id_assignment }}', '{{ route($deleteRoute, $oAssign->id_assignment) }}')">
-                                            Borrar <i class='bx bx-x'></i>
+                                            <i class='bx bx-x'></i>
                                         </button>
                                     </td>
                                 </tr>

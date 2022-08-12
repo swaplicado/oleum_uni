@@ -36,6 +36,7 @@ var app = new Vue({
         lCompanies: oServerData.lCompanies,
         lOrganizations: oServerData.lOrganizations,
         type_sel: "Seleccione estudiante",
+        durationDays: 0,
     },
     mounted() {
         let self = this;
@@ -46,6 +47,7 @@ var app = new Vue({
             })
             .on('select2:select', function (e){
                 self.kaId = e.params.data.id;
+                self.getDurationDays(self.kaId);
             });
         $('#selec_iAssignmentBy')
             .select2({ 
@@ -288,6 +290,23 @@ var app = new Vue({
                     console.log(error);
                     SGui.showError(error);
                 });
+        },
+
+        getDurationDays(ka_id){
+            axios.post(oServerData.durationRoute, {
+                'ka': ka_id,
+            })
+            .then(response => {
+                this.durationDays = response.data;
+                this.setDurationDays();
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+        },
+
+        setDurationDays(){
+            this.dtEnd = moment(this.dtStart, 'YYYY-MM-DD').add(this.durationDays, 'days').format('YYYY-MM-DD');
         }
     },
 })

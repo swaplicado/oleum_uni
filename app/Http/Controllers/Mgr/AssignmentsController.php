@@ -146,6 +146,8 @@ class AssignmentsController extends Controller
                                         ->get();
         $lStudents->prepend([ 'id' => '', 'text' => '']);
 
+        $routeDurationDays = route('assignments.getDurationDays');
+
         return view("mgr.assignments.create")->with('title', "Asignación de cuadrante")
                                             ->with('lKAreas', $lKAreas)
                                             ->with('lAssignBy', $lAssignBy)
@@ -157,7 +159,8 @@ class AssignmentsController extends Controller
                                             ->with('lStudents', $lStudents)
                                             ->with('studentsRoute', 'assignments.getstudents')
                                             ->with('indexRoute', 'assignments.index')
-                                            ->with('storeRoute', $this->storeRoute);
+                                            ->with('storeRoute', $this->storeRoute)
+                                            ->with('durationRoute', $routeDurationDays);
     }
 
     public function getStudents(Request $request)
@@ -524,5 +527,28 @@ class AssignmentsController extends Controller
         $courseControl->update();
 
         return;
+    }
+
+    public function getDurationDays(Request $request){
+        $lModules = \DB::table('uni_modules AS mo')
+                    ->join('uni_knowledge_areas AS ka', 'mo.knowledge_area_id', '=', 'ka.id_knowledge_area')
+                    ->join('sys_element_status AS es', 'mo.elem_status_id', '=', 'es.id_element_status')
+                    ->join('sys_sequences AS seq', 'mo.sequence_id', '=', 'seq.id_sequence')
+                    ->select([
+                            'mo.id_module as id',
+                            'mo.module as text',
+                            'mo.completion_days'
+                            ])
+                    ->where('mo.is_deleted', 0)
+                    ->where('ka.is_deleted', 0)
+                    ->where('knowledge_area_id', $request->ka)
+                    ->get();
+
+        $days = 0;
+        foreach($lModules as $module){
+            $days = $days + $module->completion_days;
+        }
+
+        return json_encode($days);
     }
 }

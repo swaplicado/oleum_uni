@@ -3,6 +3,7 @@
 @section('scripts_section')
 <script type="text/javascript">
     function GlobalData () {
+            this.durationRoute = <?php echo json_encode( $durationRoute ) ?>;
             this.studentsRoute = <?php echo json_encode( route($studentsRoute) ) ?>;
             this.storeRoute = <?php echo json_encode( route($storeRoute) ) ?>;
             this.indexRoute = <?php echo json_encode( route($indexRoute) ) ?>;
