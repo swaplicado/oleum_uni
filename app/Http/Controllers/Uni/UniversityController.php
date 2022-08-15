@@ -92,7 +92,7 @@ class UniversityController extends Controller
                                             ['is_deleted', 0]
                                         ])->first();
 
-        if(Carbon::parse($oModuleControl->dt_close)->lt(Carbon::now())){
+        if(Carbon::parse($oModuleControl->dt_close)->lte(Carbon::now())){
             return redirect(route('home'))->with(['message' => 'El módulo está cerrado', 'icon' => 'error']);
         }
 
@@ -190,7 +190,7 @@ class UniversityController extends Controller
                                             ['is_deleted', 0]
                                         ])->first();
                                         
-        if(Carbon::parse($oModuleControl->dt_close)->lt(Carbon::now())){
+        if(Carbon::parse($oModuleControl->dt_close)->lte(Carbon::now())){
             return redirect(route('home'))->with(['message' => 'El módulo está cerrado', 'icon' => 'error']);
         }
 
