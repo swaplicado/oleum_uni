@@ -485,7 +485,7 @@ class AssignmentsController extends Controller
         $oAssigment = Assignment::find($moduleControl->assignment_id);
 
         $dtOpenModule = Carbon::parse($request->dt_assignment);
-        $dtOpenAssigment = Carbon::parse($oAssigment->dt_assigment);
+        $dtOpenAssigment = Carbon::parse($oAssigment->dt_assignment);
         $dtEndModule = Carbon::parse($request->dt_end);
         $dtEndAssigment = Carbon::parse($oAssigment->dt_end);
 
