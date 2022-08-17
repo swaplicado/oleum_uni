@@ -313,7 +313,9 @@ class UniversityController extends Controller
                                         ->with('aGrade', $aGrade)
                                         ->with('enableReview', $enableReview)
                                         ->with('lReviews', $lReviews)
-                                        ->with('takeGrouper', $takeGrouper);
+                                        ->with('takeGrouper', $takeGrouper)
+                                        ->with('Module', $oCourse->module_id)
+                                        ->with('Assignment', $assignment);
     }
 
     public function playSubtopic($subtopic = 0, $takeGrouper = 0, $idAssignment = 0)

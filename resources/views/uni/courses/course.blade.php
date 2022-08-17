@@ -85,6 +85,14 @@
                             </div>
                         @endif
                     @endif
+                    <br>
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <a href="{{route('uni.courses.index', ['assignment' => $Assignment, 'module' => $Module])}}" type="button" style="width: 100%" class="btn btn-secondary">
+                                Tomar otro curso
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="accordion" id="accordionThemes">
