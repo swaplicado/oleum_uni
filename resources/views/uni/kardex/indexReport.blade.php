@@ -111,9 +111,6 @@
                             {id: 'cuadrante', text: 'Cuadrante'},
                             {id: 'modulo', text: 'Módulo'},
                             {id: 'curso', text: 'Curso'},
-                            {id: 'tema', text: 'Tema'},
-                            {id: 'subtema', text: 'Subtema'},
-                            {id: 'todo', text: 'Todo'},
                         ];
         
         this.lNivel = [

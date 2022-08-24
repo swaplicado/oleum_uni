@@ -14,6 +14,8 @@ use App\Uni\Course;
 use App\Uni\EduContent;
 use App\Uni\ElementContent;
 
+use App\Utils\assignmentsUtils;
+
 class CoursesController extends Controller
 {
     protected $newRoute;
@@ -139,6 +141,8 @@ class CoursesController extends Controller
             $oCourse->updated_by_id = \Auth::id();
 
             \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
 
             $oCourse->save();
 
@@ -155,10 +159,21 @@ class CoursesController extends Controller
                 $elem->save();
             }
 
+            if(!assignmentsUtils::validateTotalDaysInModule($oCourse->module_id)){
+                throw new \Exception("El número total de días del curso '".$oCourse->course."' es superior al número de días del módulo");
+            }
+
+            if(assignmentsUtils::getCourseAssignments($request->module_id) > 0){
+                $ka_id = assignmentsUtils::getCuadranteIdFromModule($request->module_id);
+                assignmentsUtils::setModuleAssignments($ka_id);
+            }
+
             \DB::commit();
+            $session->commitTransaction();
         }
         catch (\Throwable $th) {
             \DB::rollBack();
+            $session->abortTransaction();
             return back()->withError($th->getMessage())->withInput();
         }
 
@@ -244,7 +259,16 @@ class CoursesController extends Controller
                 $elem->updated_by_id = \Auth::id();
     
                 $elem->save();
-            }                            
+            }
+
+            if(!assignmentsUtils::validateTotalDaysInModule($oCourse->module_id)){
+                throw new \Exception("El número total de días del curso '".$oCourse->course."' es superior al número de días del módulo");
+            }
+
+            if(assignmentsUtils::getCourseAssignments($oCourse->module_id) > 0){
+                $ka_id = assignmentsUtils::getCuadranteIdFromModule($oCourse->module_id);
+                assignmentsUtils::setModuleAssignments($ka_id);
+            }
 
             \DB::commit();
         }

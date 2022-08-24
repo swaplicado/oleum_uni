@@ -9,6 +9,7 @@ use App\Uni\Question;
 use App\Uni\Answer;
 use App\Uni\SubTopic;
 
+use App\Utils\assignmentsUtils;
 class QuestionsController extends Controller
 {
      /**
@@ -55,23 +56,37 @@ class QuestionsController extends Controller
 
         $oQuestion = new Question();
 
-        $oQuestion->question = $question->question;
-        $oQuestion->number_answers = $question->number_answers;
-        $oQuestion->answer_feedback = $question->answer_feedback;
-        $oQuestion->is_deleted = false;
-        $oQuestion->answer_id = 0;
-        $oQuestion->subtopic_id = $question->subtopic_id;
-        $oQuestion->created_by_id = \Auth::id();
-        $oQuestion->updated_by_id = \Auth::id();
+        try {
+            \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
 
-        $oQuestion->save();
-
-        $answer_id = $this->saveAnswers($oQuestion, $question->lAnswers, $question->answer);
-
-        $oQuestion->answer_id = $answer_id;
-
-        $oQuestion->save();
-
+            $oQuestion->question = $question->question;
+            $oQuestion->number_answers = $question->number_answers;
+            $oQuestion->answer_feedback = $question->answer_feedback;
+            $oQuestion->is_deleted = false;
+            $oQuestion->answer_id = 0;
+            $oQuestion->subtopic_id = $question->subtopic_id;
+            $oQuestion->created_by_id = \Auth::id();
+            $oQuestion->updated_by_id = \Auth::id();
+    
+            $oQuestion->save();
+    
+            $answer_id = $this->saveAnswers($oQuestion, $question->lAnswers, $question->answer);
+    
+            $oQuestion->answer_id = $answer_id;
+    
+            $oQuestion->save();
+    
+            assignmentsUtils::upQuestions($oQuestion);
+            
+            \DB::commit();
+            $session->commitTransaction();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            $session->abortTransaction();
+        }
+        
         $oQuestion->answer_text = (Answer::where('id_answer', $answer_id)->select('answer')->get())[0]->answer;
 
         $oQuestion->lAnswers = Answer::where('question_id', $oQuestion->id_question)
@@ -87,6 +102,8 @@ class QuestionsController extends Controller
 
         try {
             \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
             
             $oQuestion = Question::find($question->id_question);
 
@@ -99,10 +116,14 @@ class QuestionsController extends Controller
 
             $oQuestion->save();
 
+            assignmentsUtils::upQuestions($oQuestion);
+
             \DB::commit();
+            $session->commitTransaction();
         }
         catch (\Throwable $th) {
             \DB::rollBack();
+            $session->abortTransaction();
             return $th;
         }
 
@@ -151,7 +172,22 @@ class QuestionsController extends Controller
      */
     public function delete(Request $request)
     {
-        $res = Question::where('id_question', $request->question)->update(['is_deleted' => true]);
+        try {
+            \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
+
+            $oQuestion = Question::find($request->question);
+            $res = $oQuestion->update(['is_deleted' => true]);
+
+            assignmentsUtils::upQuestions($oQuestion);
+
+            \DB::commit();
+            $session->commitTransaction();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            $session->abortTransaction();
+        }
 
         return json_encode($res);
     }
@@ -166,7 +202,27 @@ class QuestionsController extends Controller
     {
         $id = $request->answer;
 
-        $res = Answer::where('id_answer', $id)->update(['is_deleted' => true]);
+        $oQuestion = \DB::table('uni_answers as a')
+                        ->join('uni_questions as q', 'q.id_question', '=', 'a.question_id')
+                        ->where('a.id_answer', $id)
+                        ->select('q.*')
+                        ->first();
+
+        try {
+            \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
+
+            $res = Answer::where('id_answer', $id)->update(['is_deleted' => true]);
+
+            assignmentsUtils::upQuestions($oQuestion);
+
+            \DB::commit();
+            $session->commitTransaction();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            $session->abortTransaction();
+        }
 
         return json_encode($res);
     }

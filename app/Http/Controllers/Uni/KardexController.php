@@ -16,7 +16,12 @@ use App\Uni\Module;
 use App\Uni\Course;
 use App\Uni\Topic;
 use App\Uni\SubTopic;
-
+use App\Uni\mQuadrant;
+use App\Uni\mModule;
+use App\Uni\mCourse;
+use App\Uni\mTopic;
+use App\Uni\mSubtopic;
+use App\Uni\mTakedExams;
 class KardexController extends Controller
 {
     public function index($student = 0)
@@ -400,6 +405,289 @@ class KardexController extends Controller
                     'lJobs' => $lJobs, 'lStudent' => $lStudent]);
     }
 
+    public function generateMReporte(Request $request){
+        switch ($request->type_level) {
+            case 'organizacion':
+                $lUsers = \DB::table('users as u')
+                            ->join('adm_branches as ab', 'ab.id_branch', '=', 'u.branch_id')
+                            ->join('adm_companies as ac', 'ab.company_id', '=', 'ac.id_company')
+                            ->join('adm_organizations as ao', 'ac.organization_id', '=', 'ao.id_organization')
+                            ->where('ao.id_organization', $request->level)
+                            ->pluck('u.id');
+                break;
+            case 'empresa':
+                $lUsers = \DB::table('users as u') //no hay forma actual de obtener usuarios por empresa, se obtienen todos los usuarios en su lugar
+                            ->join('adm_branches as ab', 'ab.id_branch', '=', 'u.branch_id')
+                            ->join('adm_companies as ac', 'ab.company_id', '=', 'ac.id_company')
+                            ->where('ac.id_company', $request->level)
+                            ->pluck('u.id');
+                break;
+            case 'sucursal':
+                $lUsers = \DB::table('users as u')
+                            ->where('u.branch_id', $request->level)
+                            ->pluck('u.id');
+                break;
+            case 'departamento':
+                $lUsers = \DB::table('users as u')
+                            ->join('adm_jobs as aj', 'aj.id_job', '=', 'u.job_id')
+                            ->join('adm_departments as ad', 'aj.department_id', '=', 'ad.id_department')
+                            ->where('ad.id_department', $request->level)
+                            ->pluck('u.id');
+                break;
+            case 'puesto':
+                $lUsers = \DB::table('users as u')
+                            ->where('u.job_id', $request->level)
+                            ->pluck('u.id');
+                break;
+            case 'estudiante':
+                $lUsers = \DB::table('users as u')
+                            ->where('u.id', $request->level)
+                            ->pluck('u.id')
+                            ->toArray();
+                break;
+            default:
+                break;
+        }
+        $max_questions = 0;
+        switch ($request->tipo_elemento) {
+            case 'cuadrante':
+                $lAssignments = \DB::table('uni_assignments')
+                                    ->where('knowledge_area_id', $request->elemento)
+                                    ->whereIn('student_id', $lUsers)
+                                    ->where('is_deleted', 0)
+                                    ->whereBetween('dt_assignment', [$request->calendarStart, $request->calendarEnd])
+                                    ->pluck('id_assignment')
+                                    ->toArray();
+
+                $mQuadrants = mQuadrant::whereIn('assignment_id', $lAssignments)->get();
+                foreach($mQuadrants as $quadrantkey => $quadrant){
+                    
+                    $mModules = mModule::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                        ->where('quadrant_id', (Integer)$mQuadrants[$quadrantkey]->quadrant_id)
+                                        ->get();
+
+                    foreach($mModules as $modulekey => $module){
+                        $mCourses = mCourse::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                            ->where('module_id', (Integer)$mModules[$modulekey]->module_id)
+                                            ->get();
+
+                        foreach($mCourses as $courseKey => $course){
+                            $mTopics = mTopic::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                            ->where('course_id', (Integer)$mCourses[$courseKey]->course_id)
+                                            ->get();
+
+                            foreach($mTopics as $topicKey => $topic){
+                                $mSubtopic = mSubtopic::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                                    ->where('topic_id', (Integer)$mTopics[$topicKey]->topic_id)
+                                                    ->get();
+
+                                foreach($mSubtopic as $subtopicKey => $subtopic){
+                                    $mExam = mTakedExams::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                                        ->where('subtopic_id', (Integer)$mSubtopic[$subtopicKey]->subtopic_id)
+                                                        ->first();
+
+                                    $num_questions = ((object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE))->number_questions;
+                                    $max_questions < $num_questions ? $max_questions = $num_questions : '';
+                                    if(!is_null($mExam)){
+                                        $oExam = (object)$mExam->getAttributes();
+                                        $mSubtopic[$subtopicKey] = (object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE);
+                                        $mSubtopic[$subtopicKey]->exam = $oExam;
+                                        $mSubtopic[$subtopicKey]->exam->takedQuestions = json_decode($oExam->element_body, JSON_UNESCAPED_UNICODE);
+                                    } else {
+                                        $mSubtopic[$subtopicKey] = (object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE);
+                                        $mSubtopic[$subtopicKey]->exam = null;
+                                    }
+
+                                }
+
+                                $mTopics[$topicKey] = (object)json_decode($topic->element_body, JSON_UNESCAPED_UNICODE);
+                                $mTopics[$topicKey]->subtopics = $mSubtopic;
+                            }
+
+                            $mCourses[$courseKey] = (object)json_decode($course->element_body, JSON_UNESCAPED_UNICODE);
+                            $mCourses[$courseKey]->topics = $mTopics;
+                        }
+
+                        $mModules[$modulekey] = (object)json_decode($module->element_body, JSON_UNESCAPED_UNICODE);
+                        $mModules[$modulekey]->courses = $mCourses;
+                    }
+
+                    $student = \DB::table('adm_departments as d')
+                                        ->join('adm_jobs as j', 'j.department_id', '=', 'd.id_department')
+                                        ->join('users as u', 'u.job_id', '=', 'j.id_job')
+                                        ->where('u.id', $mQuadrants[$quadrantkey]->student_id)
+                                        ->select('u.full_name', 'd.department')
+                                        ->first();
+
+                    $mQuadrants[$quadrantkey] = (object)json_decode($quadrant->element_body, JSON_UNESCAPED_UNICODE);
+                    $mQuadrants[$quadrantkey]->modules = $mModules;
+                    $mQuadrants[$quadrantkey]->student_name = $student->full_name;
+                    $mQuadrants[$quadrantkey]->student_department = $student->department;
+                }
+                break;
+            case 'modulo':
+                $lAssignments = \DB::table('uni_assignments as a')
+                                    ->join('uni_modules as m', 'm.knowledge_area_id', '=', 'a.knowledge_area_id')
+                                    ->where('m.id_module', $request->elemento)
+                                    ->whereIn('a.student_id', $lUsers)
+                                    ->whereBetween('dt_assignment', [$request->calendarStart, $request->calendarEnd])
+                                    ->pluck('id_assignment')
+                                    ->toArray();
+
+                $mQuadrants = mQuadrant::whereIn('assignment_id', $lAssignments)->get();
+                foreach($mQuadrants as $quadrantkey => $quadrant){
+                    $mModules = mModule::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                        ->where('quadrant_id', (Integer)$mQuadrants[$quadrantkey]->quadrant_id)
+                                        ->where('module_id', (Integer)$request->elemento)
+                                        ->get();
+
+                    foreach($mModules as $modulekey => $module){
+                        $mCourses = mCourse::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                            ->where('module_id', (Integer)$mModules[$modulekey]->module_id)
+                                            ->get();
+
+                        foreach($mCourses as $courseKey => $course){
+                            $mTopics = mTopic::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                            ->where('course_id', (Integer)$mCourses[$courseKey]->course_id)
+                                            ->get();
+
+                            foreach($mTopics as $topicKey => $topic){
+                                $mSubtopic = mSubtopic::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                                    ->where('topic_id', (Integer)$mTopics[$topicKey]->topic_id)
+                                                    ->get();
+
+                                foreach($mSubtopic as $subtopicKey => $subtopic){
+                                    $mExam = mTakedExams::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                                        ->where('subtopic_id', (Integer)$mSubtopic[$subtopicKey]->subtopic_id)
+                                                        ->first();
+
+                                    $num_questions = ((object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE))->number_questions;
+                                    $max_questions < $num_questions ? $max_questions = $num_questions : '';
+                                    if(!is_null($mExam)){
+                                        $oExam = (object)$mExam->getAttributes();
+                                        $mSubtopic[$subtopicKey] = (object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE);
+                                        $mSubtopic[$subtopicKey]->exam = $oExam;
+                                        $mSubtopic[$subtopicKey]->exam->takedQuestions = json_decode($oExam->element_body, JSON_UNESCAPED_UNICODE);
+                                    } else {
+                                        $mSubtopic[$subtopicKey] = (object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE);
+                                        $mSubtopic[$subtopicKey]->exam = null;
+                                    }
+
+                                }
+
+                                $mTopics[$topicKey] = (object)json_decode($topic->element_body, JSON_UNESCAPED_UNICODE);
+                                $mTopics[$topicKey]->subtopics = $mSubtopic;
+                            }
+
+                            $mCourses[$courseKey] = (object)json_decode($course->element_body, JSON_UNESCAPED_UNICODE);
+                            $mCourses[$courseKey]->topics = $mTopics;
+                        }
+
+                        $mModules[$modulekey] = (object)json_decode($module->element_body, JSON_UNESCAPED_UNICODE);
+                        $mModules[$modulekey]->courses = $mCourses;
+                    }
+                    $student = \DB::table('adm_departments as d')
+                                    ->join('adm_jobs as j', 'j.department_id', '=', 'd.id_department')
+                                    ->join('users as u', 'u.job_id', '=', 'j.id_job')
+                                    ->where('u.id', $mQuadrants[$quadrantkey]->student_id)
+                                    ->select('u.full_name', 'd.department')
+                                    ->first();
+
+                    $mQuadrants[$quadrantkey] = (object)json_decode($quadrant->element_body, JSON_UNESCAPED_UNICODE);
+                    $mQuadrants[$quadrantkey]->modules = $mModules;
+                    $mQuadrants[$quadrantkey]->student_name = $student->full_name;
+                    $mQuadrants[$quadrantkey]->student_department = $student->department;
+                }
+                break;
+            case 'curso':
+                $lAssignments = \DB::table('uni_assignments as a')
+                                    ->join('uni_modules as m', 'm.knowledge_area_id', '=', 'a.knowledge_area_id')
+                                    ->join('uni_courses as c', 'c.module_id', '=', 'm.id_module')
+                                    ->where('c.id_course', $request->elemento)
+                                    ->whereIn('a.student_id', $lUsers)
+                                    ->whereBetween('dt_assignment', [$request->calendarStart, $request->calendarEnd])
+                                    ->pluck('id_assignment')
+                                    ->toArray();
+
+                $module_id = \DB::table('uni_modules as m')
+                                ->join('uni_courses as c', 'c.module_id', '=', 'm.id_module')
+                                ->where('c.id_course', $request->elemento)
+                                ->value('id_module');
+
+                $mQuadrants = mQuadrant::whereIn('assignment_id', $lAssignments)->get();
+                foreach($mQuadrants as $quadrantkey => $quadrant){
+                    $mModules = mModule::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                        ->where('quadrant_id', (Integer)$mQuadrants[$quadrantkey]->quadrant_id)
+                                        ->where('module_id', (Integer)$module_id)
+                                        ->get();
+
+                    foreach($mModules as $modulekey => $module){
+                        $mCourses = mCourse::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                            ->where('module_id', (Integer)$mModules[$modulekey]->module_id)
+                                            ->where('course_id', (Integer)$request->elemento)
+                                            ->get();
+
+                        foreach($mCourses as $courseKey => $course){
+                            $mTopics = mTopic::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                            ->where('course_id', (Integer)$mCourses[$courseKey]->course_id)
+                                            ->get();
+
+                            foreach($mTopics as $topicKey => $topic){
+                                $mSubtopic = mSubtopic::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                                    ->where('topic_id', (Integer)$mTopics[$topicKey]->topic_id)
+                                                    ->get();
+
+                                foreach($mSubtopic as $subtopicKey => $subtopic){
+                                    $mExam = mTakedExams::where('assignment_id', (Integer)$mQuadrants[$quadrantkey]->assignment_id)
+                                                        ->where('subtopic_id', (Integer)$mSubtopic[$subtopicKey]->subtopic_id)
+                                                        ->first();
+
+                                    $num_questions = ((object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE))->number_questions;
+                                    $max_questions < $num_questions ? $max_questions = $num_questions : '';
+                                    if(!is_null($mExam)){
+                                        $oExam = (object)$mExam->getAttributes();
+                                        $mSubtopic[$subtopicKey] = (object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE);
+                                        $mSubtopic[$subtopicKey]->exam = $oExam;
+                                        $mSubtopic[$subtopicKey]->exam->takedQuestions = json_decode($oExam->element_body, JSON_UNESCAPED_UNICODE);
+                                    } else {
+                                        $mSubtopic[$subtopicKey] = (object)json_decode($mSubtopic[$subtopicKey]->element_body, JSON_UNESCAPED_UNICODE);
+                                        $mSubtopic[$subtopicKey]->exam = null;
+                                    }
+
+                                }
+
+                                $mTopics[$topicKey] = (object)json_decode($topic->element_body, JSON_UNESCAPED_UNICODE);
+                                $mTopics[$topicKey]->subtopics = $mSubtopic;
+                            }
+
+                            $mCourses[$courseKey] = (object)json_decode($course->element_body, JSON_UNESCAPED_UNICODE);
+                            $mCourses[$courseKey]->topics = $mTopics;
+                        }
+
+                        $mModules[$modulekey] = (object)json_decode($module->element_body, JSON_UNESCAPED_UNICODE);
+                        $mModules[$modulekey]->courses = $mCourses;
+                    }
+
+                    $student = \DB::table('adm_departments as d')
+                                        ->join('adm_jobs as j', 'j.department_id', '=', 'd.id_department')
+                                        ->join('users as u', 'u.job_id', '=', 'j.id_job')
+                                        ->where('u.id', $mQuadrants[$quadrantkey]->student_id)
+                                        ->select('u.full_name', 'd.department')
+                                        ->first();
+
+                    $mQuadrants[$quadrantkey] = (object)json_decode($quadrant->element_body, JSON_UNESCAPED_UNICODE);
+                    $mQuadrants[$quadrantkey]->modules = $mModules;
+                    $mQuadrants[$quadrantkey]->student_name = $student->full_name;
+                    $mQuadrants[$quadrantkey]->student_department = $student->department;
+                }
+                break;
+            default:
+                break;
+        }
+
+        return view('uni.kardex.generatedReport', ['areas' => $mQuadrants, 'max_questions' => $max_questions]);
+    }
+
     public function generateReport(Request $request)
     {
         $lResult = \DB::table('uni_assignments AS a')
@@ -408,8 +696,10 @@ class KardexController extends Controller
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
                         ->leftJoin('users as u', 'u.id', '=', 'a.student_id')
                         ->where('c.elem_status_id', '>', config('csys.elem_status.EDIT'))
-                        ->where('a.dt_assignment', '>=', $request->calendarStart)
-                        ->where('a.dt_end', '<=', $request->calendarEnd);
+                        ->whereBetween('a.dt_assignment', [$request->calendarStart, $request->calendarEnd])
+                        ->whereBetween('a.dt_end', [$request->calendarStart, $request->calendarEnd]);
+                        // ->where('a.dt_assignment', '>=', $request->calendarStart)
+                        // ->where('a.dt_end', '<=', $request->calendarEnd);
         
         switch ($request->tipo_elemento) {
             case 'cuadrante':

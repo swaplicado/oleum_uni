@@ -9,23 +9,39 @@ use Illuminate\Database\QueryException;
 
 use App\Uni\SubTopic;
 
+use App\Utils\assignmentsUtils;
 class SubTopicsController extends Controller
 {
     public function store(Request $request)
     {
         $subtopic = json_decode($request->subtopic);
 
-        $oSubTopic = new SubTopic();
-        
-        $oSubTopic->subtopic = $subtopic->subtopic;
-        $oSubTopic->hash_id = hash('ripemd160', $oSubTopic->subtopic);
-        $oSubTopic->number_questions = $subtopic->number_questions;
-        $oSubTopic->is_deleted = false;
-        $oSubTopic->topic_id = $subtopic->topic_id;
-        $oSubTopic->created_by_id = \Auth::id();
-        $oSubTopic->updated_by_id = \Auth::id();
+        try {
+            \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
+    
+            $oSubTopic = new SubTopic();
+            
+            $oSubTopic->subtopic = $subtopic->subtopic;
+            $oSubTopic->hash_id = hash('ripemd160', $oSubTopic->subtopic);
+            $oSubTopic->number_questions = $subtopic->number_questions;
+            $oSubTopic->is_deleted = false;
+            $oSubTopic->topic_id = $subtopic->topic_id;
+            $oSubTopic->created_by_id = \Auth::id();
+            $oSubTopic->updated_by_id = \Auth::id();
+    
+            $oSubTopic->save();
+    
+            assignmentsUtils::createSubtopicMongo($oSubTopic);
+    
+            \DB::commit();
+            $session->commitTransaction();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            $session->abortTransaction();
+        }
 
-        $oSubTopic->save();
 
         return json_encode($oSubTopic);
     }
@@ -34,12 +50,21 @@ class SubTopicsController extends Controller
         $success = true;
 
         try {
-            DB::transaction(function () use ($id, $request) {
-                $oSubTopic = SubTopic::findOrFail($id);
-                $oSubTopic->subtopic = $request->name;
-                $oSubTopic->update();
-            });
-        } catch (QueryException $e) {
+            \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
+
+            $oSubTopic = SubTopic::findOrFail($id);
+            $oSubTopic->subtopic = $request->name;
+            $oSubTopic->update();
+
+            assignmentsUtils::upSubtopicMongo($oSubTopic);
+
+            \DB::commit();
+            $session->commitTransaction();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            $session->abortTransaction();
             $success = false;
         }
 

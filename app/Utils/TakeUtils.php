@@ -11,6 +11,11 @@ use App\Uni\Module;
 use App\Uni\Course;
 use App\Uni\Topic;
 use App\Uni\SubTopic;
+use App\Uni\mQuadrant;
+use App\Uni\mModule;
+use App\Uni\mCourse;
+use App\Uni\mTopic;
+use App\Uni\mSubtopic;
 
 class TakeUtils {
 
@@ -317,16 +322,16 @@ class TakeUtils {
                         ->where('m.elem_status_id', '>', config('csys.elem_status.EDIT'))
                         ->where('m.knowledge_area_id', $idArea)
                         // ->where('mc.dt_open', '<=', Carbon::now()->toDateString())
-                        // ->where('mc.is_deleted', 0)
+                        ->where('mc.is_deleted', 0)
                         // ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         // ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->groupBy('m.id_module')
                         ->get();
-                        
+
         foreach($lModules as $module){
-            $result = TakeUtils::getModulePercentCompleted($module->id_module, $idAsigment);
+            $result = TakeUtils::getModulePercentCompleted($module->id_module, $idAsigment, $student);
             $module->completed_percent = number_format($result[0]);
-            $module->grade = TakeUtils::isCourseApproved($module->id_module, $iStudent, $module->id_assignment, true);
+            $module->grade = TakeUtils::isModuleApproved($module->id_module, $iStudent, $module->id_assignment, true);
             $module->courses = $result[1];
             $assig_percent = $assig_percent + $module->completed_percent;
             $tot_mod = $tot_mod + 1;
@@ -358,35 +363,54 @@ class TakeUtils {
         $lCourses = \DB::table('uni_assignments AS a')
                         ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                         ->join('uni_modules AS m', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
+                        ->join('uni_assignments_courses_control as cc', 'cc.assignment_id', '=', 'a.id_assignment')
                         ->join('uni_courses AS c', 'm.id_module', '=', 'c.module_id')
                         ->select('c.*', 'a.id_assignment')
                         ->where('a.id_assignment', $idAssigment)
                         ->where('a.is_deleted', false)
                         ->where('a.student_id', $student)
                         ->where('m.is_deleted', false)
+                        ->where('cc.is_deleted', false)
                         ->where('c.is_deleted', false)
                         ->where('c.module_id', $idModule)
                         ->where('c.elem_status_id', '>', config('csys.elem_status.EDIT'))
+                        ->groupBy(['id_assignment', 'id_course'])
                         ->get();
 
         foreach ($lCourses as $course) {
             $course->grade = TakeUtils::isCourseApproved($course->id_course, $student, $course->id_assignment, true);
             $course->completed_percent = number_format(TakeUtils::getCoursePercentCompleted($course->id_course, $student, $course->id_assignment));
             
-            $course->lTopics = \DB::table('uni_topics AS t')
-                                    ->where('t.is_deleted', false)
-                                    ->where('t.course_id', $course->id_course)
+            // $course->lTopics = \DB::table('uni_topics AS t')
+            //                         ->where('t.is_deleted', false)
+            //                         ->where('t.course_id', $course->id_course)
+            //                         ->get();
+
+            $course->lTopics = mTopic::where('assignment_id', $idAssigment)
+                                    ->where('student_id', $student)
+                                    ->where('course_id', $course->id_course)
+                                    ->select('element_body')
                                     ->get();
 
-            foreach ($course->lTopics as $topic) {
+            foreach ($course->lTopics as $key => $topic) {
+                $topic = (object)json_decode($topic->element_body, JSON_UNESCAPED_UNICODE);
+                $course->lTopics[$key] = $topic;
                 $topic->grade = TakeUtils::isTopicApproved($topic->id_topic, $student, $course->id_assignment, true);
 
-                $topic->lSubTopics = \DB::table('uni_subtopics AS s')
-                                        ->where('s.is_deleted', false)
-                                        ->where('s.topic_id', $topic->id_topic)
+                // $topic->lSubTopics = \DB::table('uni_subtopics AS s')
+                //                         ->where('s.is_deleted', false)
+                //                         ->where('s.topic_id', $topic->id_topic)
+                //                         ->get();
+
+                $topic->lSubTopics = mSubtopic::where('assignment_id', $idAssigment)
+                                        ->where('student_id', $student)
+                                        ->where('topic_id', $topic->id_topic)
+                                        ->select('element_body')
                                         ->get();
 
-                foreach ($topic->lSubTopics as $subtopic) {
+                foreach ($topic->lSubTopics as $key => $subtopic) {
+                    $subtopic = (object)json_decode($subtopic->element_body, JSON_UNESCAPED_UNICODE);
+                    $topic->lSubTopics[$key] = $subtopic;
                     $subtopic->grade = TakeUtils::isSubtopicApproved($subtopic->id_subtopic, $student, $course->id_assignment, true);
                 }
             }
@@ -404,21 +428,38 @@ class TakeUtils {
 
     public static function getCoursePercentCompleted($iCourse, $student, $idAssignment)
     {
-        $subtopics = \DB::table('uni_topics AS top')
-                        ->join('uni_subtopics AS sub', 'top.id_topic', '=', 'sub.topic_id')
-                        ->where('top.course_id', $iCourse)
-                        ->where('top.is_deleted', false)
-                        ->where('sub.is_deleted', false)
-                        ->pluck('sub.id_subtopic');
+        $mTopics = mTopic::where([
+                                ['assignment_id', $idAssignment],
+                                ['course_id', $iCourse],
+                                ['student_id', (Integer)$student],
+                            ])->get();
+
+        $mTopicsIds = [];
+        foreach($mTopics as $topic){
+            $mTopicsIds[] = $topic->topic_id;
+        }                            
+        $mSubtopics =  mSubtopic::where([
+                                    ['assignment_id', $idAssignment],
+                                    ['student_id', (Integer)$student],
+                                ])
+                                ->whereIn('topic_id', $mTopicsIds)
+                                ->pluck('subtopic_id');
+
+        // $subtopics = \DB::table('uni_topics AS top')
+        //                 ->join('uni_subtopics AS sub', 'top.id_topic', '=', 'sub.topic_id')
+        //                 ->where('top.course_id', $iCourse)
+        //                 ->where('top.is_deleted', false)
+        //                 ->where('sub.is_deleted', false)
+        //                 ->pluck('sub.id_subtopic');
 
         $approved = 0;
-        foreach ($subtopics as $idSub) {
+        foreach ($mSubtopics as $idSub) {
             if (TakeUtils::isSubtopicApproved($idSub, $student, $idAssignment)) {
                 $approved++;
             }
         }
 
-        $total = count($subtopics);
+        $total = count($mSubtopics);
 
         return $total == 0 ? 0 : ($approved * 100 / $total);
     }

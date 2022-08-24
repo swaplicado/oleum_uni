@@ -14,6 +14,8 @@ use App\Uni\Course;
 use App\Uni\Topic;
 use App\Uni\SubTopic;
 
+use App\Utils\assignmentsUtils;
+
 class TopicsController extends Controller
 {
     protected $newRoute;
@@ -93,18 +95,33 @@ class TopicsController extends Controller
     public function store(Request $request)
     {
         $topic = json_decode($request->topic);
+        try {
+            \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
+    
+            $oTopic = new Topic();
+            
+            $oTopic->topic = $topic->topic;
+            $oTopic->hash_id = hash('ripemd160', $oTopic->topic);
+            $oTopic->is_deleted = false;
+            $oTopic->course_id = $topic->course_id;
+            $oTopic->sequence_id = $topic->secuence_id;
+            $oTopic->created_by_id = \Auth::id();
+            $oTopic->updated_by_id = \Auth::id();
+    
+            $oTopic->save();
+    
+            assignmentsUtils::createTopicsMongo($oTopic);
 
-        $oTopic = new Topic();
-        
-        $oTopic->topic = $topic->topic;
-        $oTopic->hash_id = hash('ripemd160', $oTopic->topic);
-        $oTopic->is_deleted = false;
-        $oTopic->course_id = $topic->course_id;
-        $oTopic->sequence_id = $topic->secuence_id;
-        $oTopic->created_by_id = \Auth::id();
-        $oTopic->updated_by_id = \Auth::id();
+            \DB::commit();
+            $session->commitTransaction();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            $session->abortTransaction();
 
-        $oTopic->save();
+            $oTopic = null;
+        }
 
         return json_encode($oTopic);
     }
@@ -113,12 +130,22 @@ class TopicsController extends Controller
         $success = true;
 
         try {
-            DB::transaction(function () use ($id, $request) {
-                $oTopic = Topic::findOrFail($id);
-                $oTopic->topic = $request->name;
-                $oTopic->update();
-            });
-        } catch (QueryException $e) {
+            \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
+
+            $oTopic = Topic::findOrFail($id);
+            $oTopic->topic = $request->name;
+            $oTopic->update();
+
+            assignmentsUtils::upTopicsMongo($oTopic);
+
+            \DB::commit();
+            $session->commitTransaction();
+
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            $session->abortTransaction();
             $success = false;
         }
 

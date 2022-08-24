@@ -14,6 +14,7 @@ use App\Uni\TakingControl;
 use App\Uni\TakingSubTopicQuestion;
 use App\Utils\TakeUtils;
 
+use App\Utils\assignmentsUtils;
 class ExamsController extends Controller
 {
     public function exam($subtopic, $idSubtopicTaken, $takenGrouper)
@@ -208,6 +209,8 @@ class ExamsController extends Controller
 
         try {
             \DB::beginTransaction();
+            $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+            $session->startTransaction();
 
             $oTakeSub->min_grade = $approved_grade;
             $oTakeSub->grade = $grade;
@@ -221,6 +224,15 @@ class ExamsController extends Controller
             $oTakeEval->dtt_end = Carbon::now()->toDateTimeString();
             $oTakeEval->status_id = config('csys.take_status.COM');
             $oTakeEval->save();
+
+            $lAllQuestions = \DB::table('uni_taken_questions AS tq')
+                            ->join('uni_questions as q', 'tq.question_id', '=', 'q.id_question')
+                            ->where('take_control_id', $takeEval)
+                            ->where('tq.is_deleted', 0)
+                            ->select('tq.*', 'q.question')
+                            ->get();
+
+            assignmentsUtils::upTakedExams($oTakeSub, $lAllQuestions);
 
             $controller = new TakesController();
             $oCompleted = $controller->verifyCompleted($oTakeSub);
@@ -242,9 +254,11 @@ class ExamsController extends Controller
             }
 
             \DB::commit();
+            $session->commitTransaction();
         }
         catch (\Throwable $th) {
             \DB::rollBack();
+            $session->abortTransaction();
             return response()->json(['error' => $th->getMessage()], 500);
         }
 

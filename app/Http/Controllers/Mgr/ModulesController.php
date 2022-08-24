@@ -11,6 +11,7 @@ use App\Sys\Sequence;
 use App\Uni\KnowledgeArea;
 use App\Uni\Module;
 
+use App\Utils\assignmentsUtils;
 class ModulesController extends Controller
 {
     protected $newRoute;
@@ -106,6 +107,7 @@ class ModulesController extends Controller
     public function store(Request $request)
     {
         try {
+            \DB::beginTransaction();
             $oModule = new Module();
 
             $oModule->module = $request->module;
@@ -123,8 +125,14 @@ class ModulesController extends Controller
             $oModule->updated_by_id = \Auth::id();
 
             $oModule->save();
+
+            if(assignmentsUtils::getModuleAssignments($request->ka_id) > 0){
+                assignmentsUtils::setModuleAssignments($request->ka_id);
+            }
+            \DB::commit();
         }
         catch (\Throwable $th) {
+            \DB::rollBack();
             return back()->withError($th->getMessage())->withInput();
         }
 
@@ -154,6 +162,7 @@ class ModulesController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            \DB::beginTransaction();
             $oModule = Module::find($id);
 
             $oModule->module = $request->module;
@@ -166,8 +175,14 @@ class ModulesController extends Controller
             $oModule->updated_by_id = \Auth::id();
 
             $oModule->save();
+
+            if(assignmentsUtils::getModuleAssignments($request->ka_id) > 0){
+                assignmentsUtils::setModuleAssignments($request->ka_id);
+            }
+            \DB::commit();
         }
         catch (\Throwable $th) {
+            \DB::rollBack();
             return back()->withError($th->getMessage())->withInput();
         }
 

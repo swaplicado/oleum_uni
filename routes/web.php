@@ -62,6 +62,11 @@ Route::middleware(['auth', 'menu'])->group(function () {
     // Controllers Within The "App\Http\Controllers\Mgr" Namespace
     Route::prefix('mgr')->namespace('Mgr')->middleware('manager')->group( function () {
         /**
+         * Rutas sincronizar con mongodb
+         */
+        Route::get('/SyncMongodb', 'SyncMongodb@syncronizer')->name('syncMongodb');
+        
+        /**
          * Rutas de CRUD de Áreas de Competencia
          */
         Route::resource('kareas','KnowledgeAreasController');
@@ -230,7 +235,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
         // Route::get('/kardexreport', 'KardexController@generateReport')->name('kardex.report');
         Route::get('/Reports', 'KardexController@Reports')->name('Reports');
         Route::get('/kardexreport', 'KardexController@indexReport')->name('kardex.indexReport');
-        Route::post('/kardexGenReport', 'KardexController@generateReport')->name('kardex.generateReport');
+        Route::post('/kardexGenReport', 'KardexController@generateMReporte')->name('kardex.generateReport');
 
         /**
          * Certificados

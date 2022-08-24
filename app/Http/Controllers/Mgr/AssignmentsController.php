@@ -14,6 +14,11 @@ use App\Uni\Assignment;
 use App\Uni\KnowledgeArea;
 use App\Uni\ModuleControl;
 use App\Uni\CourseControl;
+use App\Uni\mQuadrant;
+use App\Uni\mModule;
+use App\Uni\mCourse;
+use App\Uni\mTopic;
+use App\Uni\mSubtopic;
 use App\Adm\Organization;
 use App\Adm\Company;
 use App\Adm\Branch;
@@ -263,6 +268,7 @@ class AssignmentsController extends Controller
         $oAControl->updated_by_id = \Auth::id();
 
         try {
+
             \DB::beginTransaction();
     
             $oAControl->save();
@@ -283,6 +289,26 @@ class AssignmentsController extends Controller
                                 ->orderBy('id_module')
                                 ->get();
                     
+                $session = \DB::connection('mongodb')->getMongoClient()->startSession();
+                $session->startTransaction();
+
+                $cuadrante = \DB::table('uni_knowledge_areas')
+                                ->where('id_knowledge_area', $oAssignment->knowledge_area_id)
+                                ->first();
+                        
+                $oCuadrante = json_encode($cuadrante, JSON_UNESCAPED_UNICODE);
+                
+                $mQuadrant = new mQuadrant();
+                $mQuadrant->assignment_id = $oAssignment->id_assignment;
+                $mQuadrant->student_id = $oAssignment->student_id;
+                $mQuadrant->quadrant_id = $oAssignment->knowledge_area_id;
+                $mQuadrant->element_body = $oCuadrante;
+                $mQuadrant->grade = 0;
+                $mQuadrant->is_delete = 0;
+                $mQuadrant->dt_open = $oAssignment->dt_assignment;
+                $mQuadrant->dt_end = $oAssignment->dt_end;
+                $mQuadrant->save();
+
                 foreach($lModules as $module){
                     //crea modulo control
                     $dates = $this->getDatesModule($lModules, $module, $oAssignment->dt_assignment);
@@ -293,6 +319,7 @@ class AssignmentsController extends Controller
 
                     if($closeDate->gt($assignDateEnd)){
                         \DB::rollBack();
+                        $session->abortTransaction();
                         
                         return json_encode([
                             'success' => false,
@@ -316,6 +343,20 @@ class AssignmentsController extends Controller
                                     ->where([['is_deleted', 0], ['module_id', $module->id_module]])
                                     ->get();
 
+                    $oModule = json_encode($module, JSON_UNESCAPED_UNICODE);
+
+                    $mModule = new mModule();
+                    $mModule->assignment_id = $oAssignment->id_assignment;
+                    $mModule->student_id = $oAssignment->student_id;
+                    $mModule->module_id = $module->id_module;
+                    $mModule->quadrant_id = (Integer) $oAssignment->knowledge_area_id;
+                    $mModule->element_body = $oModule;
+                    $mModule->grade = 0;
+                    $mModule->is_delete = 0;
+                    $mModule->dt_open = $oModuleControl->dt_open;
+                    $mModule->dt_end = $oModuleControl->dt_close;
+                    $mModule->save();
+
                     foreach($lCourses as $course){
                         $courseDates = $this->getDatesCourse($lCourses, $course, $oModuleControl->dt_open);
                         $courseCloseDate = Carbon::parse($courseDates[0]);
@@ -323,6 +364,7 @@ class AssignmentsController extends Controller
 
                         if($courseCloseDate->gt($closeDate)){
                             \DB::rollBack();
+                            $session->abortTransaction();
                             
                             return json_encode([
                                 'success' => false,
@@ -342,14 +384,77 @@ class AssignmentsController extends Controller
                         $oCourseControl->updated_by = \Auth::id();
 
                         $oCourseControl->save();
+
+                        $lTopics = \DB::table('uni_topics')
+                                    ->where([['is_deleted', 0], ['course_id', $course->id_course]])
+                                    ->get();
+
+                        $oCourse = json_encode($course, JSON_UNESCAPED_UNICODE);
+
+                        $mCourse = new mCourse();
+                        $mCourse->assignment_id = $oAssignment->id_assignment;
+                        $mCourse->student_id = $oAssignment->student_id;
+                        $mCourse->course_id = $course->id_course;
+                        $mCourse->module_id = $module->id_module;
+                        $mCourse->element_body = $oCourse;
+                        $mCourse->grade = 0;
+                        $mCourse->is_delete = 0;
+                        $mCourse->dt_open = $oCourseControl->dt_open;
+                        $mCourse->dt_end = $oCourseControl->dt_close;
+                        $mCourse->save();
+
+                        foreach($lTopics as $topic){
+                            $lSubtopics = \DB::table('uni_subtopics')
+                                            ->where([['is_deleted', 0], ['topic_id', $topic->id_topic]])
+                                            ->get();
+
+                            // $oSubtopics = json_encode($lSubtopics, JSON_UNESCAPED_UNICODE);
+                            $oTopic = json_encode($topic, JSON_UNESCAPED_UNICODE);
+
+                            $mTopic = new mTopic();
+                            $mTopic->assignment_id = $oAssignment->id_assignment;
+                            $mTopic->student_id = $oAssignment->student_id;
+                            $mTopic->topic_id = $topic->id_topic;
+                            $mTopic->course_id = $course->id_course;
+                            $mTopic->element_body = $oTopic;
+                            $mTopic->grade = 0;
+                            $mTopic->is_delete = 0;
+                            $mTopic->save();
+
+                            foreach($lSubtopics as $subtopic){
+                                $lQuestions = \DB::table('uni_questions as q')
+                                                    ->where([['is_deleted', 0], ['subtopic_id', $subtopic->id_subtopic]])
+                                                    ->get();
+
+                                foreach($lQuestions as $question){
+                                    $lAnswers = \DB::table('uni_answers')
+                                                    ->where([['is_deleted', 0],['question_id', $question->id_question]])
+                                                    ->get();
+                                    $question->answers = json_encode($lAnswers, JSON_UNESCAPED_UNICODE);
+                                }
+
+                                $oQuestions = json_encode($lQuestions, JSON_UNESCAPED_UNICODE);
+                                $oSubtopic = json_encode($subtopic, JSON_UNESCAPED_UNICODE);
+
+                                $mSubtopic = new mSubtopic();
+                                $mSubtopic->assignment_id = $oAssignment->id_assignment;
+                                $mSubtopic->student_id = $oAssignment->student_id;
+                                $mSubtopic->subtopic_id = $subtopic->id_subtopic;
+                                $mSubtopic->topic_id = $topic->id_topic;
+                                $mSubtopic->element_body = $oSubtopic;
+                                $mSubtopic->questions = $oQuestions;
+                                $mSubtopic->grade = 0;
+                                $mSubtopic->is_delete = 0;
+                                $mSubtopic->save();
+                            }
+                        }
                     }
                 }
-
-
                 $lAssigns[] = $oAssignment;
             }
 
             \DB::commit();
+            $session->commitTransaction();
 
             foreach ($lAssigns as $assignment) {
                 $student = User::find($assignment->student_id);
@@ -369,6 +474,7 @@ class AssignmentsController extends Controller
         }
         catch (\Throwable $th) {
             \DB::rollBack();
+            $session->abortTransaction();
         }
 
     }
