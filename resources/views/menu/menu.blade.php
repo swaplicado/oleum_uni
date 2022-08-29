@@ -7,7 +7,7 @@
         {{-- <a href="{{ route('home') }}" class="nav_logo">
             <img src="{{ asset('img/uvaeth_logo.jpg') }}" width="80%" height="80%" alt="">
         </a> --}}
-        <div class="nav_list" style="width: 100%; height: 700px; overflow-y: auto;">
+        <div class="nav_list" style="width: 100%; height: auto; overflow-y: auto;">
             {!! session()->has('menu') ? session('menu') : "" !!}
             {{-- @auth
                 <a class="nav_link" title="Salir" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

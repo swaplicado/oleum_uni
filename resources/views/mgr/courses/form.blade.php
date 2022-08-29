@@ -29,7 +29,7 @@
         <br>
         <div class="mb-3">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="has_points" {{ (isset($oCourse) && $oCourse->has_points) || !isset($oCourse) ? 'checked' : '' }}>
+              <input type="checkbox" id="has_points" onclick="hasPoints();" class="form-check-input" name="has_points" {{ (isset($oCourse) && $oCourse->has_points) || !isset($oCourse) ? 'checked' : '' }}>
               Genera puntos
             </label>
         </div>
