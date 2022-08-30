@@ -157,6 +157,7 @@ class KardexController extends Controller
                                     ->where('d.is_deleted', false)
                                     ->where('j.is_deleted', false)
                                     ->where('u.is_deleted', false)
+                                    ->where('u.is_active', true)
                                     ->where('d.head_user_n_id', \Auth::id());
 
             $lStudentsByBranch = \DB::table('adm_branches AS b')
@@ -164,6 +165,7 @@ class KardexController extends Controller
                                     ->select('u.id')
                                     ->where('b.is_deleted', false)
                                     ->where('u.is_deleted', false)
+                                    ->where('u.is_active', true)
                                     ->where('b.head_user_id', \Auth::id());
 
             $lStudentsByCompany = \DB::table('adm_companies AS c')
@@ -172,6 +174,7 @@ class KardexController extends Controller
                                     ->select('u.id')
                                     ->where('b.is_deleted', false)
                                     ->where('u.is_deleted', false)
+                                    ->where('u.is_active', true)
                                     ->where('c.head_user_id', \Auth::id());
 
             $lStudentsByOrg = \DB::table('adm_organizations AS o')
@@ -181,6 +184,7 @@ class KardexController extends Controller
                                     ->select('u.id')
                                     ->where('b.is_deleted', false)
                                     ->where('u.is_deleted', false)
+                                    ->where('u.is_active', true)
                                     ->where('o.head_user_id', \Auth::id());
 
 
