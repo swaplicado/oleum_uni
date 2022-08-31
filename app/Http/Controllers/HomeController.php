@@ -58,9 +58,11 @@ class HomeController extends Controller
                             ->leftJoin('uni_contents_vs_elements as ce', 'ce.knowledge_area_n_id', '=', 'ka.id_knowledge_area')
                             ->where('a.student_id', \Auth::id())
                             ->where('a.is_deleted', false)
-                            ->whereRaw('NOW() BETWEEN a.dt_assignment AND a.dt_end')
+                            ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
+                            ->where('a.dt_end', '>=', Carbon::today()->toDateString())
+                            // ->whereRaw('NOW() BETWEEN a.dt_assignment AND a.dt_end')
                             ->get();
-        
+
         foreach($lAssignments as $area){
             $result = TakeUtils::getlAssignmentPercentCompleted($area->id_assignment, $area->id_knowledge_area, \Auth::id());
             $area->completed_percent = number_format($result[0]);
