@@ -330,10 +330,11 @@ class assignmentsUtils {
         $ka_id = \DB::table('uni_modules')
                         ->where('id_module', $module_id)
                         ->where('is_deleted', 0)
-                        ->pluck('id_module');
+                        ->value('knowledge_area_id');
 
         $lAssignments = \DB::table('uni_assignments')
                             ->where('knowledge_area_id', $ka_id)
+                            ->where('is_deleted', 0)
                             ->where('dt_assignment', '<=', Carbon::now()->toDateString())
                             ->where('dt_end', '>=', Carbon::now()->toDateString())
                             ->get();
