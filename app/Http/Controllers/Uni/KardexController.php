@@ -58,7 +58,7 @@ class KardexController extends Controller
             $dt_end = new \DateTime($area->dt_end);
             $area->duracion = ($dt_in->diff($dt_end))->format('%d días');
 
-            if (($area->dt_assignment <= Carbon::now()->toDateString()) && ($area->dt_end >= Carbon::now()->toDateString())) {
+            if (($area->dt_assignment <= Carbon::now()->toDateString()) && ($area->dt_end >= Carbon::now()->toDateString()) && ($area->is_closed == 0)) {
                 $area->is_active = true;
             }
             else {
@@ -247,6 +247,7 @@ class KardexController extends Controller
                                     ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                                     ->where('a.student_id', $student->id)
                                     ->where('a.is_deleted', false)
+                                    ->where('a.is_closed', 0)
                                     ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                                     ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                                     ->orderBy('a.dt_assignment', 'DESC')

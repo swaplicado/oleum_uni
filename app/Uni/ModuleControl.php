@@ -13,6 +13,7 @@ class ModuleControl extends Model
         'assignment_id',
         'dt_open',
         'dt_close',
+        'is_closed',
         'module_n_id',
         'student_id',
         'is_deleted',

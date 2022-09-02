@@ -163,7 +163,7 @@ class CoursesController extends Controller
                 throw new \Exception("El número total de días del curso '".$oCourse->course."' es superior al número de días del módulo");
             }
 
-            if(assignmentsUtils::getCourseAssignments($request->module_id) > 0){
+            if(assignmentsUtils::getAssignmentByModule($request->module_id) > 0){
                 $ka_id = assignmentsUtils::getCuadranteIdFromModule($request->module_id);
                 assignmentsUtils::setModuleAssignments($ka_id);
             }
@@ -265,7 +265,7 @@ class CoursesController extends Controller
                 throw new \Exception("El número total de días del curso '".$oCourse->course."' es superior al número de días del módulo");
             }
 
-            if(assignmentsUtils::getCourseAssignments($oCourse->module_id) > 0){
+            if(assignmentsUtils::getAssignmentByModule($oCourse->module_id) > 0){
                 $ka_id = assignmentsUtils::getCuadranteIdFromModule($oCourse->module_id);
                 assignmentsUtils::setModuleAssignments($ka_id);
             }

@@ -126,7 +126,7 @@ class ModulesController extends Controller
 
             $oModule->save();
 
-            if(assignmentsUtils::getModuleAssignments($request->ka_id) > 0){
+            if(assignmentsUtils::getAssignmentsByKa($request->ka_id) > 0){
                 assignmentsUtils::setModuleAssignments($request->ka_id);
             }
             \DB::commit();
@@ -176,7 +176,7 @@ class ModulesController extends Controller
 
             $oModule->save();
 
-            if(assignmentsUtils::getModuleAssignments($request->ka_id) > 0){
+            if(assignmentsUtils::getAssignmentsByKa($request->ka_id) > 0){
                 assignmentsUtils::setModuleAssignments($request->ka_id);
             }
             \DB::commit();

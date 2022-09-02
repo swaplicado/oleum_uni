@@ -22,6 +22,10 @@ class ExamsController extends Controller
         $oSubtopic = SubTopic::find($subtopic);
         $oTopic = Topic::find($oSubtopic->topic_id);
 
+        if(assignmentsUtils::getStatusCourseByExam($oTopic->course_id, $idSubtopicTaken)){
+            return redirect(route('home'))->with(['message' => 'El curso está cerrado', 'icon' => 'error']);
+        }
+
         $limit = $oSubtopic->number_questions;
         
         $lQuestions = $this->getQuestions($takenGrouper, $subtopic, $limit);

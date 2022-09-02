@@ -73,6 +73,7 @@ class AssignmentsController extends Controller
                                 ->orWhereBetween('a.dt_end', [$aDates[0]->format('Y-m-d'), $aDates[1]->format('Y-m-d')]);
                         })
                         ->where('a.is_deleted', false)
+                        ->where('a.is_closed', 0)
                         ->where('ka.is_deleted', false)
                         ->where('u.is_deleted', false)
                         ->get();
@@ -278,6 +279,7 @@ class AssignmentsController extends Controller
             $lAssigns = [];
             foreach ($assignments as $assignment) {
                 $oAssignment = new Assignment(((array) $assignment));
+                $oAssignment->is_closed = 0;
                 $oAssignment->control_id = $oAControl->id_control;
                 $oAssignment->created_by_id = \Auth::id();
                 $oAssignment->updated_by_id = \Auth::id();
@@ -331,6 +333,7 @@ class AssignmentsController extends Controller
                     $oModuleControl->assignment_id = $oAssignment->id_assignment;
                     $oModuleControl->dt_close = $closeDate->format('Y-m-d');
                     $oModuleControl->dt_open = $openDate->format('Y-m-d');
+                    $oModuleControl->is_closed = 0;
                     $oModuleControl->module_n_id = $module->id_module;
                     $oModuleControl->student_id = $oAssignment->student_id;
                     $oModuleControl->is_deleted = false;
@@ -374,8 +377,10 @@ class AssignmentsController extends Controller
 
                         $oCourseControl = new CourseControl();
                         $oCourseControl->assignment_id = $oAssignment->id_assignment;
+                        $oCourseControl->assignment_module_id = $oModuleControl->id_module_control;
                         $oCourseControl->dt_close = $courseCloseDate->format('Y-m-d');
                         $oCourseControl->dt_open = $courseOpenDate->format('Y-m-d');
+                        $oCourseControl->is_closed = 0;
                         $oCourseControl->course_n_id = $course->id_course;
                         $oCourseControl->module_n_id = $course->module_id;
                         $oCourseControl->student_id = $oAssignment->student_id;
@@ -453,9 +458,6 @@ class AssignmentsController extends Controller
                 $lAssigns[] = $oAssignment;
             }
 
-            \DB::commit();
-            $session->commitTransaction();
-
             foreach ($lAssigns as $assignment) {
                 $student = User::find($assignment->student_id);
                 if (strlen($student->email) == 0) {
@@ -471,6 +473,9 @@ class AssignmentsController extends Controller
 
                 Mail::to($rec)->send(new KnowledgeAreaAssignment($assignment->id_assignment));
             }
+
+            \DB::commit();
+            $session->commitTransaction();
         }
         catch (\Throwable $th) {
             \DB::rollBack();

@@ -11,8 +11,10 @@ class CourseControl extends Model
 
     protected $fillable = [
         'assignment_id',
+        'assignment_module_id',
         'dt_open',
         'dt_close',
+        'is_closed',
         'course_n_id',
         'module_n_id',
         'student_id',

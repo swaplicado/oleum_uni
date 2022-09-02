@@ -306,7 +306,7 @@ var app = new Vue({
         },
 
         setDurationDays(){
-            this.dtEnd = moment(this.dtStart, 'YYYY-MM-DD').add(this.durationDays, 'days').format('YYYY-MM-DD');
+            this.dtEnd = moment(this.dtStart, 'YYYY-MM-DD').add((this.durationDays - 1), 'days').format('YYYY-MM-DD');
         }
     },
 })

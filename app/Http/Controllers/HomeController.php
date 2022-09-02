@@ -58,9 +58,9 @@ class HomeController extends Controller
                             ->leftJoin('uni_contents_vs_elements as ce', 'ce.knowledge_area_n_id', '=', 'ka.id_knowledge_area')
                             ->where('a.student_id', \Auth::id())
                             ->where('a.is_deleted', false)
+                            ->where('a.is_closed', 0)
                             ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                             ->where('a.dt_end', '>=', Carbon::today()->toDateString())
-                            // ->whereRaw('NOW() BETWEEN a.dt_assignment AND a.dt_end')
                             ->get();
 
         foreach($lAssignments as $area){

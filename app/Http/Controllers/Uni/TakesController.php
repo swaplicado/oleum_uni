@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
 use App\Utils\TakeUtils;
+use App\Utils\assignmentsUtils;
 
 use App\Uni\TakingControl;
 use App\Uni\TakingContent;
@@ -17,6 +18,8 @@ use App\Uni\Module;
 use App\Uni\Course;
 use App\Uni\Topic;
 use App\Uni\SubTopic;
+use App\Uni\CourseControl;
+use App\Uni\ModuleControl;
 
 class TakesController extends Controller
 {
@@ -531,14 +534,26 @@ class TakesController extends Controller
                         ->orderBy('id_taken_control', 'DESC')
                         ->first();
         
-        TakingControl::where('id_taken_control', $courseTake->id_taken_control)
+        $oTakingControl = TakingControl::where('id_taken_control', $courseTake->id_taken_control)->first();
+
+        $oTakingControl->dtt_end = Carbon::now()->toDateTimeString();
+        $oTakingControl->status_id = (config('csys.take_status.COM'));
+        $oTakingControl->grade = $courseGrade;
+        $oTakingControl->min_grade = $minGrade;
+        $oTakingControl->update();
+
+        $approved = $oTakingControl->status_id == config('csys.take_status.COM') && $oTakingControl->grade >= $oTakingControl->min_grade;
+
+        if($approved){
+            CourseControl::where('assignment_id', $assignment)
+                        ->where('student_id', $idStudent)
+                        ->where('course_n_id', $idCourse)
+                        ->where('is_deleted', 0)
                         ->update([
-                                    'dtt_end' => Carbon::now()->toDateTimeString(),
-                                    'status_id' => (config('csys.take_status.COM')),
-                                    'grade' => $courseGrade,
-                                    'min_grade' => $minGrade,
-                                    ]);
-        
+                            'is_closed' => 1
+                        ]);
+        }
+
         return true;
     }
 
@@ -574,13 +589,26 @@ class TakesController extends Controller
                         ->orderBy('id_taken_control', 'DESC')
                         ->first();
         
-        TakingControl::where('id_taken_control', $moduleTake->id_taken_control)
+        $oTakingControl = TakingControl::where('id_taken_control', $moduleTake->id_taken_control)->first();
+
+        $oTakingControl->dtt_end = Carbon::now()->toDateTimeString();
+        $oTakingControl->status_id = (config('csys.take_status.COM'));
+        $oTakingControl->grade = $moduleGrade;
+        $oTakingControl->min_grade = $minGrade;
+
+        $oTakingControl->update();
+
+        $approved = $oTakingControl->status_id == config('csys.take_status.COM') && $oTakingControl->grade >= $oTakingControl->min_grade;
+
+        if($approved){
+            ModuleControl::where('assignment_id', $assignment)
+                        ->where('student_id', $idStudent)
+                        ->where('module_n_id', $idModule)
+                        ->where('is_deleted', 0)
                         ->update([
-                                    'dtt_end' => Carbon::now()->toDateTimeString(),
-                                    'status_id' => (config('csys.take_status.COM')),
-                                    'grade' => $moduleGrade,
-                                    'min_grade' => $minGrade,
-                                    ]);
+                            'is_closed' => 1
+                        ]);
+        }
         
         return true;
     }
@@ -617,17 +645,19 @@ class TakesController extends Controller
                         ->orderBy('id_taken_control', 'DESC')
                         ->first();
         
-        TakingControl::where('id_taken_control', $areaTake->id_taken_control)
-                        ->update([
-                                    'dtt_end' => Carbon::now()->toDateTimeString(),
-                                    'status_id' => (config('csys.take_status.COM')),
-                                    'grade' => $areaGrade,
-                                    'min_grade' => $minGrade,
-                                    ]);
+        $oTakingControl = TakingControl::where('id_taken_control', $areaTake->id_taken_control)->first();
+        
+        $oTakingControl->dtt_end = Carbon::now()->toDateTimeString();
+        $oTakingControl->status_id = (config('csys.take_status.COM'));
+        $oTakingControl->grade = $areaGrade;
+        $oTakingControl->min_grade = $minGrade;
+        $oTakingControl->update();
+
+        $approved = $oTakingControl->status_id == config('csys.take_status.COM') && $oTakingControl->grade >= $oTakingControl->min_grade;
 
         Assignment::where('id_assignment', $assignment)
-                    ->update(['is_over' => true]);
-        
+                    ->update(['is_over' => true, 'is_closed' => $approved]);
+
         return true;
     }
 }

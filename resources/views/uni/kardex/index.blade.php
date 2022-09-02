@@ -81,7 +81,7 @@
                                     aria-controls="module{{ $module->id_module }}">
                                     <div class="row" style="width: 100%;">
                                         <div class="col-md-4">
-                                            @if (\Carbon\Carbon::parse($module->dt_close)->lt(\Carbon\Carbon::today()) || \Carbon\Carbon::parse($module->dt_open)->gt(\Carbon\Carbon::today()))
+                                            @if (\Carbon\Carbon::parse($module->dt_close)->lt(\Carbon\Carbon::today()) || \Carbon\Carbon::parse($module->dt_open)->gt(\Carbon\Carbon::today()) || ($module->is_closed))
                                                 <div class="fw-bold">{{ $module->module }}</div>
                                             @else
                                                 <div class="fw-bold">

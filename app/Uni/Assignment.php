@@ -29,6 +29,7 @@ class Assignment extends Model
         'is_deleted',
         'dt_assignment',
         'dt_end',
+        'is_closed',
         'is_over',
         'knowledge_area_id',
         'student_id',

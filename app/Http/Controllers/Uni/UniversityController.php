@@ -25,7 +25,7 @@ class UniversityController extends Controller
                             ->join('uni_knowledge_areas AS ka', 'a.knowledge_area_id', '=', 'ka.id_knowledge_area')
                             ->where('a.student_id', \Auth::id())
                             ->where('a.is_deleted', false)
-                            // ->where('a.is_over', false)
+                            ->where('a.is_closed', 0)
                             ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                             ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                             ->get();
@@ -54,12 +54,14 @@ class UniversityController extends Controller
                         ->select('m.*', 'mc.dt_open', 'mc.dt_close','a.id_assignment', 'a.dt_end')
                         ->where('a.id_assignment', $assignment)
                         ->where('a.is_deleted', false)
-                        // ->where('a.is_over', false)
+                        ->where('a.is_closed', 0)
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('m.knowledge_area_id', $area)
                         ->where('m.elem_status_id', '>', config('csys.elem_status.EDIT'))
-                        ->where([['mc.dt_open', '<=', Carbon::today()->toDateString()],['mc.dt_close',  '>=', Carbon::today()->toDateString()]])
+                        // ->where('mc.is_closed', 0)
+                        ->where('mc.dt_open', '<=', Carbon::today()->toDateString())
+                        ->where('mc.dt_close',  '>=', Carbon::today()->toDateString())
                         ->where('mc.is_deleted', 0)
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
@@ -109,14 +111,16 @@ class UniversityController extends Controller
                         ->select('c.*', 'a.id_assignment', 'acc.dt_open', 'acc.dt_close')
                         ->where('a.id_assignment', $assignment)
                         ->where('a.is_deleted', false)
-                        // ->where('a.is_over', false)
                         ->where('a.student_id', \Auth::id())
                         ->where('m.is_deleted', false)
                         ->where('c.is_deleted', false)
                         ->where('c.module_id', $module)
                         ->where('c.elem_status_id', '>', config('csys.elem_status.EDIT'))
-                        ->where([['acc.dt_open', '<=', Carbon::today()->toDateString()],['acc.dt_close',  '>=', Carbon::today()->toDateString()]])
+                        // ->where('acc.is_closed', 0)
+                        ->where('acc.dt_open', '<=', Carbon::today()->toDateString())
+                        ->where('acc.dt_close',  '>=', Carbon::today()->toDateString())
                         ->where('acc.is_deleted', 0)
+                        // ->where('a.is_closed', 0)
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->groupBy('id_course')
@@ -170,9 +174,15 @@ class UniversityController extends Controller
                         ->where('c.is_deleted', false)
                         ->where('c.id_course', $course)
                         ->where('a.id_assignment', $assignment)
+                        // ->where('acc.is_closed', 0)
+                        // ->where('a.is_closed', 0)
                         ->where('a.dt_assignment', '<=', Carbon::now()->toDateString())
                         ->where('a.dt_end', '>=', Carbon::now()->toDateString())
                         ->first();
+
+        if(is_null($oCourse)){
+            return redirect(route('home'))->with(['message' => 'El curso está cerrado', 'icon' => 'error']);
+        }
 
         if(!(Carbon::today()->lte(Carbon::parse($oCourse->dt_close)))){
             return redirect(route('home'))->with(['message' => 'El curso está cerrado', 'icon' => 'error']);

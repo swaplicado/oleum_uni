@@ -10,8 +10,12 @@ use App\Uni\mCourse;
 use App\Uni\mTopic;
 use App\Uni\mSubtopic;
 use App\Uni\mTakedExams;
+use App\Uni\SubTopic;
+use App\Uni\Topic;
+use App\Uni\TakingControl;
 
 class assignmentsUtils {
+    //Metodo para actualizar m_taked_exams en mongo
     public static function upTakedExams($otakedExams, $lQuestions){
         $mTakedExam = mTakedExams::where('assignment_id', (Integer)$otakedExams->assignment_id)
                                 ->where('subtopic_id', (Integer)$otakedExams->subtopic_n_id)
@@ -42,6 +46,7 @@ class assignmentsUtils {
         }
     }
 
+    //Metodo para actualizar las preguntas de los examenes en mongo
     public static function upQuestions($question){
         $course_id = \DB::table('uni_questions as q')
                         ->join('uni_subtopics as sub', 'sub.id_subtopic', '=', 'q.subtopic_id')
@@ -97,6 +102,7 @@ class assignmentsUtils {
         }
     }
 
+    //Metodo para agregar un subtema a mongo
     public static function createSubtopicMongo($subtopic){
         $course_id = \DB::table('uni_subtopics as sub')
                         ->join('uni_topics as top', 'sub.topic_id', '=', 'top.id_topic')
@@ -139,6 +145,7 @@ class assignmentsUtils {
         }
     }
 
+    //Metodo para actualizar un subtema en mongo
     public static function upSubtopicMongo($subtopic){
         $course_id = \DB::table('uni_subtopics as sub')
                         ->join('uni_topics as top', 'sub.topic_id', '=', 'top.id_topic')
@@ -192,6 +199,7 @@ class assignmentsUtils {
         }
     }
 
+    //Crear un tema en mongo
     public static function createTopicsMongo($topic){
         $lmCourses = mCourse::where('course_id', (Integer)$topic->course_id)
                             ->where('dt_end', '>=', Carbon::now()->toDateString())
@@ -227,6 +235,7 @@ class assignmentsUtils {
         }
     }
 
+    //actualizar un tema en mongo
     public static function upTopicsMongo($topic){
         $lmCourses = mCourse::where('course_id', $topic->course_id)
                             ->where('dt_end', '>=', Carbon::now()->toDateString())
@@ -260,6 +269,7 @@ class assignmentsUtils {
         }
     }
 
+    //Crear un control de curso en mongo
     public static function createCoursesMongo($oAssignment, $module_id, $course, $oCourseControl){
         $mCourse = new mCourse();
         $mCourse->assignment_id = $oAssignment->id_assignment;
@@ -274,6 +284,7 @@ class assignmentsUtils {
         $mCourse->save();
     }
 
+    //actualizar un control de curso en mongo
     public static function upCourseMongo($oAssignment, $module_id, $course, $oCourseControl){
         $mCourse = mCourse::where([
             ['assignment_id', $oAssignment->id_assignment],
@@ -288,6 +299,7 @@ class assignmentsUtils {
         $mCourse->update();
     }
 
+    //crear un control de modulo en mongo
     public static function createModulesMongo($oAssignment, $module, $oModuleControl){
         $mModule = new mModule();
         $mModule->assignment_id = $oAssignment->id_assignment;
@@ -302,6 +314,7 @@ class assignmentsUtils {
         $mModule->save();
     }
 
+    //actualizar un control de modulo en mongo
     public static function upModulesMongo($oAssignment, $module, $oModuleControl){
         $mModule = mModule::where([
                                 ['assignment_id', $oAssignment->id_assignment],
@@ -315,18 +328,21 @@ class assignmentsUtils {
         $mModule->update();
     }
 
-    public static function getModuleAssignments($ka_id){
+    //Obtener numero de assignaciones por area
+    public static function getAssignmentsByKa($ka_id){
         $lAssignments = \DB::table('uni_assignments')
                             ->where('knowledge_area_id', $ka_id)
                             ->where('is_deleted', 0)
                             // ->where('dt_assignment', '<=', Carbon::now()->toDateString())
+                            ->where('is_closed', 0)
                             ->where('dt_end', '>=', Carbon::now()->toDateString())
                             ->get();
 
         return count($lAssignments);
     }
 
-    public static function getCourseAssignments($module_id){
+    //Obtener numero total de asignaciones por modulo
+    public static function getAssignmentByModule($module_id){
         $ka_id = \DB::table('uni_modules')
                         ->where('id_module', $module_id)
                         ->where('is_deleted', 0)
@@ -335,6 +351,7 @@ class assignmentsUtils {
         $lAssignments = \DB::table('uni_assignments')
                             ->where('knowledge_area_id', $ka_id)
                             ->where('is_deleted', 0)
+                            ->where('is_closed', 0)
                             ->where('dt_assignment', '<=', Carbon::now()->toDateString())
                             ->where('dt_end', '>=', Carbon::now()->toDateString())
                             ->get();
@@ -342,10 +359,13 @@ class assignmentsUtils {
         return count($lAssignments);
     }
 
+    //Metodo para actualizar los modulos de una area en las asignaciones que no han sido cerradas
+    //el metodo reacomoda las fechas de las asignaciones
     public static function setModuleAssignments($ka_id){
         $lAssignments = \DB::table('uni_assignments')
                             ->where('knowledge_area_id', $ka_id)
                             ->where('is_deleted', 0)
+                            ->where('is_closed', 0)
                             ->where('dt_assignment', '<=', Carbon::now()->toDateString())
                             ->where('dt_end', '>=', Carbon::now()->toDateString())
                             ->get();
@@ -363,6 +383,7 @@ class assignmentsUtils {
                 $assignDate = Carbon::parse($assign->dt_assignment);
                 $assignDateEnd = Carbon::parse($assign->dt_end);
 
+                //si la fecha de cierre del modulo se pasa de la fecha de cierre del area la actualiza
                 if($closeDate->gt($assignDateEnd)){
                     $oAssignment = Assignment::find($assign->id_assignment);
                     $oAssignment->dt_end = $closeDate->format('Y-m-d');
@@ -377,7 +398,7 @@ class assignmentsUtils {
                                                 ->first();
 
                 if(!is_null($oModuleControl)){
-                    if($closeDate->gte(Carbon::now()->toDateString())){
+                    if($closeDate->gt(Carbon::now()->toDateString())){
                         $oModuleControl->dt_close = $closeDate->format('Y-m-d');
                         $oModuleControl->dt_open = $openDate->format('Y-m-d');
                         $oModuleControl->update();
@@ -390,6 +411,7 @@ class assignmentsUtils {
                     $oModuleControl->assignment_id = $assign->id_assignment;
                     $oModuleControl->dt_close = $closeDate->format('Y-m-d');
                     $oModuleControl->dt_open = $openDate->format('Y-m-d');
+                    $oModuleControl->is_closed = $closeDate->lt(Carbon::now()->toDateString());
                     $oModuleControl->module_n_id = $module->id_module;
                     $oModuleControl->student_id = $assign->student_id;
                     $oModuleControl->is_deleted = false;
@@ -404,6 +426,8 @@ class assignmentsUtils {
         }
     }
 
+    //Metodo para actualizar los cursos de un modulo en las asignaciones
+    //el metodo reacomoda las fechas de las asignaciones
     public static function setCoursesAssignment($assign, $moduleControl){
         $lCourses = \DB::table('uni_courses')
                         ->where([['is_deleted', 0], ['module_id', $moduleControl->module_n_id]])
@@ -414,7 +438,7 @@ class assignmentsUtils {
             $courseCloseDate = Carbon::parse($courseDates[0]);
             $courseOpenDate = Carbon::parse($courseDates[1]);
 
-            if($courseCloseDate->gt($moduleControl->dt_close)){
+            if($courseCloseDate->gte($moduleControl->dt_close)){
                 $oModule = ModuleControl::find($moduleControl->id_module_control);
                 $oModule->dt_close = $courseCloseDate->format('Y-m-d');
                 $oModule->update();
@@ -438,6 +462,7 @@ class assignmentsUtils {
                 $oCourseControl->assignment_id = $assign->id_assignment;
                 $oCourseControl->dt_close = $courseCloseDate->format('Y-m-d');
                 $oCourseControl->dt_open = $courseOpenDate->format('Y-m-d');
+                $oCourseControl->is_closed = $courseCloseDate->gt($moduleControl->dt_close);
                 $oCourseControl->course_n_id = $course->id_course;
                 $oCourseControl->module_n_id = $moduleControl->module_n_id;
                 $oCourseControl->student_id = $assign->student_id;
@@ -452,6 +477,7 @@ class assignmentsUtils {
         }
     }
 
+    //calcular las fechas de apertura y de cierre de un modulo
     public static function getDatesModule($lModules, $module, $assign_date){
         $days = $module->completion_days;
         $oModule = $module;
@@ -474,6 +500,7 @@ class assignmentsUtils {
         return [$closeDate->format('Y-m-d'), $openDate->format('Y-m-d')];
     }
 
+    //calcular las fechas de apertura y de cierre de un curso
     public static function getDatesCourse($lCourses, $course, $oModuleControl_dt_open){
         $days = $course->completion_days;
         $oCourse = $course;
@@ -496,6 +523,7 @@ class assignmentsUtils {
         return [$closeDate->format('Y-m-d'), $openDate->format('Y-m-d')];
     }
 
+    //obtiene el cuadrante de un curso
     public static function getQuadrantFromCourse($course_id){
         $quadrant = \DB::table('uni_courses as c')
                         ->join('uni_modules as m', 'm.id_module', '=', 'c.module_id')
@@ -508,6 +536,7 @@ class assignmentsUtils {
         return $quadrant;
     }
 
+    //obtiene el cuadrante de un modulo
     public static function getCuadranteIdFromModule($module_id){
         $cuadrante = \DB::table('uni_modules as m')
                         ->join('uni_knowledge_areas as ka', 'ka.id_knowledge_area', '=', 'm.knowledge_area_id')
@@ -519,6 +548,7 @@ class assignmentsUtils {
         return $cuadrante;
     }
 
+    //valida que el total de los dias de los cursos de un modulo no supere a la duracion en dias del modulo
     public static function validateTotalDaysInModule($module_id){
         $moduleDays = \DB::table('uni_modules')
                         ->where('id_module', $module_id)
@@ -540,5 +570,64 @@ class assignmentsUtils {
         }
 
         return $days <= $moduleDays;
+    }
+
+    public static function getStatusCourseByExam($course_id, $idSubtopicTaken){
+        $oTakingControl = TakingControl::where('id_taken_control', $idSubtopicTaken)->first();
+
+        $oCourseControl = CourseControl::where('course_n_id', $course_id)
+                                        ->where('student_id', $oTakingControl->student_id)
+                                        ->where('assignment_id', $oTakingControl->assignment_id)
+                                        ->where('is_deleted', 0)
+                                        ->first();
+
+        return !is_null($oCourseControl) ? $oCourseControl->is_closed : true;
+    }
+
+    //metodo para vereificar si una asignacion ha pasado su fecha de cierre, si es asi activa la bandera is_closed
+    public static function verifyAssignClosed(){
+        try {
+            \DB::beginTransaction();
+            $lAssignments = Assignment::where('student_id', \Auth::id())
+                                ->where('is_deleted', 0)
+                                ->where('is_closed', 0)
+                                ->where('dt_assignment', '<=', Carbon::now()->toDateString())
+                                ->get();
+            
+            foreach($lAssignments as $assign){
+
+                $lCourseAssignments = CourseControl::where('is_deleted', 0)
+                                                ->where('is_closed', 0)
+                                                ->where('assignment_id', $assign->id_assignment)
+                                                ->get();
+
+                foreach($lCourseAssignments as $cAssign){
+                    if(Carbon::parse($cAssign->dt_close)->lt(Carbon::today())){
+                        $cAssign->is_closed = 1;
+                        $cAssign->update();
+                    }
+                }
+
+                $lModuleAssignments = ModuleControl::where('is_deleted', 0)
+                                                ->where('is_closed', 0)
+                                                ->where('assignment_id', $assign->id_assignment)
+                                                ->get();
+
+                foreach($lModuleAssignments as $mAssign){
+                    if(Carbon::parse($mAssign->dt_close)->lt(Carbon::today())){
+                        $mAssign->is_closed = 1;
+                        $mAssign->update();
+                    }
+                }
+
+                if(Carbon::parse($assign->dt_end)->lt(Carbon::today())){
+                    $assign->is_closed = 1;
+                    $assign->update();
+                }
+            }   
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+        }
     }
 }
