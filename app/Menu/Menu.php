@@ -73,6 +73,8 @@ class Menu {
                     (object) ['route' => route('carousel.index'), 'icon' => 'bx bx-images', 'name' => 'Carrusel'],
                     (object) ['route' => route('users'), 'icon' => 'bx bxs-user-account', 'name' => 'Usuarios'],
                     (object) ['route' => route('Reports'), 'icon' => 'bx bxs-report', 'name' => 'Reportes'],
+                    (object) ['route' => route('areasAdm.index'), 'icon' => 'bx bxs-spreadsheet', 'name' => 'Áreas funcionales'],
+                    (object) ['route' => route('areasAdm.departments'), 'icon' => 'bx bx-hive', 'name' => 'Áreas departamentos'],
                 ];
                 break;
             

@@ -34,6 +34,7 @@ class AssignmentControl extends Model
         'company_n_id',
         'branch_n_id',
         'department_n_id',
+        'area_n_id',
         'job_n_id',
         'student_n_id',
         'created_by_id',

@@ -24,6 +24,7 @@ use App\Adm\Company;
 use App\Adm\Branch;
 use App\Adm\Department;
 use App\Adm\Job;
+use App\Adm\Areas;
 use App\User;
 
 class AssignmentsController extends Controller
@@ -107,6 +108,7 @@ class AssignmentsController extends Controller
         $lKAreas->prepend([ 'id' => '', 'text' => '']);
 
         $lAssignBy = [
+                        (object) [ 'id' => 7, 'text' => 'Área'],
                         (object) [ 'id' => 6, 'text' => 'Estudiante'],
                         (object) [ 'id' => 5, 'text' => 'Puesto'],
                         (object) [ 'id' => 4, 'text' => 'Departamento'],
@@ -139,6 +141,12 @@ class AssignmentsController extends Controller
                                         ->get();
         $lDepartments->prepend([ 'id' => '', 'text' => '']);
 
+        $lAdmAreas = Areas::where('is_deleted', false)
+                                        ->select('id_area as id', 'area as text')
+                                        ->orderBy('area', 'ASC')
+                                        ->get();
+        $lAdmAreas->prepend([ 'id' => '', 'text' => '']);
+
         $lJobs = Job::where('is_deleted', false)
                                         ->select('id_job as id', \DB::raw("CONCAT(job,' - ',acronym) AS text"))
                                         ->orderBy('job', 'ASC')
@@ -161,6 +169,7 @@ class AssignmentsController extends Controller
                                             ->with('lCompanies', $lCompanies)
                                             ->with('lBranches', $lBranches)
                                             ->with('lDepartments', $lDepartments)
+                                            ->with('lAdmAreas', $lAdmAreas)
                                             ->with('lJobs', $lJobs)
                                             ->with('lStudents', $lStudents)
                                             ->with('studentsRoute', 'assignments.getstudents')
@@ -172,6 +181,14 @@ class AssignmentsController extends Controller
     public function getStudents(Request $request)
     {
         switch ($request->assignment_by) {
+            case 7:
+                $lStudents = \DB::table('users AS u')
+                                ->where('u.area_id', $request->area)
+                                ->where('u.is_deleted', false)
+                                ->select('u.id', 'u.num_employee', 'u.full_name')
+                                ->orderBy('full_name', 'ASC')
+                                ->get();
+                break;
             case 6:
                 $lStudents = User::where('is_deleted', false)
                                     ->where('id', $request->student)
@@ -241,6 +258,9 @@ class AssignmentsController extends Controller
 
         $lStudents = [];
         switch ($request->assignment_by) {
+            case 7:
+                $oAControl->area_n_id = $request->area;
+                break;
             case 6:
                 $oAControl->student_n_id = $request->student;
                 break;

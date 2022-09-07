@@ -22,6 +22,7 @@ use App\Uni\mCourse;
 use App\Uni\mTopic;
 use App\Uni\mSubtopic;
 use App\Uni\mTakedExams;
+use App\Adm\Areas;
 class KardexController extends Controller
 {
     public function index($student = 0)
@@ -150,6 +151,21 @@ class KardexController extends Controller
     public function indexHead()
     {
         if (\Auth::user()->user_type_id <= 2) {
+            $areaId =  \DB::table('adm_areas_users')
+                            ->where('head_user_id', \Auth::id())
+                            ->value('area_id');
+                            
+            $group = Areas::find($areaId);
+
+            $group->child = $group->getChildrens();
+
+            $arrayAreas = $group->getArrayChilds();
+
+            $lStudentsByArea = \DB::table('adm_areas as a')
+                                    ->join('users as u', 'u.area_id', '=', 'a.id_area')
+                                    ->select('u.id')
+                                    ->whereIn('a.id_area', $arrayAreas);
+
             $lStudentsByDept = \DB::table('adm_departments AS d')
                                     ->join('adm_jobs AS j', 'd.id_department', '=', 'j.department_id')
                                     ->join('users AS u', 'j.id_job', '=', 'u.job_id')
@@ -187,8 +203,13 @@ class KardexController extends Controller
                                     ->where('u.is_active', true)
                                     ->where('o.head_user_id', \Auth::id());
 
-
             $aStudentsAux = $lStudentsByDept->union($lStudentsByBranch)
+                                        ->union($lStudentsByCompany)
+                                        ->union($lStudentsByOrg)
+                                        ->distinct()
+                                        ->pluck('u.id');
+            
+            $aStudentsArea = $lStudentsByArea->union($lStudentsByBranch)
                                         ->union($lStudentsByCompany)
                                         ->union($lStudentsByOrg)
                                         ->distinct()
@@ -199,12 +220,19 @@ class KardexController extends Controller
                                 ->where('u.is_deleted', false)
                                 ->where('u.is_active', true)
                                 ->pluck('u.id');
+
+            $aStudentsArea = $aStudentsAux;
         }
 
-        $lStudents = \DB::table('adm_departments AS d')
-                            ->join('adm_jobs AS j', 'd.id_department', '=', 'j.department_id')
-                            ->join('users AS u', 'j.id_job', '=', 'u.job_id')
-                            ->whereIn('u.id', $aStudentsAux)
+        // $lStudents = \DB::table('adm_departments AS d')
+        //                     ->join('adm_jobs AS j', 'd.id_department', '=', 'j.department_id')
+        //                     ->join('users AS u', 'j.id_job', '=', 'u.job_id')
+        //                     ->whereIn('u.id', $aStudentsAux)
+        //                     ->get();
+
+        $lStudents = \DB::table('users AS u')
+                            ->leftJoin('adm_areas as a', 'u.area_id', '=', 'a.id_area')
+                            ->whereIn('u.id', $aStudentsArea)
                             ->get();
 
         foreach ($lStudents as $student) {

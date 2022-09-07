@@ -12,6 +12,7 @@
             this.lStudents = <?php echo $lStudents ?>;
             this.lJobs = <?php echo $lJobs ?>;
             this.lDepartments = <?php echo $lDepartments ?>;
+            this.lAdmAreas = <?php echo $lAdmAreas ?>;
             this.lBranches = <?php echo $lBranches ?>;
             this.lCompanies = <?php echo $lCompanies ?>;
             this.lOrganizations = <?php echo $lOrganizations ?>;

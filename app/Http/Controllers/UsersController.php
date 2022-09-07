@@ -14,12 +14,22 @@ class UsersController extends Controller
 
     public function index()
     {
-        $lUsers = \DB::table('users AS u')->where('is_deleted', false)->get();
+        $lUsers = \DB::table('users AS u')
+                    ->leftJoin('adm_areas as a', 'a.id_area', '=', 'u.area_id')
+                    ->select('u.*', 'a.area')
+                    ->where('u.is_deleted', false)
+                    ->get();
+
+        $areas = \DB::table('adm_areas')
+                    ->where('is_deleted', 0)
+                    ->select('id_area as id', 'area as text')
+                    ->get();
 
         return view('users')->with('lUsers', $lUsers)
                             ->with('mailroute', 'users.update.mail')
                             ->with('userroute', 'users.update.username')
-                            ->with('passroute', 'users.reset.pass');
+                            ->with('passroute', 'users.reset.pass')
+                            ->with('areas', $areas);
     }
 
     public function resetPassword(Request $request)
@@ -89,6 +99,12 @@ class UsersController extends Controller
 
     private function updUser($jUser, $id)
     {
+        $areaId = \DB::table('adm_departments as d')
+                        ->join('adm_jobs as j', 'j.department_id', '=', 'd.id_department')
+                        ->where('j.id_job', $this->lJobs[$jUser->siie_job_id])
+                        ->where('j.is_deleted', 0)
+                        ->value('d.area_id');
+
         User::where('id', $id)
                     ->update(
                             [
@@ -99,7 +115,8 @@ class UsersController extends Controller
                                 'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
                                 'is_active' => $jUser->is_active,
                                 'is_deleted' => $jUser->is_deleted,
-                                'job_id' => $this->lJobs[$jUser->siie_job_id]
+                                'job_id' => $this->lJobs[$jUser->siie_job_id],
+                                'area_id' => $areaId,
                             ]
                         );
     }
@@ -182,5 +199,19 @@ class UsersController extends Controller
         $username = str_replace(' ', '', $username);
 
         return $username;
+    }
+
+    public function updateUserArea(Request $request){
+        try {
+            \DB::beginTransaction();
+                $user = User::findOrFail($request->id_user);
+                $user->area_id = $request->area_id;
+                $user->update();
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollback();
+            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro']);
+        }
+        return json_encode(['success' => true, 'message' => 'Registro actualizadó con exitó']);
     }
 }

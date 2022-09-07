@@ -15,12 +15,13 @@ Vue.directive('select2', {
 var app = new Vue({
     el: '#appAssignmentsForm',
     data: {
-        iAssignmentBy: 6,
+        iAssignmentBy: 7,
         oData: oServerData,
         dtStart: moment().format('YYYY-MM-DD'),
         dtEnd: moment().add(7, 'days').format('YYYY-MM-DD'),
         kaId: 0,
         student: 0,
+        area: 0,
         job: 0,
         department: 0,
         branch: 0,
@@ -32,10 +33,11 @@ var app = new Vue({
         lStudents: oServerData.lStudents,
         lJobs: oServerData.lJobs,
         lDepartments: oServerData.lDepartments,
+        lAdmAreas: oServerData.lAdmAreas,
         lBranches: oServerData.lBranches,
         lCompanies: oServerData.lCompanies,
         lOrganizations: oServerData.lOrganizations,
-        type_sel: "Seleccione estudiante",
+        type_sel: "Seleccione área",
         durationDays: 0,
     },
     mounted() {
@@ -57,10 +59,13 @@ var app = new Vue({
         $('#type_selec')
             .select2({ 
                 placeholder: 'selecciona',
-                data: self.lStudents,
+                data: self.lAdmAreas,
             });
         $('#type_selec').on('select2:select', function (e) {
             switch (parseInt(self.iAssignmentBy)) {
+                case 7:
+                    self.area = e.params.data.id;
+                    break;
                 case 6:
                     self.student = e.params.data.id;
                     break;
@@ -89,6 +94,14 @@ var app = new Vue({
             self.iAssignmentBy = data.id;
             $('#type_selec').empty();
             switch (parseInt(self.iAssignmentBy)) {
+                case 7:
+                    self.type_sel = "Seleccione área";
+                    $('#type_selec')
+                        .select2({ 
+                            placeholder: 'selecciona',
+                            data: self.lAdmAreas,
+                        })
+                    break;
                 case 6:
                     self.type_sel = "Seleccione estudiante";
                     $('#type_selec')
@@ -158,6 +171,7 @@ var app = new Vue({
                         'student': this.student,
                         'job': this.job,
                         'department': this.department,
+                        'area': this.area,
                         'branch': this.branch,
                         'company': this.company,
                         'organization': this.organization,
@@ -197,6 +211,13 @@ var app = new Vue({
             }
 
             switch (this.iAssignmentBy) {
+                case 7:
+                    if (parseInt(this.area) == 0) {
+                        SGui.showError("Debes seleccionar un área.");
+                        return false;
+                    }
+
+                    break;
                 case 6:
                     if (parseInt(this.student) == 0) {
                         SGui.showError("Debes seleccionar un estudiante.");
@@ -267,6 +288,7 @@ var app = new Vue({
                     'student': this.student,
                     'job': this.job,
                     'department': this.department,
+                    'area': this.area,
                     'branch': this.branch,
                     'company': this.company,
                     'organization': this.organization,

@@ -3,7 +3,7 @@
 @section('scripts_section')
     <script type="text/javascript">
         $(document).ready(function() {
-            var oProfileTable = $('#users').DataTable({
+            var oProfileTable = $('#departments').DataTable({
                 "language": {
                     "sProcessing":     "Procesando...",
                     "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -30,9 +30,9 @@
                 },
                 "colReorder": true,
                 "responsive": true,
-                "columnDefs": [
-                    { responsivePriority: 1, targets: 4 }
-                ],
+                // "columnDefs": [
+                //     { responsivePriority: 1, targets: 4 }
+                // ],
                 "dom": 'Bfrtip',
                 "lengthMenu": [
                     [ 10, 25, 50, 100, -1 ],
@@ -56,11 +56,8 @@
     </script>
     <script type="text/javascript">
         function GlobalData () {
-            this.mailroute = <?php echo json_encode( route($mailroute) ) ?>;
-            this.userroute = <?php echo json_encode( route($userroute) ) ?>;
-            this.passroute = <?php echo json_encode( route($passroute) ) ?>;
-            this.arearoute = <?php echo json_encode( route('users.update.userarea') ) ?>;
-            this.lAreas = <?php echo json_encode( $areas ) ?>;
+            this.lAreas = <?php echo json_encode( $lAreas ) ?>;
+            this.routeUpDepto = <?php echo json_encode( route('areasAdm.departments.update') ) ?>;
         }
         
         var oServerData = new GlobalData();
@@ -68,46 +65,31 @@
     <script>
         $(document).ready(function() {
             $('.select2class').select2({
-                dropdownParent: $('#userArea')
+                dropdownParent: $('#departmentArea')
             });
         });
     </script>
 @endsection
 
 @section('content')
-    @section('content_title', 'Usuarios')
-    <div class="row" id="usersApp">
+    @section('content_title', 'Departments')
+    <div class="row" id="departmentsApp">
         <div class="col-12">
-            <table id="users" class="display stripe hover row-border order-column" style="width:100%">
+            <table id="departments" class="display stripe hover row-border order-column" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Num</th>
-                        <th>Usuario</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
+                        <th>Departamento</th>
                         <th>Área funcional</th>
                         <th style="text-align: center">-</th>
                     </tr>
                 </thead>
                 <tbody>
-                   @foreach ($lUsers as $user)
+                   @foreach ($lDepartments as $department)
                    <tr>
-                        <td>{{ str_pad($user->num_employee, 5, '0', STR_PAD_LEFT) }}</td>
-                        <td>{{ $user->username }}</td>
-                        <td>{{ $user->full_name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->area }}</td>
+                        <td>{{ $department->department }}</td>
+                        <td>{{ $department->area }}</td>
                         <td style="text-align: center">
-                            <a href="#" v-on:click="editPassword({{ $user->id }})" title="Cambiar contraseña">
-                                <i class='bx bxs-key'></i>
-                            </a>
-                            <a href="#" v-on:click="editMail({{ $user->id }},'{{ $user->email }}')" title="Actualizar correo">
-                                <i class='bx bx-envelope'></i>
-                            </a>
-                            <a href="#" v-on:click="editUsername({{ $user->id }},'{{ $user->username }}')" title="Modificar nombre de usuario">
-                                <i class='bx bxs-user-circle'></i>
-                            </a>
-                            <a href="#" v-on:click="editArea({{$user->id}}, '{{ $user->username }}', {{ $user->area_id }})" title="Cambiar area funcional">
+                            <a href="#" v-on:click="editArea({{$department->id_department}}, '{{$department->department}}', {{$department->area_id}});" title="Cambiar area funcional">
                                 <i class='bx bxs-spreadsheet'></i>
                             </a>
                         </td>
@@ -116,23 +98,17 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Num</th>
-                        <th>Usuario</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
+                        <th>Departamento</th>
                         <th>Área funcional</th>
                         <th style="text-align: center">-</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
-        @include('adm.upd_mail_modal')
-        @include('adm.upd_pass_modal')
-        @include('adm.upd_username_modal')
-        @include('adm.upd_userArea_modal')
+        @include('adm.departments.upd_departmentArea_modal')
     </div>
 @endsection
 
 @section('bottom_scripts')
-    <script type="text/javascript" src="{{ asset('myapp/js/adm/VueUsers.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('myapp/js/adm/departmentsVue.js') }}"></script>
 @endsection

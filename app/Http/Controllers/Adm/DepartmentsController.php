@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Adm\Department;
+use App\Adm\Areas;
 use App\User;
 
 class DepartmentsController extends Controller
@@ -82,5 +83,32 @@ class DepartmentsController extends Controller
                         ->update($upds);
         }
 
+    }
+
+    public function indexDepartments(){
+        $lDepartments = \DB::table('adm_departments as d')
+                            ->leftJoin('adm_areas as a', 'a.id_area', '=', 'd.area_id')
+                            ->select('d.*', 'a.id_area', 'a.area')
+                            ->where('d.is_deleted', 0)
+                            ->get();
+
+        $lAreas = Areas::select('id_area as id', 'area as text')->where('is_deleted', 0)->get();
+
+        return view('adm.departments.index')->with('lDepartments', $lDepartments)
+                                            ->with('lAreas', $lAreas);
+    }
+
+    public function updateDeptoArea(Request $request){
+        try {
+            \DB::beginTransaction();
+                $depto = Department::findOrFail($request->id_depto);
+                $depto->area_id = $request->area_id;
+                $depto->update();
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollback();
+            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro']);
+        }
+        return json_encode(['success' => true, 'message' => 'Registro actualizadó con éxito']);
     }
 }

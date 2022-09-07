@@ -33,6 +33,7 @@ Route::middleware(['auth', 'menu'])->group(function () {
     Route::put('/users/resetpass', 'UsersController@resetPassword')->name('users.reset.pass')->middleware('manager');
     Route::put('/users/updemail', 'UsersController@updateEmail')->name('users.update.mail')->middleware('manager');
     Route::put('/users/updusername', 'UsersController@updateUsername')->name('users.update.username')->middleware('manager');
+    Route::post('/users/upduserarea', 'UsersController@updateUserArea')->name('users.update.userarea')->middleware('manager');
 
     /**
      * password
@@ -57,6 +58,19 @@ Route::middleware(['auth', 'menu'])->group(function () {
          * Rutas de CRUD de Empresas
          */
         Route::resource('companies','CompaniesController');
+
+        /**
+         * Rutas de CRUD areas funcionales
+         */
+        Route::get('areasAdm', 'AreasController@index')->name('areasAdm.index');
+        Route::get('areasAdm/create', 'AreasController@create')->name('areasAdm.create');
+        Route::post('areasAdm/store', 'AreasController@store')->name('areasAdm.store');
+        Route::get('areasAdm/edit/{area_id}', 'AreasController@edit')->name('areasAdm.edit');
+        Route::post('areasAdm/update/{area_id}', 'AreasController@update')->name('areasAdm.update');
+        Route::delete('areasAdm/delete/{area_id}', 'AreasController@destroy')->name('areasAdm.delete');
+
+        Route::get('areasAdm/departments', 'DepartmentsController@indexDepartments')->name('areasAdm.departments');
+        Route::post('areasAdm/departments/update', 'DepartmentsController@updateDeptoArea')->name('areasAdm.departments.update');
     });
     
     // Controllers Within The "App\Http\Controllers\Mgr" Namespace

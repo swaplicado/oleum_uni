@@ -38,6 +38,7 @@ class User extends Authenticatable
         'external_id',
         'job_id',
         'branch_id',
+        'area_id',
         'user_type_id',
         'created_by_id',
         'updated_by_id'

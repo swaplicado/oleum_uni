@@ -2,11 +2,24 @@ var app = new Vue({
     el: '#usersApp',
     data: {
         oData: oServerData,
+        lAreas: oServerData.lAreas,
+        selArea: null,
         idUser: 0,
         pass: '',
         mail: '',
         username: '',
         userType: '',
+    },
+    mounted(){
+        let self = this;
+        $('#selArea')
+            .select2({
+                placeholder: 'selecciona área',
+                data: self.lAreas,
+            })
+            .on('select2:select', function (e){
+                self.selArea = e.params.data.id;
+            });
     },
     methods: {
         editPassword(id) {
@@ -109,6 +122,40 @@ var app = new Vue({
                     console.log(error);
                     SGui.showError(error);
                 });
-        }
+        },
+
+        editArea(user_id, user, area_id) {
+            this.idUser = user_id;
+            this.username = user;
+            this.selArea = area_id;
+            $('#selArea').val(area_id).trigger('change');
+            $('#userArea').modal('show');
+        },
+
+        updateUserarea() {
+            SGui.showWaiting(3000);
+
+            /**
+             * Petición al Controlador
+             */
+            axios.post(this.oData.arearoute, {
+                    'id_user': this.idUser,
+                    'area_id': this.selArea,
+                })
+                .then(response => {
+                    let res = response.data;
+                    if(res.success){
+                        $('#usernameModal').modal('hide');
+                        SGui.showOk();
+                        location.reload();
+                    }else{
+                        SGui.showError(res.message);
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                });
+        },
     },
 })
