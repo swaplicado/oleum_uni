@@ -417,6 +417,8 @@ class KardexController extends Controller
                             ->join('adm_companies as ac', 'ab.company_id', '=', 'ac.id_company')
                             ->join('adm_organizations as ao', 'ac.organization_id', '=', 'ao.id_organization')
                             ->where('ao.id_organization', $request->level)
+                            ->where('u.is_active', 1)
+                            ->where('u.is_deleted', 0)
                             ->pluck('u.id');
                 break;
             case 'empresa':
@@ -424,11 +426,15 @@ class KardexController extends Controller
                             ->join('adm_branches as ab', 'ab.id_branch', '=', 'u.branch_id')
                             ->join('adm_companies as ac', 'ab.company_id', '=', 'ac.id_company')
                             ->where('ac.id_company', $request->level)
+                            ->where('u.is_active', 1)
+                            ->where('u.is_deleted', 0)
                             ->pluck('u.id');
                 break;
             case 'sucursal':
                 $lUsers = \DB::table('users as u')
                             ->where('u.branch_id', $request->level)
+                            ->where('u.is_active', 1)
+                            ->where('u.is_deleted', 0)
                             ->pluck('u.id');
                 break;
             case 'departamento':
@@ -436,11 +442,15 @@ class KardexController extends Controller
                             ->join('adm_jobs as aj', 'aj.id_job', '=', 'u.job_id')
                             ->join('adm_departments as ad', 'aj.department_id', '=', 'ad.id_department')
                             ->where('ad.id_department', $request->level)
+                            ->where('u.is_active', 1)
+                            ->where('u.is_deleted', 0)
                             ->pluck('u.id');
                 break;
             case 'puesto':
                 $lUsers = \DB::table('users as u')
                             ->where('u.job_id', $request->level)
+                            ->where('u.is_active', 1)
+                            ->where('u.is_deleted', 0)
                             ->pluck('u.id');
                 break;
             case 'estudiante':

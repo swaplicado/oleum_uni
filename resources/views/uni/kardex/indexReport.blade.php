@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="periodo" class="form-label">Selecciona periodo:</label>
+                    <label for="periodo" class="form-label">Selecciona periodo de asignación:</label>
                     <div id="reportrange" name="periodo" class="form-select" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                         <i class="fa fa-calendar"></i>&nbsp;
                         <span></span> <i class="fa fa-caret-down"></i>
