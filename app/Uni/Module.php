@@ -38,4 +38,9 @@ class Module extends Model
         'created_by_id',
         'updated_by_id'
     ];
+
+    public function courses()
+    {
+        return $this->hasMany('App\Uni\Course', 'module_id')->where('is_deleted', 0);
+    }
 }

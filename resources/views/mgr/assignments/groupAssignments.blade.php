@@ -30,9 +30,9 @@
             },
             "colReorder": true,
             "responsive": true,
-            "columnDefs": [
-                    { responsivePriority: 1, targets: 7 }
-                ],
+            // "columnDefs": [
+            //         { responsivePriority: 1, targets: 4 }
+            //     ],
             "dom": 'Bfrtip',
             "lengthMenu": [
                 [ 10, 25, 50, 100, -1 ],
@@ -55,14 +55,6 @@
     } );
 </script>
 <script>
-    function GlobalData () {
-            this.updateRoute = <?php echo json_encode( route($updateRoute) ) ?>;
-            this.deleteRoute = <?php echo json_encode( "" ) ?>;
-    }
-
-    var oServerData = new GlobalData();
-</script>
-<script>
     $(function() {
         $('input[name="daterange"]').daterangepicker({
         opens: 'left'
@@ -71,23 +63,27 @@
         });
     });
 </script>
+<script>
+    function GlobalData () {
+        this.getModulesRoute = <?php echo json_encode(route('assignmentsGroup.getModules')); ?>;
+        this.updateRoute = <?php echo json_encode(route('assignmentsGroup.update')); ?>;
+        this.deleteRoute = <?php echo json_encode(route('assignmentsGroup.delete')); ?>;
+    }
+
+    var oServerData = new GlobalData();
+</script>
 @endsection
 
 @section('content')
-    @section('content_title', $title)
-    <div class="row" id="indexAssignmentsApp">
+    @section('content_title', 'Asignaciones')
+    <div class="row" id="groupAssignmentsApp">
         <div class="col-12">
-            <a id="" href="{{ route('assignmentsGroup.index') }}" class="btn btn-primary" style="float: right; margin-left: 10px;">
-                Grupos asignaciones
-            </a>
-            <a id="" href="{{ route($newRoute) }}" class="btn btn-success" style="float: right;">
-                Nuevo<i class='bx bx-plus'></i>
-            </a>
-            <br>
-            <br>
-            <form action="{{ route('assignments.index') }}">
+            <form action="{{ route('assignmentsGroup.index') }}">
                 <div class="row justify-content-end">
-                    <div class="col-11 col-md-3">
+                    <div class="col-3" style="text-align: right;">
+                        <label class="form-label" for="daterang">Filtrar por fecha asignación:</label>
+                    </div>
+                    <div class="col-8 col-md-3">
                         <input size="24" class="form-control" type="text" name="daterange" value="{{ $daterange }}" />
                     </div>
                     <div class="col-1">
@@ -100,61 +96,51 @@
                     <table id="assignments_table" class="display stripe hover row-border order-column" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Estudiante</th>
-                                <th>Departamento</th>
+                                <th>Fecha asignación</th>
+                                <th>Fecha fin</th>
                                 <th>Cuadrante</th>
-                                <th>Fecha de asignación</th>
-                                <th>Fecha límite</th>
-                                <th>Terminada</th>
-                                <th>Calif.</th>
-                                <th>Acciones</th>
+                                <th>Medio asignación</th>
+                                <th>Nombre</th>
+                                <th>-</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($lAssignments as $oAssign)
+                            @foreach ($lAssignments as $assign)
                                 <tr>
-                                    <td>{{ $oAssign->student }}</td>
-                                    <td>{{ $oAssign->department }}</td>
-                                    <td>{{ $oAssign->ka }}</td>
-                                    <td>{{ $oAssign->dt_assignment }}</td>
-                                    <td>{{ $oAssign->dt_end }}</td>
-                                    <td>{{ $oAssign->is_over ? 'SÍ' : 'NO' }}</td>
-                                    <td>{{ $oAssign->grade > 0 ? $oAssign->grade : '' }}</td>
-                                    <td style="text-align: center">
-                                        <button class="btn btn-info" v-on:click="editAssignment('{{ $oAssign->dt_assignment }}', '{{ $oAssign->dt_end }}', '{{ $oAssign->student }}', '{{ $oAssign->id_assignment }}')">
-                                            <i class='bx bxs-edit-alt'></i>
-                                        </button>
-                                        <a class="btn btn-info" href="{{ route('assignments.modules', ['id' => $oAssign->id_assignment]) }}">
-                                            <i class='bx bxs-category'></i>
+                                    <td>{{$assign->dt_assignment}}</td>
+                                    <td>{{$assign->dt_end}}</td>
+                                    <td>{{$assign->karea}}</td>
+                                    <td>{{$assign->type}}</td>
+                                    <td>{{$assign->name}}</td>
+                                    <td>
+                                        <a href="#" v-on:click="editDate('{{$assign->dt_assignment}}', '{{$assign->dt_end}}', {{$assign->id_control}}, {{$assign->knowledge_area_id}}, '{{$assign->karea}}', '{{$assign->type}}', '{{$assign->name}}')" style="display: inline;">
+                                            <i class='bx bxs-calendar'></i>
                                         </a>
-                                        <button class="btn btn-danger" v-on:click="deleteAssignment('{{ $oAssign->id_assignment }}', '{{ route($deleteRoute, $oAssign->id_assignment) }}')">
-                                            <i class='bx bx-x'></i>
-                                        </button>
+                                        <a href="#" v-on:click="deleteAssign({{$assign->id_control}}, '{{$assign->karea}}', '{{$assign->type}}', '{{$assign->name}}', '{{$assign->dt_assignment}}', '{{$assign->dt_end}}')">
+                                            <i class='bx bxs-trash' style="color: red;"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Estudiante</th>
-                                <th>Departamento</th>
+                                <th>Fecha asignación</th>
+                                <th>Fecha fin</th>
                                 <th>Cuadrante</th>
-                                <th>Fecha de asignación</th>
-                                <th>Fecha límite</th>
-                                <th>Terminada</th>
-                                <th>Calif.</th>
-                                <th>Acciones</th>
+                                <th>Medio asignacion</th>
+                                <th>Nombre</th>
+                                <th>-</th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
-        @include('mgr.assignments.editmodal')
+        @include('mgr.assignments.editDatesModal')
     </div>
 @endsection
 
 @section('bottom_scripts')
-    <script type="text/javascript" src="{{ asset('myapp/js/assignments/Assignment.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('myapp/js/assignments/VueAssignmentEdit.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('myapp/js/assignments/VueGroupAssignment.js') }}"></script>
 @endsection

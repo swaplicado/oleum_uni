@@ -175,6 +175,12 @@ Route::middleware(['auth', 'menu'])->group(function () {
         Route::get('/assignments/{id}/courses/{idModule}', 'AssignmentsController@indexAssignmentCourses')->name('assignments.courses');
         Route::put('/assignments/update/courses/{id}', 'AssignmentsController@updateAssignmentCourse')->name('assignments.courses.update');
 
+        /**Rutas de asignaciones control */
+        Route::get('assignments/group', 'groupAssignmentController@index')->name('assignmentsGroup.index');
+        Route::get('assignments/group/getModules', 'groupAssignmentController@getModules')->name('assignmentsGroup.getModules');
+        Route::post('assignments/group/update', 'groupAssignmentController@updateAssign')->name('assignmentsGroup.update');
+        Route::post('assignments/group/delete', 'groupAssignmentController@deleteAssign')->name('assignmentsGroup.delete');
+
         /**
          * Premios administración
          */
