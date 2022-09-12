@@ -66,7 +66,11 @@
                     <tr>
                         <th>Num</th>
                         <th>Estudiante</th>
-                        <th>Área</th>
+                        @if ($withFunctionalArea)
+                            <th>Área</th>
+                        @else
+                            <th>Dept</th>
+                        @endif
                         <th>Promedio general</th>
                         <th>Comp</th>
                         <th>Aprob</th>
@@ -81,7 +85,7 @@
                         <tr>
                             <td>{{ str_pad($student->num_employee, 5, '0', STR_PAD_LEFT) }}</td>
                             <td>{{ $student->full_name }}</td>
-                            <td>{{ $student->area }}</td>
+                            <td>{{ $withFunctionalArea ? $student->area : $student->department}}</td>
                             <td style="text-align: center">{{ number_format($student->generalAverage, 2, '.', '') }}</td>
                             <td style="text-align: center">{{ $student->nTotalAssignments }}</td>
                             <td style="text-align: center">{{ $student->nTotalApprovedAssignments }}</td>
@@ -104,7 +108,11 @@
                     <tr>
                         <th>Num</th>
                         <th>Estudiante</th>
-                        <th>Área</th>
+                        @if ($withFunctionalArea)
+                            <th>Área</th>
+                        @else
+                            <th>Dept</th>
+                        @endif
                         <th>Promedio general</th>
                         <th>Comp</th>
                         <th>Aprob</th>

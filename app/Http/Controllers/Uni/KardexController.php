@@ -150,21 +150,25 @@ class KardexController extends Controller
 
     public function indexHead()
     {
+        $config = \App\Utils\Configuration::getConfigurations();
         if (\Auth::user()->user_type_id <= 2) {
-            $areaId =  \DB::table('adm_areas_users')
-                            ->where('head_user_id', \Auth::id())
-                            ->value('area_id');
-                            
-            $group = Areas::find($areaId);
 
-            $group->child = $group->getChildrens();
-
-            $arrayAreas = $group->getArrayChilds();
-
-            $lStudentsByArea = \DB::table('adm_areas as a')
-                                    ->join('users as u', 'u.area_id', '=', 'a.id_area')
-                                    ->select('u.id')
-                                    ->whereIn('a.id_area', $arrayAreas);
+            if($config->withFunctionalArea){
+                $areaId =  \DB::table('adm_areas_users')
+                                ->where('head_user_id', \Auth::id())
+                                ->value('area_id');
+                                
+                $group = Areas::find($areaId);
+    
+                $group->child = $group->getChildrens();
+    
+                $arrayAreas = $group->getArrayChilds();
+    
+                $lStudentsByArea = \DB::table('adm_areas as a')
+                                        ->join('users as u', 'u.area_id', '=', 'a.id_area')
+                                        ->select('u.id')
+                                        ->whereIn('a.id_area', $arrayAreas);
+            }
 
             $lStudentsByDept = \DB::table('adm_departments AS d')
                                     ->join('adm_jobs AS j', 'd.id_department', '=', 'j.department_id')
@@ -209,11 +213,13 @@ class KardexController extends Controller
                                         ->distinct()
                                         ->pluck('u.id');
             
-            $aStudentsArea = $lStudentsByArea->union($lStudentsByBranch)
-                                        ->union($lStudentsByCompany)
-                                        ->union($lStudentsByOrg)
-                                        ->distinct()
-                                        ->pluck('u.id');
+            if($config->withFunctionalArea){
+                $aStudentsArea = $lStudentsByArea->union($lStudentsByBranch)
+                                            ->union($lStudentsByCompany)
+                                            ->union($lStudentsByOrg)
+                                            ->distinct()
+                                            ->pluck('u.id');
+            }
         }
         else {
             $aStudentsAux = \DB::table('users AS u')
@@ -224,16 +230,19 @@ class KardexController extends Controller
             $aStudentsArea = $aStudentsAux;
         }
 
-        // $lStudents = \DB::table('adm_departments AS d')
-        //                     ->join('adm_jobs AS j', 'd.id_department', '=', 'j.department_id')
-        //                     ->join('users AS u', 'j.id_job', '=', 'u.job_id')
-        //                     ->whereIn('u.id', $aStudentsAux)
-        //                     ->get();
+        if($config->withFunctionalArea){
+            $lStudents = \DB::table('users AS u')
+                                ->leftJoin('adm_areas as a', 'u.area_id', '=', 'a.id_area')
+                                ->whereIn('u.id', $aStudentsArea)
+                                ->get();
+        }else{
+            $lStudents = \DB::table('adm_departments AS d')
+                                ->join('adm_jobs AS j', 'd.id_department', '=', 'j.department_id')
+                                ->join('users AS u', 'j.id_job', '=', 'u.job_id')
+                                ->whereIn('u.id', $aStudentsAux)
+                                ->get();
+        }
 
-        $lStudents = \DB::table('users AS u')
-                            ->leftJoin('adm_areas as a', 'u.area_id', '=', 'a.id_area')
-                            ->whereIn('u.id', $aStudentsArea)
-                            ->get();
 
         foreach ($lStudents as $student) {
 
@@ -301,7 +310,7 @@ class KardexController extends Controller
             $student->currentAdvancePercent = $total == 0 ? 0 : ($currentApproved * 100 / $total);
         }
 
-        return view('uni.kardex.head')->with('lStudents', $lStudents);
+        return view('uni.kardex.head')->with('lStudents', $lStudents)->with('withFunctionalArea', $config->withFunctionalArea);
     }
 
     public function Reports()

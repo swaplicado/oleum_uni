@@ -22,22 +22,26 @@ class HeadMiddleware
             return $next($request);
         }
 
+        $config = \App\Utils\Configuration::getConfigurations();
         if (\Auth::user()->user_type_id <= 2) {
-            $areaId =  \DB::table('adm_areas_users')
-                            ->where('head_user_id', \Auth::id())
-                            ->value('area_id');
-                            
-            $group = Areas::find($areaId);
 
-            $group->child = $group->getChildrens();
-
-            $arrayAreas = $group->getArrayChilds();
-
-            $lStudentsByArea = \DB::table('adm_areas as a')
-                                    ->join('users as u', 'u.area_id', '=', 'a.id_area')
-                                    ->select('u.id')
-                                    ->where('u.id', $student)
-                                    ->whereIn('a.id_area', $arrayAreas);
+            if($config->withFunctionalArea){
+                $areaId =  \DB::table('adm_areas_users')
+                                ->where('head_user_id', \Auth::id())
+                                ->value('area_id');
+                                
+                $group = Areas::find($areaId);
+    
+                $group->child = $group->getChildrens();
+    
+                $arrayAreas = $group->getArrayChilds();
+    
+                $lStudentsByArea = \DB::table('adm_areas as a')
+                                        ->join('users as u', 'u.area_id', '=', 'a.id_area')
+                                        ->select('u.id')
+                                        ->where('u.id', $student)
+                                        ->whereIn('a.id_area', $arrayAreas);
+            }
 
             $lStudentsByDept = \DB::table('adm_departments AS d')
                                     ->join('adm_jobs AS j', 'd.id_department', '=', 'j.department_id')
@@ -76,18 +80,20 @@ class HeadMiddleware
                                     ->where('u.id', $student)
                                     ->where('o.head_user_id', \Auth::id());
     
-    
-            // $lStudentsAux = $lStudentsByDept->union($lStudentsByBranch)
-            //                             ->union($lStudentsByCompany)
-            //                             ->union($lStudentsByOrg)
-            //                             ->distinct()
-            //                             ->pluck('u.id');
+            if($config->withFunctionalArea){
+                $lStudentsAux = $lStudentsByArea->union($lStudentsByBranch)
+                                            ->union($lStudentsByCompany)
+                                            ->union($lStudentsByOrg)
+                                            ->distinct()
+                                            ->pluck('u.id');
+            }else{
+                $lStudentsAux = $lStudentsByDept->union($lStudentsByBranch)
+                                            ->union($lStudentsByCompany)
+                                            ->union($lStudentsByOrg)
+                                            ->distinct()
+                                            ->pluck('u.id');
+            }
 
-            $lStudentsAux = $lStudentsByArea->union($lStudentsByBranch)
-                                        ->union($lStudentsByCompany)
-                                        ->union($lStudentsByOrg)
-                                        ->distinct()
-                                        ->pluck('u.id');
 
             if (count($lStudentsAux) > 0) {
                 return $next($request);
