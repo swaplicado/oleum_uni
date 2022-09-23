@@ -77,6 +77,7 @@ class AssignmentsController extends Controller
                         ->where('a.is_closed', 0)
                         ->where('ka.is_deleted', false)
                         ->where('u.is_deleted', false)
+                        ->where('u.is_active', true)
                         ->get();
 
         foreach ($lAssignments as $element) {
@@ -192,6 +193,7 @@ class AssignmentsController extends Controller
             case 6:
                 $lStudents = User::where('is_deleted', false)
                                     ->where('id', $request->student)
+                                    ->where('is_active', true)
                                     ->select('id', 'num_employee', 'full_name')
                                     ->orderBy('full_name', 'ASC')
                                     ->get();
@@ -199,6 +201,7 @@ class AssignmentsController extends Controller
             case 5:
                 $lStudents = User::where('is_deleted', false)
                                     ->where('job_id', $request->job)
+                                    ->where('is_active', true)
                                     ->select('id', 'num_employee', 'full_name')
                                     ->orderBy('full_name', 'ASC')
                                     ->get();
@@ -208,6 +211,7 @@ class AssignmentsController extends Controller
                                 ->join('adm_jobs AS j', 'u.job_id', '=', 'j.id_job')
                                 ->where('j.department_id', $request->department)
                                 ->where('u.is_deleted', false)
+                                ->where('u.is_active', true)
                                 ->select('u.id', 'u.num_employee', 'u.full_name')
                                 ->orderBy('full_name', 'ASC')
                                 ->get();
@@ -215,6 +219,7 @@ class AssignmentsController extends Controller
             case 3:
                 $lStudents = User::where('is_deleted', false)
                                     ->where('branch_id', $request->branch)
+                                    ->where('is_active', true)
                                     ->select('id', 'num_employee', 'full_name')
                                     ->orderBy('full_name', 'ASC')
                                     ->get();
@@ -224,6 +229,7 @@ class AssignmentsController extends Controller
                                 ->join('adm_branches AS b', 'u.branch_id', '=', 'b.id_branch')
                                 ->where('b.company_id', $request->company)
                                 ->where('u.is_deleted', false)
+                                ->where('u.is_active', true)
                                 ->select('u.id', 'u.num_employee', 'u.full_name')
                                 ->orderBy('full_name', 'ASC')
                                 ->get();
@@ -234,6 +240,7 @@ class AssignmentsController extends Controller
                                 ->join('adm_companies AS c', 'b.company_id', '=', 'c.id_company')
                                 ->where('c.organization_id', $request->organization)
                                 ->where('u.is_deleted', false)
+                                ->where('u.is_active', true)
                                 ->select('u.id', 'u.num_employee', 'u.full_name')
                                 ->orderBy('full_name', 'ASC')
                                 ->get();
