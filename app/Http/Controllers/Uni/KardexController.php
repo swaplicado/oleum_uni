@@ -158,11 +158,16 @@ class KardexController extends Controller
                                 ->where('head_user_id', \Auth::id())
                                 ->value('area_id');
                                 
-                $group = Areas::find($areaId);
-    
-                $group->child = $group->getChildrens();
-    
-                $arrayAreas = $group->getArrayChilds();
+                if(!is_null($areaId)){
+                    $group = Areas::find($areaId);
+        
+                    $group->child = $group->getChildrens();
+        
+                    $arrayAreas = $group->getArrayChilds();
+                } else{
+                    $arrayAreas = [];
+                }
+
     
                 $lStudentsByArea = \DB::table('adm_areas as a')
                                         ->join('users as u', 'u.area_id', '=', 'a.id_area')
