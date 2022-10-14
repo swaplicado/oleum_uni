@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Adm\Job;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-use App\User;
-use App\Adm\Job;
-
 class UsersController extends Controller
 {
-    private $lJobs;    
+    private $lJobs;
 
     public function index()
     {
@@ -105,6 +104,16 @@ class UsersController extends Controller
                         ->where('j.is_deleted', 0)
                         ->value('d.area_id');
 
+        $oUsr = User::find($id);
+
+        if ($oUsr->area_id > 0) {
+            $areaId = $oUsr->area_id;
+        }
+        else if (is_null($areaId)) {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $areaId =  $config->defFunctArea;
+        }
+
         User::where('id', $id)
                     ->update(
                             [
@@ -169,6 +178,17 @@ class UsersController extends Controller
             }
         }
 
+        $areaId = \DB::table('adm_departments as d')
+                        ->join('adm_jobs as j', 'j.department_id', '=', 'd.id_department')
+                        ->where('j.id_job', $this->lJobs[$jUser->siie_job_id])
+                        ->where('j.is_deleted', 0)
+                        ->value('d.area_id');
+
+        if (is_null($areaId)) {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $areaId =  $config->defFunctArea;
+        }
+
         $oUser = new User();
 
         $oUser->username = $username;
@@ -185,6 +205,7 @@ class UsersController extends Controller
         $oUser->external_id = $jUser->id_employee;
         $oUser->job_id = $this->lJobs[$jUser->siie_job_id];
         $oUser->branch_id = 1;
+        $oUser->area_id = $areaId;
         $oUser->user_type_id = 1;
         $oUser->created_by_id = 1;
         $oUser->updated_by_id = 1;
