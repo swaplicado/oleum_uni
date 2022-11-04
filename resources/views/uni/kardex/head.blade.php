@@ -90,12 +90,18 @@
                             <td style="text-align: center">{{ $student->nTotalAssignments }}</td>
                             <td style="text-align: center">{{ $student->nTotalApprovedAssignments }}</td>
                             <td style="text-align: center">{{ $student->nTotalCurrentAssignments }}</td>
-                            <td style="text-align: center">{{ number_format($student->currentAdvancePercent, 2, '.', '').'%' }}</td>
+                            <td style="text-align: center">{{ $student->nTotalCurrentAssignments > 0 ? number_format($student->currentAdvancePercent, 2, '.', '').'%' : '-' }}</td>
+                            @if($student->nTotalCurrentAssignments > 0)
                             <td>
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ $student->currentAdvancePercent }}%" aria-valuenow="{{ $student->currentAdvancePercent }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </td>
+                            @else
+                                <td>
+                                    -
+                                </td>
+                            @endif
                             <td style="text-align: center">
                                 <a href="{{ route('kardex.index', $student->id) }}">
                                     <i class='bx bxs-graduation'></i>
