@@ -297,7 +297,20 @@ class KardexController extends Controller
 
             $currentSubtopics = [];
             $currentApproved = 0;
+            $nApproved = 0;
+            $nTakenTotal = 0;
+            $nSumGrades = 0;
             foreach ($lAssignmentsCurrent as $curElement) {
+                $curElement->isAreaApproved = TakeUtils::isAreaApproved($curElement->id_knowledge_area, $student->id, $curElement->id_assignment, true);
+
+                if ($curElement->isAreaApproved[0]) {
+                    $nApproved++;
+                }
+                if ($curElement->isAreaApproved[1] != null && $curElement->isAreaApproved[1] > 0) {
+                    $nSumGrades += $curElement->isAreaApproved[1];
+                    $nTakenTotal++;
+                }
+
                 $lSubs = TakeUtils::getSubTopicsOfArea($curElement->id_knowledge_area);
 
                 foreach ($lSubs as $idSub) {
@@ -310,7 +323,7 @@ class KardexController extends Controller
             }
 
             $total = count($currentSubtopics);
-
+            $student->currentAverage = $nTakenTotal == 0 ? 0 : $nSumGrades/$nTakenTotal;
             $student->nTotalCurrentAssignments = count($lAssignmentsCurrent);
             $student->currentAdvancePercent = $total == 0 ? 0 : ($currentApproved * 100 / $total);
         }
