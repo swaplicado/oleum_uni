@@ -3,7 +3,7 @@
 @include('uni.kardex.sectionjs')
 
 @section('content')
-@section('content_title', 'Mi avance')
+@section('content_title', $student_name != '' ? 'Avance: '.$student_name : 'Mi avance')
 
 <h5><b>Cuadrantes:</b></h5>
 <br>
