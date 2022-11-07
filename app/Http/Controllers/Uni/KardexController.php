@@ -36,6 +36,15 @@ class KardexController extends Controller
                         ->orderBy('a.dt_assignment', 'DESC')
                         ->get();
 
+        $student_name = null;
+        if($student != 0){
+            $oStudent = \DB::table('users')
+                            ->where('id', $student)
+                            ->first();
+            
+            $student_name = !is_null($oStudent) ? $oStudent->full_name : '';
+        }
+
         foreach ($areas as $area) {
             $area->grade = TakeUtils::isAreaApproved($area->id_knowledge_area, $iStudent, $area->id_assignment, true);
             $result = TakeUtils::getlAssignmentPercentCompleted($area->id_assignment, $area->id_knowledge_area, $iStudent);
@@ -67,7 +76,7 @@ class KardexController extends Controller
             }
         }
 
-        return view('uni.kardex.index')->with('areas', $areas)->with('student', $iStudent);
+        return view('uni.kardex.index')->with('areas', $areas)->with('student', $iStudent)->with('student_name',  $student_name);
     }
 
     public function kardexModules($area, $asssignment, $student = 0)
