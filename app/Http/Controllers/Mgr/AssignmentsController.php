@@ -519,6 +519,12 @@ class AssignmentsController extends Controller
         $oAssignment->dt_end = $request->dt_end;
         $oAssignment->updated_by_id = \Auth::id();
 
+        $today = Carbon::today();
+        $dt_end = Carbon::parse($request->dt_end);
+        if($today->lte($dt_end)){
+            $oAssignment->is_closed = 0;
+        }
+
         $oAssignment->save();
 
         return;
@@ -638,6 +644,12 @@ class AssignmentsController extends Controller
         $moduleControl->dt_open =  $request->dt_assignment;
         $moduleControl->dt_close =  $request->dt_end;
 
+        $today = Carbon::today();
+        $dt_end = Carbon::parse($request->dt_end);
+        if($today->lte($dt_end)){
+            $moduleControl->is_closed = 0;
+        }
+
         $moduleControl->update();
 
         return;
@@ -664,6 +676,12 @@ class AssignmentsController extends Controller
 
         $courseControl->dt_open =  $request->dt_assignment;
         $courseControl->dt_close =  $request->dt_end;
+
+        $today = Carbon::today();
+        $dt_end = Carbon::parse($request->dt_end);
+        if($today->lte($dt_end)){
+            $courseControl->is_closed = 0;
+        }
 
         $courseControl->update();
 
