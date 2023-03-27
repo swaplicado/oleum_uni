@@ -486,19 +486,22 @@ class AssignmentsController extends Controller
             }
 
             foreach ($lAssigns as $assignment) {
-                $student = User::find($assignment->student_id);
-                if (strlen($student->email) == 0) {
-                    continue;
+                try {
+                    $student = User::find($assignment->student_id);
+                    if (strlen($student->email) == 0) {
+                        continue;
+                    }
+    
+                    $rec = [];
+                    $ua = [];
+                    $ua['email'] = $student->email;
+                    $ua['name'] = $student->full_name;
+    
+                    $rec[] = (object) $ua;
+    
+                    Mail::to($rec)->send(new KnowledgeAreaAssignment($assignment->id_assignment));
+                } catch (\Throwable $th) {
                 }
-
-                $rec = [];
-                $ua = [];
-                $ua['email'] = $student->email;
-                $ua['name'] = $student->full_name;
-
-                $rec[] = (object) $ua;
-
-                Mail::to($rec)->send(new KnowledgeAreaAssignment($assignment->id_assignment));
             }
 
             \DB::commit();
