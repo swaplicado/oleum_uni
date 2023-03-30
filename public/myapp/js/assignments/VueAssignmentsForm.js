@@ -39,6 +39,7 @@ var app = new Vue({
         lOrganizations: oServerData.lOrganizations,
         type_sel: "Seleccione área",
         durationDays: 0,
+        assigntButton: false,
     },
     mounted() {
         let self = this;
@@ -195,7 +196,7 @@ var app = new Vue({
 
                         this.lAssignments.push(oAss);
                     }
-
+                    this.assigntButton = false;
                     $('#studentsModal').modal('show');
                 })
                 .catch(err => {
@@ -277,6 +278,7 @@ var app = new Vue({
             SGui.showOk();
         },
         assignArea() {
+            this.assigntButton = true;
             SGui.showWaiting(4000);
             /**
              * Petición al Controlador
