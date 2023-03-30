@@ -118,6 +118,7 @@ class UsersController extends Controller
                     ->update(
                             [
                                 'num_employee' => $jUser->num_employee,
+                                'email' => $jUser->email,
                                 'first_name' => $jUser->lastname1,
                                 'last_name' => $jUser->lastname2,
                                 'names' => $jUser->firstname,
