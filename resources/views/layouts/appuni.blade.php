@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0"/>
+    <meta http-equiv="pragma" content="no-cache"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ env('APP_NAME', 'APP WEB') }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/uvaeth_aeth.png') }}">
@@ -275,6 +279,7 @@
     });
     </script>
     @yield('bottom_scripts')
+    <script> axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');</script>
 </body>
 @include('layouts.unifooter')
 </html>
