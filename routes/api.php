@@ -16,3 +16,13 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group([], function() {
+    Route::post('getCuadrants', [
+        'uses' => 'api\\apiCertificatesController@getCuadrants'
+    ]);
+
+    Route::post('getCertificates', [
+        'uses' => 'api\\apiCertificatesController@getCertificates'
+    ]);
+});
