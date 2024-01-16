@@ -125,7 +125,7 @@ class apiCertificatesController extends Controller
 
                 if(!is_null($module->control->dtt_take)){
                     $module->moduleStatus = $module->control->id_status == 7 ? 
-                                                    ( $module->control->aprobe == 1 ? 'Apronado' : 'No apronado' ) :
+                                                    ( $module->control->aprobe == 1 ? 'Aprobado' : 'No aprobado' ) :
                                                     $module->control->status;
     
                     $module->withCertificate = $module->control->id_status == 7 ? 
@@ -170,7 +170,7 @@ class apiCertificatesController extends Controller
 
                     if(!is_null($course->control->dtt_take)){
                         $course->courseStatus = $course->control->id_status == 7 ? 
-                                                        ( $course->control->aprobe == 1 ? 'Apronado' : 'No apronado' ) :
+                                                        ( $course->control->aprobe == 1 ? 'Aprobado' : 'No aprobado' ) :
                                                         $course->control->status;
         
                         $course->withCertificate = $course->control->id_status == 7 ? 
