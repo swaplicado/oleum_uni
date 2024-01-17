@@ -149,7 +149,7 @@ class apiCertificatesController extends Controller
                     $course->control = \DB::table('uni_taken_controls as c')
                                             ->join('sys_take_status as s', 's.id_status', '=', 'status_id')
                                             ->where('c.assignment_id', $cuadrant->id_assignment)
-                                            ->where('c.module_n_id', $module->id_module)
+                                            ->where('c.course_n_id', $course->id_course)
                                             ->where('c.is_deleted', 0)
                                             ->select(
                                                 \DB::raw('MAX(c.id_taken_control) as id_control'),
