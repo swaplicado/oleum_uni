@@ -26,3 +26,19 @@ Route::group([], function() {
         'uses' => 'api\\apiCertificatesController@getCertificates'
     ]);
 });
+
+Route::post('login', 'api\\AuthController@login');
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('getUserToGlobalUser', [
+        'uses' => 'api\\apiGlobalUsersController@getUserToGlobalUser'
+    ]);
+
+    Route::post('getListUsers', [
+        'uses' => 'api\\apiGlobalUsersController@getListUsersToGlobalUsers'
+    ]);
+
+    Route::post('syncUsers', [
+        'uses' => 'api\\apiGlobalUsersController@syncUsers'
+    ]);
+});
