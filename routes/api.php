@@ -38,7 +38,15 @@ Route::group(['middleware' => 'auth:api'], function() {
         'uses' => 'api\\apiGlobalUsersController@getListUsersToGlobalUsers'
     ]);
 
-    Route::post('syncUsers', [
-        'uses' => 'api\\apiGlobalUsersController@syncUsers'
+    Route::post('syncUser', [
+        'uses' => 'api\\apiGlobalUsersController@syncUser'
+    ]);
+
+    Route::get('getUserById/{id}', [
+        'uses' => 'api\\apiGlobalUsersController@getUserById'
+    ]);
+
+    Route::post('updateUser', [
+        'uses' => 'api\\apiGlobalUsersController@updateUser'
     ]);
 });

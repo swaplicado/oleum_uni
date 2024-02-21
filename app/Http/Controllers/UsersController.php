@@ -236,4 +236,98 @@ class UsersController extends Controller
         }
         return json_encode(['success' => true, 'message' => 'Registro actualizadó con exitó']);
     }
+
+    /**
+     * The function `findUserBy` in PHP searches for a user in the database based on the provided
+     * parameters (username, full name, external ID, and employee number) and returns the first
+     * matching user.
+     * 
+     * @param $username The username parameter is used to search for a user by their username.
+     * @param $full_name The full name of the user you want to find.
+     * @param $external_id The external_id parameter is used to search for a user based on their
+     * external identifier. This could be an ID or code that is assigned to the user by an external
+     * system or service.
+     * @param $employee_num The employee number of the user.
+     * 
+     * @return $query an instance of the User model that matches the given criteria.
+     */
+    public function findUserBy($username = null, $full_name = null, $external_id = null, $employee_num = null){
+        $oUser = null;
+        $query = User::query();
+        if($username != null){
+            $query->where('username', $username);
+        }
+        if($full_name != null){
+            $query->where('full_name', $full_name);
+        }
+        if($external_id != null){
+            $query->where('external_id', $external_id);
+        }
+        if($employee_num != null){
+            $query->where('num_employee', $employee_num);
+        }
+        $oUser = $query->first();
+        return $oUser;
+    }
+
+    public function insertUserFromApi($oUserApi){
+        $this->lJobs = Job::pluck('id_job', 'external_id');
+
+        $oUser = new User();
+
+        $areaId = \DB::table('adm_departments as d')
+                        ->join('adm_jobs as j', 'j.department_id', '=', 'd.id_department')
+                        ->where('j.id_job', $this->lJobs[$oUserApi->job_id])
+                        ->where('j.is_deleted', 0)
+                        ->value('d.area_id');
+
+        if (is_null($areaId)) {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $areaId =  $config->defFunctArea;
+        }
+
+        $oUser->username = $oUserApi->username;
+        $oUser->password = $oUserApi->pass;
+        $oUser->email = isset($oUser->institutional_mail) ? $oUser->institutional_mail : ( !is_null($oUser->email) ? $oUser->email : '' );
+        $oUser->num_employee = $oUserApi->employee_num;
+        $oUser->first_name = $oUserApi->first_name;
+        $oUser->last_name = $oUserApi->last_name;
+        $oUser->names = $oUserApi->short_name;
+        $oUser->full_name = $oUserApi->full_name;
+        $oUser->profile_picture = "img/profiles/profile.png";
+        $oUser->is_active = $oUserApi->is_active;
+        $oUser->is_deleted = $oUserApi->is_delete;
+        $oUser->external_id = $oUserApi->external_id_n;
+        $oUser->job_id = $this->lJobs[$oUserApi->job_id];
+        $oUser->branch_id = 1;
+        $oUser->area_id = $areaId;
+        $oUser->user_type_id = 1;
+        $oUser->created_by_id = 1;
+        $oUser->updated_by_id = 1;
+
+        $oUser->save();
+
+        return $oUser;
+    }
+
+    public function updateUserFromApi($oUser){
+        $this->lJobs = Job::pluck('id_job', 'external_id');
+
+        $user = User::findOrFail($oUser->id_user_system);
+        $user->username = $oUser->username;
+        $user->password = $oUser->pass;
+        $user->email = isset($oUser->institutional_mail) ? $oUser->institutional_mail : $oUser->email;
+        $user->num_employee = $oUser->employee_num;
+        $user->first_name = $oUser->first_name;
+        $user->last_name = $oUser->last_name;
+        $user->names = $oUser->short_name;
+        $user->full_name = $oUser->full_name;
+        $user->is_active = $oUser->is_active;
+        $user->is_deleted = $oUser->is_delete;
+        $user->external_id = $oUser->external_id_n;
+        $user->job_id = $this->lJobs[$oUser->job_id];
+        $user->update();
+
+        return $user;
+    }
 }

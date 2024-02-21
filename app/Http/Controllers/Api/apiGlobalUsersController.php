@@ -9,7 +9,8 @@ use App\Http\Controllers\UsersController;
 
 class apiGlobalUsersController extends Controller
 {
-    
+    public const USERGLOBAL_INSERT = 1;
+    public const USERGLOBAL_UPDATE = 2;
     /**
      * The function `getUser` retrieves user data based on various parameters such as full name,
      * username, external ID, and employee number.
@@ -178,7 +179,7 @@ class apiGlobalUsersController extends Controller
      * @param Request request The  parameter is an instance of the Request class, which
      * represents an HTTP request. It contains information about the request such as the request
      * method, headers, and input data.
-     * Request contains an array of object users to sinc, Each user object has the following properties:
+     * Request contains an object users to sinc, Each user object has the following properties:
      * id_employee
      * num_employee
      * lastname1
@@ -204,18 +205,21 @@ class apiGlobalUsersController extends Controller
      * is_active
      * is_deleted
      * 
-     * @return a JSON response. If the synchronization of users is successful, it will return a success
+     * @return $ a JSON response. If the synchronization of users is successful, it will return a success
      * response with a message indicating that the users were synchronized correctly. If there is an
      * error during the synchronization process, it will return an error response with a message
      * indicating the error message.
      */
-    public function syncUsers(Request $request){
+    public function syncUser(Request $request){
         try {
-            $lUsers =  json_decode($request->lUsers);
+            $user = (object)$request->user;
+            $type = $request->type;
             
-            foreach ($lUsers as $user) {
-                $usrCont = new UsersController();
-                $usrCont->insertUserFromApi($user);
+            $usrCont = new UsersController();
+            if($type == self::USERGLOBAL_INSERT){
+                $oUser = $usrCont->insertUserFromApi($user);
+            }else if($type == self::USERGLOBAL_UPDATE){
+                $oUser = $usrCont->updateUserFromApi($user);
             }
 
         } catch (\Throwable $th) {
@@ -230,7 +234,65 @@ class apiGlobalUsersController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => "Se sincronizaron los usuarios correctamente",
-            'data' => []
+            'data' => $oUser
             ], 200, [], JSON_UNESCAPED_UNICODE);
     }
+
+    public static function getUserById($userId){
+        try {
+            $oUser = User::findOrFail($userId);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+                'data' => null
+                ], 500, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Se encontró el usuario correctamente",
+            'data' => $oUser
+            ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function updateUser(Request $request){
+        try {
+            $user = (object)$request->user;
+            $userUniv = User::findOrFail($user->user_system_id);
+            $userUniv->username = $user->username;
+            $userUniv->email = $user->email;
+            $userUniv->password = $user->pass;
+            $userUniv->update();
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+                'data' => null
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Se actualizó el usuario correctamente",
+            'data' => null
+            ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    // public function syncListUsers(Request $request){
+    //     try {
+    //         $lUsers = $request->lUsers;
+    //         foreach($lUsers as $user){
+
+    //         }
+    //     } catch (\Throwable $th) {
+    //         \Log::error($th);
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => $th->getMessage(),
+    //             'data' => null
+    //             ], 500, [], JSON_UNESCAPED_UNICODE);
+    //     }
+    // }
 }

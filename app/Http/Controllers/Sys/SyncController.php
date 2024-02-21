@@ -61,8 +61,8 @@ class SyncController extends Controller
             $jobCont = new JobsController();
             $jobCont->saveJobsFromJSON($data->positions);
             
-            $usrCont = new UsersController();
-            $usrCont->saveUsersFromJSON($data->employees);
+            // $usrCont = new UsersController(); //Se quita sincro de usuarios porque ya van a llegar de pgh
+            // $usrCont->saveUsersFromJSON($data->employees);
             
             $deptCont->setSupDeptAndHeadUser($data->departments);
 

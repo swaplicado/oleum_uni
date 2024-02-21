@@ -8,6 +8,7 @@ use Carbon\Carbon;
 
 use App\User;
 use App\Uni\PointsControl;
+use App\Utils\globalUsersUtils;
 
 class ProfilesController extends Controller
 {
@@ -85,10 +86,30 @@ class ProfilesController extends Controller
             'new_password.required' => 'La contraseña nueva es obligatoria'
         ]);
 
-        //Change Password
-        $user = \Auth::user();
-        $user->password = bcrypt($request->get('new_password'));
-        $user->save();
+
+        try {
+            \DB::beginTransaction();
+            //Change Password
+            $user = \Auth::user();
+            $user->password = bcrypt($request->get('new_password'));
+            $user->save();
+
+            $loginResult = globalUsersUtils::loginToPGH();
+            if($loginResult->status == 'success'){
+                $user->pass = $user->password;
+                $user->user_system_id = $user->id;
+                $result = globalUsersUtils::globalUpdatePassword($loginResult->token_type, $loginResult->access_token, $user);
+                if($result->status == 'error'){
+                    \Log::error($result->message);
+                }
+            }
+
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            \Log::error($th);
+            return redirect()->back()->with("error", "Ocurrió un error al actualizar la contraseña. Por favor intenta de nuevo.");
+        }
 
         return redirect()->route('home')->with("success","La contraseña ha sido actualizada con éxito!");
     }
