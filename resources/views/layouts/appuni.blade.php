@@ -10,7 +10,7 @@
     <meta http-equiv="expires" content="0"/>
     <meta http-equiv="pragma" content="no-cache"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ env('APP_NAME', 'APP WEB') }}</title>
+    <title>{{ 'UVAETH' }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/uvaeth_aeth.png') }}">
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('boxicons/css/boxicons.min.css') }}" rel="stylesheet">
