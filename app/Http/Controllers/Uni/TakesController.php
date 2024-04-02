@@ -507,7 +507,6 @@ class TakesController extends Controller
         $lTopics = \DB::table('uni_topics AS top')
                             ->where('course_id', $idCourse)
                             ->where('is_deleted', false)
-                            ->where('elem_status_id', 3)
                             ->get();
 
         $sum = 0;
