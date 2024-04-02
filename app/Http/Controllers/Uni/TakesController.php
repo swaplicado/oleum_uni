@@ -507,6 +507,7 @@ class TakesController extends Controller
         $lTopics = \DB::table('uni_topics AS top')
                             ->where('course_id', $idCourse)
                             ->where('is_deleted', false)
+                            ->where('elem_status_id', 3)
                             ->get();
 
         $sum = 0;
@@ -562,6 +563,7 @@ class TakesController extends Controller
         $lCourses = \DB::table('uni_courses AS co')
                             ->where('module_id', $idModule)
                             ->where('is_deleted', false)
+                            ->where('elem_status_id', 3)
                             ->get();
 
         $sum = 0;
@@ -618,6 +620,7 @@ class TakesController extends Controller
         $lModules = \DB::table('uni_modules AS mo')
                             ->where('knowledge_area_id', $idArea)
                             ->where('is_deleted', false)
+                            ->where('elem_status_id', 3)
                             ->get();
 
         $sum = 0;
