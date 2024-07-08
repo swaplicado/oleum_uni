@@ -80,7 +80,7 @@ class apiCertificatesController extends Controller
 
             if(!is_null($cuadrant->control->dtt_take)){
                 $cuadrant->cuadrantStatus = $cuadrant->control->id_status == 7 ? 
-                                                ( $cuadrant->control->aprobe == 1 ? 'Aprobado' : 'No aprobado' ) :
+                                                ( $cuadrant->control->aprobe == 1 ? 'Completado' : 'No completado' ) :
                                                     $cuadrant->control->status;
 
                 $cuadrant->withCertificate = $cuadrant->control->id_status == 7 ? 
@@ -125,7 +125,7 @@ class apiCertificatesController extends Controller
 
                 if(!is_null($module->control->dtt_take)){
                     $module->moduleStatus = $module->control->id_status == 7 ? 
-                                                    ( $module->control->aprobe == 1 ? 'Aprobado' : 'No aprobado' ) :
+                                                    ( $module->control->aprobe == 1 ? 'Completado' : 'No completado' ) :
                                                     $module->control->status;
     
                     $module->withCertificate = $module->control->id_status == 7 ? 

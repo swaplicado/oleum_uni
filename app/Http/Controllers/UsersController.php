@@ -325,7 +325,7 @@ class UsersController extends Controller
         $user->is_active = $oUser->is_active;
         $user->is_deleted = $oUser->is_delete;
         $user->external_id = $oUser->external_id_n;
-        $user->job_id = $this->lJobs[$oUser->job_id];
+        $user->job_id = isset($this->lJobs[$oUser->job_id]) ? $this->lJobs[$oUser->job_id] : 1;
         $user->update();
 
         return $user;

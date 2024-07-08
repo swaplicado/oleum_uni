@@ -29,24 +29,24 @@ Route::group([], function() {
 
 Route::post('login', 'api\\AuthController@login');
 
+Route::post('getUserToGlobalUser', [
+    'uses' => 'api\\apiGlobalUsersController@getUserToGlobalUser'
+]);
+
+Route::post('getListUsers', [
+    'uses' => 'api\\apiGlobalUsersController@getListUsersToGlobalUsers'
+]);
+
+Route::post('syncUser', [
+    'uses' => 'api\\apiGlobalUsersController@syncUser'
+]);
+
+Route::get('getUserById/{id}', [
+    'uses' => 'api\\apiGlobalUsersController@getUserById'
+]);
+
+Route::post('updateUser', [
+    'uses' => 'api\\apiGlobalUsersController@updateUser'
+]);
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::post('getUserToGlobalUser', [
-        'uses' => 'api\\apiGlobalUsersController@getUserToGlobalUser'
-    ]);
-
-    Route::post('getListUsers', [
-        'uses' => 'api\\apiGlobalUsersController@getListUsersToGlobalUsers'
-    ]);
-
-    Route::post('syncUser', [
-        'uses' => 'api\\apiGlobalUsersController@syncUser'
-    ]);
-
-    Route::get('getUserById/{id}', [
-        'uses' => 'api\\apiGlobalUsersController@getUserById'
-    ]);
-
-    Route::post('updateUser', [
-        'uses' => 'api\\apiGlobalUsersController@updateUser'
-    ]);
 });

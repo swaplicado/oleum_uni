@@ -509,6 +509,7 @@ class AssignmentsController extends Controller
         }
         catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             $session->abortTransaction();
         }
 

@@ -32,7 +32,7 @@ class GiftExchanged extends Mailable
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS'))
-                    ->subject('Canje de premio UNIVAETH')
+                    ->subject('[UVAETH] Canje de premio UNIVAETH')
                     ->view('mails.adm.giftexchanged')
                     ->with('oGift', $this->oGift)
                     ->with('points', $this->dCurrentPoints);
