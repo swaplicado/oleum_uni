@@ -41,6 +41,14 @@ Route::post('syncUser', [
     'uses' => 'api\\apiGlobalUsersController@syncUser'
 ]);
 
+Route::get('syncJobsAndDepartments', [
+    'uses' => 'api\\apiGlobalUsersController@syncJobsAndDepartments'
+]);
+
+Route::get('setupDeptsAndHeaders', [
+    'uses' => 'api\\apiGlobalUsersController@setupDeptsAndHeaders'
+]);
+
 Route::get('getUserById/{id}', [
     'uses' => 'api\\apiGlobalUsersController@getUserById'
 ]);

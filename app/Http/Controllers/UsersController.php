@@ -271,19 +271,24 @@ class UsersController extends Controller
     }
 
     public function insertUserFromApi($oUserApi){
+        $config = \App\Utils\Configuration::getConfigurations();
         $this->lJobs = Job::pluck('id_job', 'external_id');
 
         $oUser = new User();
 
         $areaId = \DB::table('adm_departments as d')
                         ->join('adm_jobs as j', 'j.department_id', '=', 'd.id_department')
-                        ->where('j.id_job', $this->lJobs[$oUserApi->job_id])
+                        ->where('j.id_job', $this->lJobs[$oUserApi->siie_job_id])
                         ->where('j.is_deleted', 0)
                         ->value('d.area_id');
 
         if (is_null($areaId)) {
-            $config = \App\Utils\Configuration::getConfigurations();
             $areaId =  $config->defFunctArea;
+        }
+
+        $job = $config->defJob;
+        if (isset($this->lJobs[$oUserApi->job_id])) {
+            $job = $this->lJobs[$oUserApi->job_id];
         }
 
         $oUser->username = $oUserApi->username;
@@ -298,7 +303,7 @@ class UsersController extends Controller
         $oUser->is_active = $oUserApi->is_active;
         $oUser->is_deleted = $oUserApi->is_delete;
         $oUser->external_id = $oUserApi->external_id_n;
-        $oUser->job_id = $this->lJobs[$oUserApi->job_id];
+        $oUser->job_id = $job;
         $oUser->branch_id = 1;
         $oUser->area_id = $areaId;
         $oUser->user_type_id = 1;
