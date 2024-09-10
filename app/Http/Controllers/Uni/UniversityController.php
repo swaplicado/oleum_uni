@@ -369,12 +369,18 @@ class UniversityController extends Controller
             $iContent = $controller->takeContent($idSubtopicTaken, false);
         }
 
+        $lQuestions = \DB::table('uni_questions AS q')
+                            ->where('subtopic_id', $subtopic)
+                            ->where('is_deleted', false);
+        $bHasQuiz = $lQuestions->count() > 0;
+
         return view('uni.courses.play.view')->with('lContents', $lContents)
                                             ->with('iContent', $iContent)
                                             ->with('oSubtopic', $oSubtopic)
                                             ->with('aGrade', $aGrade)
                                             ->with('takeGrouper', $takeGrouper)
                                             ->with('idSubtopicTaken', $idSubtopicTaken)
+                                            ->with('bHasQuiz', $bHasQuiz)
                                             ->with('registryContentRoute', 'take.content');
     }
 }

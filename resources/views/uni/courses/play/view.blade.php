@@ -55,10 +55,10 @@
             </div>
         </div>
     </div>
-    @if (! $aGrade[0])
-    <div style="text-align: right">
-        <a href="{{ route('exam.evaluate', [$oSubtopic->id_subtopic, $idSubtopicTaken, $takeGrouper]) }}" class="btn btn-info">Iniciar Evaluación <i class='bx bxs-spreadsheet'></i></a>
-    </div>
+    @if (! $aGrade[0] && $bHasQuiz)
+        <div style="text-align: right">
+            <a href="{{ route('exam.evaluate', [$oSubtopic->id_subtopic, $idSubtopicTaken, $takeGrouper]) }}" class="btn btn-info">Iniciar Evaluación <i class='bx bxs-spreadsheet'></i></a>
+        </div>
     @endif
 @endsection
 
