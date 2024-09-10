@@ -32,7 +32,7 @@ class Questions extends Mailable
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS'))
-                        ->subject('UVAETH. Duda de '.$this->studentName)
+                        ->subject('[UVAETH] Duda de '.$this->studentName)
                         ->view('mails.uni.question')
                         ->with('studentName', $this->studentName)
                         ->with('studentQuestion', $this->studentQuestion);

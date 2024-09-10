@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\Adm\DepartmentsController;
+use App\Http\Controllers\Adm\JobsController;
+use App\Http\Controllers\Mgr\ScheduledAssignmentsController;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
 
 class apiGlobalUsersController extends Controller
 {
@@ -212,8 +217,10 @@ class apiGlobalUsersController extends Controller
      */
     public function syncUser(Request $request){
         try {
+            $output = new \Symfony\Component\Console\Output\ConsoleOutput();
             $user = (object)$request->user;
             $type = $request->type;
+            $output->writeln("Inicio insert univ " . $user->full_name);
             
             $usrCont = new UsersController();
             if($type == self::USERGLOBAL_INSERT){
@@ -221,8 +228,9 @@ class apiGlobalUsersController extends Controller
             }else if($type == self::USERGLOBAL_UPDATE){
                 $oUser = $usrCont->updateUserFromApi($user);
             }
-
+            $output->writeln("Insertado en univ " . $user->full_name);
         } catch (\Throwable $th) {
+            $output->writeln("catch principal de univ " . $user->full_name . " " . $th->getMessage());
             \Log::error($th);
             return response()->json([
                 'status' => 'error',
@@ -235,6 +243,81 @@ class apiGlobalUsersController extends Controller
             'status' => 'success',
             'message' => "Se sincronizaron los usuarios correctamente",
             'data' => $oUser
+            ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function syncJobsAndDepartments(){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+
+            $client = new Client([
+                'base_uri' => $config->urlSync,
+                'timeout' => 10.0,
+            ]);
+
+            $response = $client->request('GET', 'getInfoERP/' . $config->lastSyncDateTime);
+            $jsonString = $response->getBody()->getContents();
+            $data = json_decode($jsonString);
+
+            $deptCont = new DepartmentsController();
+            $deptCont->saveDeptsFromJSON($data->departments);
+            
+            $jobCont = new JobsController();
+            $jobCont->saveJobsFromJSON($data->positions);
+        }
+        catch (\Throwable $th) {
+            \Log::error($th);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+                'data' => null
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Se sincronizaron los puestos y departamentos correctamente",
+            ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public static function setupDeptsAndHeaders(){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+    
+            $client = new Client([
+                'base_uri' => $config->urlSync,
+                'timeout' => 10.0,
+            ]);
+    
+            $response = $client->request('GET', 'getInfoERP/' . $config->lastSyncDateTime);
+            $jsonString = $response->getBody()->getContents();
+            $data = json_decode($jsonString);
+    
+            $deptCont = new DepartmentsController();
+            $deptCont->setSupDeptAndHeadUser($data->departments);
+    
+            $config = \App\Utils\Configuration::getConfigurations();
+            if ($config->automaticSchedule) {
+                $sch = new ScheduledAssignmentsController();
+                $sch->processAssignmentSchedule(false);
+            }
+
+            $newDate = Carbon::now();
+            $newDate->subMinutes(10);
+
+            \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+                'data' => null
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Se configuraron los headers de los departamentos",
             ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 

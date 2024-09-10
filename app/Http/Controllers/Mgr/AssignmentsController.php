@@ -256,6 +256,7 @@ class AssignmentsController extends Controller
 
     public function store(Request $request)
     {
+        $config = \App\Utils\Configuration::getConfigurations();
         $oAControl = new AssignmentControl();
 
         $oAControl->is_deleted = false;
@@ -340,20 +341,25 @@ class AssignmentsController extends Controller
 
                 foreach($lModules as $module){
                     //crea modulo control
-                    $dates = $this->getDatesModule($lModules, $module, $oAssignment->dt_assignment);
-                    $closeDate = Carbon::parse($dates[0]);
-                    $openDate = Carbon::parse($dates[1]);
-                    $assignDate = Carbon::parse($oAssignment->dt_assignment);
-                    $assignDateEnd = Carbon::parse($oAssignment->dt_end);
-
-                    if($closeDate->gt($assignDateEnd)){
-                        \DB::rollBack();
-                        $session->abortTransaction();
-                        
-                        return json_encode([
-                            'success' => false,
-                            'message' => 'El rango de fechas de los módulos es superior al rango de fecha del cuadrante',
-                            'icon' => 'error']);
+                    if ($config->withLock) {
+                        $dates = $this->getDatesModule($lModules, $module, $oAssignment->dt_assignment);
+                        $closeDate = Carbon::parse($dates[0]);
+                        $openDate = Carbon::parse($dates[1]);
+                        $assignDate = Carbon::parse($oAssignment->dt_assignment);
+                        $assignDateEnd = Carbon::parse($oAssignment->dt_end);
+    
+                        if($closeDate->gt($assignDateEnd)){
+                            \DB::rollBack();
+                            $session->abortTransaction();
+                            
+                            return json_encode([
+                                'success' => false,
+                                'message' => 'El rango de fechas de los módulos es superior al rango de fecha del cuadrante',
+                                'icon' => 'error']);
+                        }
+                    } else {
+                        $openDate = Carbon::parse($oAssignment->dt_assignment);
+                        $closeDate = Carbon::parse($oAssignment->dt_end);
                     }
 
                     $oModuleControl = new ModuleControl();
@@ -388,18 +394,24 @@ class AssignmentsController extends Controller
                     $mModule->save();
 
                     foreach($lCourses as $course){
-                        $courseDates = $this->getDatesCourse($lCourses, $course, $oModuleControl->dt_open);
-                        $courseCloseDate = Carbon::parse($courseDates[0]);
-                        $courseOpenDate = Carbon::parse($courseDates[1]);
 
-                        if($courseCloseDate->gt($closeDate)){
-                            \DB::rollBack();
-                            $session->abortTransaction();
-                            
-                            return json_encode([
-                                'success' => false,
-                                'message' => 'El rango de fechas de los cursos es superior al rango de fecha del módulo '.$module->module,
-                                'icon' => 'error']);
+                        if ($config->withLock) {
+                            $courseDates = $this->getDatesCourse($lCourses, $course, $oModuleControl->dt_open);
+                            $courseCloseDate = Carbon::parse($courseDates[0]);
+                            $courseOpenDate = Carbon::parse($courseDates[1]);
+    
+                            if($courseCloseDate->gt($closeDate)){
+                                \DB::rollBack();
+                                $session->abortTransaction();
+                                
+                                return json_encode([
+                                    'success' => false,
+                                    'message' => 'El rango de fechas de los cursos es superior al rango de fecha del módulo '.$module->module,
+                                    'icon' => 'error']);
+                            }
+                        } else {
+                            $courseOpenDate = Carbon::parse($oModuleControl->dt_open);
+                            $courseCloseDate = Carbon::parse($oModuleControl->dt_close);
                         }
 
                         $oCourseControl = new CourseControl();
@@ -509,6 +521,7 @@ class AssignmentsController extends Controller
         }
         catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             $session->abortTransaction();
         }
 
@@ -516,19 +529,53 @@ class AssignmentsController extends Controller
 
     public function updateAssignment(Request $request)
     {
-        $oAssignment = Assignment::find($request->id_assignment);
-
-        $oAssignment->dt_assignment = $request->dt_assignment;
-        $oAssignment->dt_end = $request->dt_end;
-        $oAssignment->updated_by_id = \Auth::id();
-
-        $today = Carbon::today();
-        $dt_end = Carbon::parse($request->dt_end);
-        if($today->lte($dt_end)){
-            $oAssignment->is_closed = 0;
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $oAssignment = Assignment::find($request->id_assignment);
+    
+            $oAssignment->dt_assignment = $request->dt_assignment;
+            $oAssignment->dt_end = $request->dt_end;
+            $oAssignment->updated_by_id = \Auth::id();
+    
+            $today = Carbon::today();
+            $dt_end = Carbon::parse($request->dt_end);
+            if($today->lte($dt_end)){
+                $oAssignment->is_closed = 0;
+            }
+    
+            $oAssignment->save();
+    
+            if (!$config->withLock) {
+                $moduleControl = ModuleControl::where('assignment_id', $request->id_assignment)->get();
+                foreach($moduleControl as $m){
+                    $m->dt_open =  $request->dt_assignment;
+                    $m->dt_close =  $request->dt_end;
+                    
+                    $today = Carbon::today();
+                    $dt_end = Carbon::parse($request->dt_end);
+                    if($today->lte($dt_end)){
+                        $moduleControl->is_closed = 0;
+                    }
+                    
+                    $m->update();
+                }
+    
+                $courseControl = CourseControl::where('assignment_id', $request->id_assignment)->get();
+                foreach($courseControl as $c){
+                    $c->dt_open =  $request->dt_assignment;
+                    $c->dt_close =  $request->dt_end;
+    
+                    $today = Carbon::today();
+                    $dt_end = Carbon::parse($request->dt_end);
+                    if($today->lte($dt_end)){
+                        $courseControl->is_closed = 0;
+                    }
+    
+                    $c->update();
+                }
+            }
+        } catch (\Throwable $th) {
         }
-
-        $oAssignment->save();
 
         return;
     }

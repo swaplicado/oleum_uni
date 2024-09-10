@@ -93,6 +93,30 @@
                             </a>
                         </div>
                     </div>
+                    <br>
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <a href="#" type="button" style="width: 100%" class="btn btn-info">
+                                Videoconferencias
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <a href="#" type="button" style="width: 100%" class="btn btn-info">
+                                Tablero de discusión
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <a href="#" type="button" style="width: 100%" class="btn btn-info">
+                                Tablero de discusión de grupo
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="accordion" id="accordionThemes">
