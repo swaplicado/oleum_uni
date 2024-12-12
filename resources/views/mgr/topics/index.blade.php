@@ -61,6 +61,10 @@
                         <label for="estatus" class="form-label">Editar nombre:</label>
                         <input type="text" name="name" :value="oEdit.name">
                     </div>
+                    <div class="form-group">
+                        <label for="numQuestions" class="form-label">Número de preguntas:</label>
+                        <input type="number" name="number_questions" :value="oEdit.number_questions">
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -107,7 +111,7 @@
                                     <span class="badge bg-primary rounded-pill">@{{ subtopic.number_questions }}</span>
                                 </div>
                                 <div style="width: 5%">
-                                    <a href="#" class = "bx bxs-edit-alt" v-on:click="editSubtopic(subtopic.id_subtopic, subtopic.subtopic, '{{route('subtopics.edit', ':id')}}');" data-bs-toggle="modal" data-bs-target="#editModal"></a>
+                                    <a href="#" class = "bx bxs-edit-alt" v-on:click="editSubtopic(subtopic.id_subtopic, subtopic.subtopic, subtopic.number_questions, '{{route('subtopics.edit', ':id')}}');" data-bs-toggle="modal" data-bs-target="#editModal"></a>
                                 </div>
                                 <div style="width: 5%">
                                     <a href="#" title="Copiar subtema" class = "bx bxs-copy" v-on:click="showCopyElementModal(subtopic.id_subtopic, 'subtopic');"></a>

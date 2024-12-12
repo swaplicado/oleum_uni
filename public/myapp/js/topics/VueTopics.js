@@ -215,9 +215,10 @@ var appTopics = new Vue({
             fm.setAttribute('action', url);
         },
 
-        editSubtopic(subtopic_id, name, ruta){
+        editSubtopic(subtopic_id, name, number_questions, ruta){
             this.oEdit.id = subtopic_id;
             this.oEdit.name = name;
+            this.oEdit.number_questions = number_questions;
             this.editType = 'Subtema';
             var url = ruta;
             url = url.replace(':id',subtopic_id);

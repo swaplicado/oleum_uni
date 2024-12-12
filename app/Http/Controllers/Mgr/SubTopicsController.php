@@ -56,6 +56,7 @@ class SubTopicsController extends Controller
 
             $oSubTopic = SubTopic::findOrFail($id);
             $oSubTopic->subtopic = $request->name;
+            $oSubTopic->number_questions = $request->number_questions;
             $oSubTopic->update();
 
             assignmentsUtils::upSubtopicMongo($oSubTopic);
