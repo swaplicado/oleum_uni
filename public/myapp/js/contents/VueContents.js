@@ -71,7 +71,7 @@ var app = new Vue({
             $('#elemContentModalId').modal('show');
         },
         storeEC() {
-            SGui.showWaiting(3000);
+            SGui.showWaiting(60000);
 
             /**
              * Petición al Controlador
